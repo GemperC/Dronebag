@@ -1,33 +1,17 @@
 import 'package:dronebag/screens/home_screen.dart';
+import 'package:dronebag/screens/utils.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:dronebag/main.dart';
 
-class AuthScreen extends StatelessWidget {
-  const AuthScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Something went wrong!'));
-            } else if (snapshot.hasData) {
-              return HomePage();
-            } else {
-              return LoginWidget();
-            }
-          }),
-    );
-  }
-}
-
 class LoginWidget extends StatefulWidget {
-  const LoginWidget({Key? key}) : super(key: key);
+  final VoidCallback onClickedSignUp;
+  const LoginWidget({
+    Key? key,
+    required this.onClickedSignUp,
+  }) : super(key: key);
 
   @override
   State<LoginWidget> createState() => _LoginWidgetState();
@@ -66,12 +50,29 @@ class _LoginWidgetState extends State<LoginWidget> {
               obscureText: true,
             ),
             SizedBox(height: 20),
+
+            // Sign in button
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(minimumSize: Size.fromHeight(50)),
               icon: Icon(Icons.lock_open, size: 32),
               label: Text('Sign In', style: TextStyle(fontSize: 24)),
               onPressed: signIn,
-            )
+            ),
+            SizedBox(height: 24),
+            RichText(
+                text: TextSpan(
+                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    text: 'First Time? Then ',
+                    children: [
+                  TextSpan(
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = widget.onClickedSignUp,
+                      text: 'Sign Up',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ))
+                ]))
           ],
         ),
       );
@@ -88,8 +89,14 @@ class _LoginWidgetState extends State<LoginWidget> {
       );
     } on FirebaseAuthException catch (e) {
       print(e);
-    }
 
+      if (e.code == 'user-not-found') {
+        Utils.showSnackBar('No user with those credentials was found');
+      } else {
+        Utils.showSnackBar(e.message);
+      }
+    }
+    // Navigator.of(context) not working!
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }
