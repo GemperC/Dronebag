@@ -19,6 +19,7 @@ class LoginWidget extends StatefulWidget {
 }
 
 class _LoginWidgetState extends State<LoginWidget> {
+  
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -59,6 +60,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               label: Text('Sign In', style: TextStyle(fontSize: 24)),
               onPressed: signIn,
             ),
+            SizedBox(height: 8),
             GestureDetector(
               child: Text(
                 'Forgot Password?',
