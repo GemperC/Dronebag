@@ -1,3 +1,4 @@
+import 'package:dronebag/screens/forgot_password_page.dart';
 import 'package:dronebag/screens/home_screen.dart';
 import 'package:dronebag/screens/utils.dart';
 import 'package:email_validator/email_validator.dart';
@@ -58,10 +59,23 @@ class _LoginWidgetState extends State<LoginWidget> {
               label: Text('Sign In', style: TextStyle(fontSize: 24)),
               onPressed: signIn,
             ),
+            GestureDetector(
+              child: Text(
+                'Forgot Password?',
+                style: TextStyle(
+                  decoration: TextDecoration.underline,
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontSize: 20,
+                ),
+              ),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => ForgotPasswordPage(),
+              )),
+            ),
             SizedBox(height: 24),
             RichText(
                 text: TextSpan(
-                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    style: TextStyle(color: Colors.black, fontSize: 20),
                     text: 'First Time? Then ',
                     children: [
                   TextSpan(
@@ -92,11 +106,21 @@ class _LoginWidgetState extends State<LoginWidget> {
 
       switch (e.code) {
         case 'user-not-found':
-          Utils.showSnackBar('No user with those credentials was found');
+          Utils.showSnackBar('Invalid credentials');
           break;
+
         case 'unknown':
           Utils.showSnackBar('Please enter your email and password');
           break;
+
+        case 'invalid-email':
+          Utils.showSnackBar('Please enter a valid email address');
+          break;
+
+        case 'wrong-password':
+          Utils.showSnackBar('Incorrect password');
+          break;
+
         default:
           Utils.showSnackBar(e.message);
       }

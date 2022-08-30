@@ -74,7 +74,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               SizedBox(height: 24),
               RichText(
                   text: TextSpan(
-                      style: TextStyle(color: Colors.black, fontSize: 18),
+                      style: TextStyle(color: Colors.black, fontSize: 20),
                       text: 'Already have an account? Then ',
                       children: [
                     TextSpan(
