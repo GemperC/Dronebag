@@ -90,10 +90,15 @@ class _LoginWidgetState extends State<LoginWidget> {
     } on FirebaseAuthException catch (e) {
       print(e);
 
-      if (e.code == 'user-not-found') {
-        Utils.showSnackBar('No user with those credentials was found');
-      } else {
-        Utils.showSnackBar(e.message);
+      switch (e.code) {
+        case 'user-not-found':
+          Utils.showSnackBar('No user with those credentials was found');
+          break;
+        case 'unknown':
+          Utils.showSnackBar('Please enter your email and password');
+          break;
+        default:
+          Utils.showSnackBar(e.message);
       }
     }
     // Navigator.of(context) not working!
