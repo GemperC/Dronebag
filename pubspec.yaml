@@ -19,11 +19,13 @@ dependencies:
   cloud_firestore: ^3.4.6
   firebase_auth: ^3.7.0
   email_validator: ^2.1.17
+  font_awesome_flutter: ^10.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  
 
 
 
