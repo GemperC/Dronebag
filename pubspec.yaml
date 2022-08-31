@@ -14,12 +14,20 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
+
   provider: ^6.0.3
+
+  email_validator: ^2.1.17
+
+  font_awesome_flutter: ^10.1.0
+  cupertino_icons: ^1.0.2
+
+  firebase_core: ^1.21.1
   cloud_firestore: ^3.4.6
   firebase_auth: ^3.7.0
-  email_validator: ^2.1.17
-  font_awesome_flutter: ^10.1.0
+  firebase_analytics: ^9.3.3
+  firebase_crashlytics: ^2.8.9
+  firebase_performance: ^0.8.2+4
 
 dev_dependencies:
   flutter_test:

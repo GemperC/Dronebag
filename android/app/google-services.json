@@ -33,6 +33,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:630321126392:android:a6f17cdc331a87e3d0140d",
+        "android_client_info": {
+          "package_name": "io.tomcohen.dronebag"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "630321126392-2099j3mp6kqe1tmjgvhrubkg3k1o73lk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOQxNcxDc17FLOiQW2LwxgxPAYoQean5M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "630321126392-2099j3mp6kqe1tmjgvhrubkg3k1o73lk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

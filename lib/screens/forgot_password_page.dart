@@ -66,7 +66,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   minimumSize: Size.fromHeight(50),
                 ),
                 icon: Icon(Icons.email_outlined),
-                label: Text('Resest Password', style: TextStyle(fontSize: 24)),
+                label: Text('Reset Password', style: TextStyle(fontSize: 24)),
                 onPressed: resetPassword,
               ),
             ],
