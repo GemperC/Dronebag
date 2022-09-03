@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dronebag/models/group.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
@@ -58,17 +59,3 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   }
 }
 
-class Group {
-  String id;
-  final String groupName;
-
-  Group({
-    this.id = '',
-    required this.groupName,
-  });
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'Group Name': groupName,
-      };
-}

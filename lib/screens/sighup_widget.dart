@@ -21,11 +21,13 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmpasswordController = TextEditingController();
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    confirmpasswordController.dispose();
     super.dispose();
   }
 
@@ -59,6 +61,18 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) => value != null && value.length < 6
                     ? 'Password minimum length 6 charecters'
+                    : null,
+              ),
+              SizedBox(height: 4),
+              TextFormField(
+                controller: confirmpasswordController,
+                cursorColor: Colors.white,
+                textInputAction: TextInputAction.done,
+                decoration: InputDecoration(labelText: 'Confirm Password'),
+                obscureText: true,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) => value != null && passwordController.text != confirmpasswordController.text
+                    ? 'Passwords do not match'
                     : null,
               ),
               SizedBox(height: 20),
