@@ -20,7 +20,7 @@ class SignUpWidget extends StatefulWidget {
 
 class _SignUpWidgetState extends State<SignUpWidget> {
   final firstNameController = TextEditingController();
-  final secondNameController = TextEditingController();
+  final lastNameController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -31,6 +31,9 @@ class _SignUpWidgetState extends State<SignUpWidget> {
     emailController.dispose();
     passwordController.dispose();
     confirmpasswordController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
+
     super.dispose();
   }
 
@@ -52,10 +55,10 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               ),
               SizedBox(height: 4),
               TextFormField(
-                controller: secondNameController,
+                controller: lastNameController,
                 cursorColor: Colors.white,
                 textInputAction: TextInputAction.next,
-                decoration: InputDecoration(labelText: 'Second Name'),
+                decoration: InputDecoration(labelText: 'Last Name'),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
               ),
               SizedBox(height: 4),
@@ -141,11 +144,10 @@ class _SignUpWidgetState extends State<SignUpWidget> {
       );
       final user = UserData(
         firstName: firstNameController.text.trim(),
-        secondName: secondNameController.text.trim(),
+        lastName: lastNameController.text.trim(),
         email: emailController.text,
       );
       user.createUser(user);
-      
     } on FirebaseAuthException catch (e) {
       print(e);
 

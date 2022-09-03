@@ -3,20 +3,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserData {
   String id;
   final String firstName;
-  final String secondName;
+  final String lastName;
   final String email;
 
   UserData({
     this.id = '',
     required this.firstName,
-    required this.secondName,
+    required this.lastName,
     required this.email,
   });
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'First Name': firstName,
-        'Second Name': secondName,
+        'Last Name': lastName,
         'Email': email,
       };
 
