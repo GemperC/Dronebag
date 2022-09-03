@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:dronebag/main.dart';
+import 'package:dronebag/models/user.dart';
 
 class SignUpWidget extends StatefulWidget {
   final VoidCallback onClickedSignIn;
@@ -18,6 +19,8 @@ class SignUpWidget extends StatefulWidget {
 }
 
 class _SignUpWidgetState extends State<SignUpWidget> {
+  final firstNameController = TextEditingController();
+  final secondNameController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -40,6 +43,22 @@ class _SignUpWidgetState extends State<SignUpWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: 40),
+              TextFormField(
+                controller: firstNameController,
+                cursorColor: Colors.white,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(labelText: 'First Name'),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+              ),
+              SizedBox(height: 4),
+              TextFormField(
+                controller: secondNameController,
+                cursorColor: Colors.white,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(labelText: 'Second Name'),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+              ),
+              SizedBox(height: 4),
               TextFormField(
                 controller: emailController,
                 cursorColor: Colors.white,
@@ -71,7 +90,9 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 decoration: InputDecoration(labelText: 'Confirm Password'),
                 obscureText: true,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) => value != null && passwordController.text != confirmpasswordController.text
+                validator: (value) => value != null &&
+                        passwordController.text !=
+                            confirmpasswordController.text
                     ? 'Passwords do not match'
                     : null,
               ),
@@ -118,13 +139,17 @@ class _SignUpWidgetState extends State<SignUpWidget> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+      final user = UserData(
+        firstName: firstNameController.text.trim(),
+        secondName: secondNameController.text.trim(),
+        email: emailController.text,
+      );
+      user.createUser(user);
+      
     } on FirebaseAuthException catch (e) {
       print(e);
 
-      
       Utils.showSnackBar(e.message);
-      
-      
     }
     // Navigator.of(context) not working!
     navigatorKey.currentState!.popUntil((route) => route.isFirst);

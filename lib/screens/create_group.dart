@@ -34,7 +34,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                   final group = Group(
                     groupName: groupNameController.text,
                   );
-                  createGroup(group);
+                  group.createGroup(group);
                   Navigator.pop(context);
                 },
                 child: Text(
@@ -49,13 +49,4 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         labelText: label,
         border: OutlineInputBorder(),
       );
-
-  Future createGroup(Group group) async {
-    final docGroup = FirebaseFirestore.instance.collection('groups').doc();
-    group.id = docGroup.id;
-
-    final json = group.toJson();
-    await docGroup.set(json);
-  }
 }
-
