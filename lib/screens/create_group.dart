@@ -40,7 +40,8 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                   //UserData user =  findUser();
                   final group = Group(
                     groupName: groupNameController.text,
-                    //user: user,
+                    group_admins: [user.email!,],
+                    group_users: []
                   );
                   createGroup(group);
                   Navigator.pop(context);
@@ -62,11 +63,15 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         border: OutlineInputBorder(),
       );
 
+
+
+
   //create group method
   Future createGroup(Group group) async {
     final docGroup = FirebaseFirestore.instance.collection('groups').doc();
     group.id = docGroup.id;
     group.groupKey = generateGroupKey();
+
 
     final json = group.toJson();
     await docGroup.set(json);
