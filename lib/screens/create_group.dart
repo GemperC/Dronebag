@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/models/group.dart';
 import 'package:dronebag/models/user.dart';
+import 'package:dronebag/screens/group_home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -39,8 +42,12 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                     groupName: groupNameController.text,
                     //user: user,
                   );
-                  group.createGroup(group);
+                  createGroup(group);
                   Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GroupHomePage()),
+                  );
                 },
                 child: Text(
                   'Create',
@@ -55,21 +62,47 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         border: OutlineInputBorder(),
       );
 
-  Future<UserData?> findUser() async {
-    final loggedUserEmail = FirebaseAuth.instance.currentUser!.email;
-    final docUser =
-        FirebaseFirestore.instance.collection('users').doc('JoCuxkiYkuHqNNptW6LG');
-    final snapshot = await docUser.get();
+  //create group method
+  Future createGroup(Group group) async {
+    final docGroup = FirebaseFirestore.instance.collection('groups').doc();
+    group.id = docGroup.id;
+    group.groupKey = generateGroupKey();
 
-    if (snapshot.exists) {
-      return UserData.fromJson(snapshot.data()!);
-    }
+    final json = group.toJson();
+    await docGroup.set(json);
   }
 
-  static UserData fromJson(Map<String, dynamic> json) => UserData(
-    email: json['Email'],
-    firstName: json['First Name'], 
-    lastName: json['Last Name'], 
-    );
+  // generates a random group key
+  String generateGroupKey() {
+    final length = 10;
+    final letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    final numbers = '0123456789';
+
+    String chars = '';
+    chars += '$letters$numbers';
+
+    return List.generate(length, (index) {
+      final indexRandom = Random.secure().nextInt(chars.length);
+
+      return chars[indexRandom];
+    }).join('');
+  }
+
+  // Future<UserData?> findUser() async {
+  //   final loggedUserEmail = FirebaseAuth.instance.currentUser!.email;
+  //   final docUser =
+  //       FirebaseFirestore.instance.collection('users').doc('JoCuxkiYkuHqNNptW6LG');
+  //   final snapshot = await docUser.get();
+
+  //   if (snapshot.exists) {
+  //     return UserData.fromJson(snapshot.data()!);
+  //   }
+  // }
+
+  // static UserData fromJson(Map<String, dynamic> json) => UserData(
+  //   email: json['Email'],
+  //   firstName: json['First Name'],
+  //   lastName: json['Last Name'],
+  //   );
 
 }

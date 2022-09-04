@@ -26,27 +26,7 @@ class Group {
         //'Users': user,
       };
 
-  Future createGroup(Group group) async {
-    final docGroup = FirebaseFirestore.instance.collection('groups').doc();
-    group.id = docGroup.id;
-    group.groupKey = generateGroupKey();
 
-    final json = group.toJson();
-    await docGroup.set(json);
-  }
 
-  String generateGroupKey() {
-    final length = 10;
-    final letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    final numbers = '0123456789';
 
-    String chars = '';
-    chars += '$letters$numbers';
-
-    return List.generate(length, (index) {
-      final indexRandom = Random.secure().nextInt(chars.length);
-
-      return chars[indexRandom];
-    }).join('');
-  }
 }
