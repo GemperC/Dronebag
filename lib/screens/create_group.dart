@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/models/group.dart';
+import 'package:dronebag/models/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ class CreateGroupPage extends StatefulWidget {
 
 class _CreateGroupPageState extends State<CreateGroupPage> {
   final groupNameController = TextEditingController();
+  final user = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -31,8 +34,10 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                 style:
                     ElevatedButton.styleFrom(minimumSize: Size.fromHeight(60)),
                 onPressed: () {
+                  //UserData user =  findUser();
                   final group = Group(
                     groupName: groupNameController.text,
+                    //user: user,
                   );
                   group.createGroup(group);
                   Navigator.pop(context);
@@ -49,4 +54,22 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         labelText: label,
         border: OutlineInputBorder(),
       );
+
+  Future<UserData?> findUser() async {
+    final loggedUserEmail = FirebaseAuth.instance.currentUser!.email;
+    final docUser =
+        FirebaseFirestore.instance.collection('users').doc('JoCuxkiYkuHqNNptW6LG');
+    final snapshot = await docUser.get();
+
+    if (snapshot.exists) {
+      return UserData.fromJson(snapshot.data()!);
+    }
+  }
+
+  static UserData fromJson(Map<String, dynamic> json) => UserData(
+    email: json['Email'],
+    firstName: json['First Name'], 
+    lastName: json['Last Name'], 
+    );
+
 }
