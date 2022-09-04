@@ -24,13 +24,15 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final confirmpasswordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  final confirmEmailController = TextEditingController();
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
-    confirmpasswordController.dispose();
+    confirmPasswordController.dispose();
+    confirmEmailController.dispose();
     firstNameController.dispose();
     lastNameController.dispose();
 
@@ -75,6 +77,19 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               ),
               SizedBox(height: 4),
               TextFormField(
+                controller: confirmEmailController,
+                cursorColor: Colors.white,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(labelText: 'Confirm Email'),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) => value != null &&
+                        emailController.text !=
+                            confirmEmailController.text
+                    ? 'Emails do not match'
+                    : null,
+              ),
+              SizedBox(height: 4),
+              TextFormField(
                 controller: passwordController,
                 cursorColor: Colors.white,
                 textInputAction: TextInputAction.done,
@@ -87,7 +102,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               ),
               SizedBox(height: 4),
               TextFormField(
-                controller: confirmpasswordController,
+                controller: confirmPasswordController,
                 cursorColor: Colors.white,
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(labelText: 'Confirm Password'),
@@ -95,7 +110,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) => value != null &&
                         passwordController.text !=
-                            confirmpasswordController.text
+                            confirmPasswordController.text
                     ? 'Passwords do not match'
                     : null,
               ),
