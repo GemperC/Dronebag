@@ -1,11 +1,3 @@
-import 'dart:ffi';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:math';
-
-import 'package:dronebag/models/user.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 class Group {
   String id;
   final String groupName;
@@ -30,4 +22,11 @@ class Group {
         'Group Admins': group_admins,
         //'Users': user,
       };
+
+  static Group fromJson(Map<String, dynamic> json) => Group(
+    groupName: json['Group Name'],
+    groupKey: json['Group key'], 
+    group_users: json['Group Admins'], 
+    group_admins: json['Group Users'], 
+    );
 }

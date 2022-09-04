@@ -1,3 +1,4 @@
+import 'package:dronebag/widgets/get_groups.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class _GroupHomePageState extends State<GroupHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-           
+           Expanded(child:GetGroups())
           ],
         ),
       ),

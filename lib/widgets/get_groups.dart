@@ -1,24 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dronebag/models/user.dart';
-import 'package:dronebag/screens/get_user_email.dart';
-import 'package:flutter/gestures.dart';
+import 'package:dronebag/widgets/get_my_groups.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
-class GetUser extends StatefulWidget {
-  const GetUser({Key? key}) : super(key: key);
+class GetGroups extends StatefulWidget {
+  const GetGroups({Key? key}) : super(key: key);
 
   @override
-  State<GetUser> createState() => _GetUserState();
+  State<GetGroups> createState() => _GetGroupsState();
 }
 
-class _GetUserState extends State<GetUser> {
+class _GetGroupsState extends State<GetGroups> {
   List<String> docIDs = [];
 
   Future getDocId() async {
     await FirebaseFirestore.instance
-        .collection('users')
+        .collection('groups')
         .get()
         .then((snapshot) => snapshot.docs.forEach((document) {
               print(document.reference);
@@ -38,7 +34,7 @@ class _GetUserState extends State<GetUser> {
             itemCount: docIDs.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: GetUserEmail(documentId: docIDs[index]),
+                title: GetMyGroups(documentId: docIDs[index]),
               );
             });
 
