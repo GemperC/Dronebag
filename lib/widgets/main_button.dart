@@ -30,7 +30,7 @@ class MainButton extends StatelessWidget {
           color: backgroundColor == null
               ? ThemeColors.primaryColor
               : backgroundColor,
-          borderRadius: BorderRadius.circular(28),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Center(
           child: Row(
@@ -51,7 +51,7 @@ class MainButton extends StatelessWidget {
                   color: textColor == null
                       ? ThemeColors.whiteTextColor
                       : textColor,
-                  fontSize: FontSize.medium,
+                  fontSize: FontSize.large,
                   fontWeight: FontWeight.bold,
                 ),
               ),
