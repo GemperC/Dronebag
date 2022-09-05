@@ -21,7 +21,8 @@ dependencies:
 
   font_awesome_flutter: ^10.1.0
   cupertino_icons: ^1.0.2
-
+  google_fonts: ^3.0.1
+  
   firebase_core: ^1.21.1
   cloud_firestore: ^3.4.6
   firebase_auth: ^3.7.0
