@@ -7,13 +7,12 @@ class GetMyGroups extends StatelessWidget {
 
   GetMyGroups({required this.documentId});
   final user = FirebaseAuth.instance.currentUser!;
-  List<String> myGroups = [];
+  List<String> docIDs = [];
 
   @override
   Widget build(BuildContext context) {
     // get collection
-    CollectionReference groups =
-        FirebaseFirestore.instance.collection('groups');
+    CollectionReference groups = FirebaseFirestore.instance.collection('groups');
 
     return FutureBuilder<DocumentSnapshot>(
       future: groups.doc(documentId).get(),
@@ -21,7 +20,7 @@ class GetMyGroups extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           Map<String, dynamic> data =
               snapshot.data!.data() as Map<String, dynamic>;
-          print(data['Group Admins']);
+          //print(data['Group Admins']);
           if (data['Group Admins'] != null &&
               data['Group Admins'].contains(user.email!)) {
             return Text(data['Group Name']);
@@ -31,4 +30,23 @@ class GetMyGroups extends StatelessWidget {
       }),
     );
   }
+
+  Future getMyGroups() async {
+    final docGroup = FirebaseFirestore.instance.collection('groups');
+    print(docGroup);
+    final snapshot = await docGroup.get();
+  }
+
+
+
+    Future getDocId() async {
+    await FirebaseFirestore.instance
+        .collection('groups')
+        .get()
+        .then((snapshot) => snapshot.docs.forEach((document) {
+              print(document.reference);
+              docIDs.add(document.reference.id);
+            }));
+  }
 }
+
