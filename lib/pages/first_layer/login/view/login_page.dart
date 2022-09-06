@@ -10,11 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
-  // final VoidCallback onClickedSignUp;
-  // const LoginPage({
-  //   Key? key,
-  //   required this.onClickedSignUp,
-  // }) : super(key: key);
+  final VoidCallback onClickedSignUp;
+  const LoginPage({
+    Key? key,
+    required this.onClickedSignUp,
+  }) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -157,16 +157,16 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 text: "Don't have an account? ",
                                 children: [
-                          // TextSpan(
-                          //   recognizer: TapGestureRecognizer()
-                          //     ..onTap = widget.onClickedSignUp,
-                          //   text: 'Sign Up',
-                          //   style: GoogleFonts.poppins(
-                          //     color: ThemeColors.primaryColor,
-                          //     fontSize: FontSize.medium,
-                          //     fontWeight: FontWeight.w600,
-                          //   ),
-                          // )
+                          TextSpan(
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = widget.onClickedSignUp,
+                            text: 'Sign Up',
+                            style: GoogleFonts.poppins(
+                              color: ThemeColors.primaryColor,
+                              fontSize: FontSize.medium,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
                         ]))))
               ],
             ),

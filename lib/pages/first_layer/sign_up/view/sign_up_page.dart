@@ -4,6 +4,7 @@ import 'package:dronebag/domain/user_repository/user_repository.dart';
 import 'package:dronebag/main.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:dronebag/widgets/utils.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -23,12 +24,12 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final formKey = GlobalKey<FormState>();
 
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _confirmemailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confrimpasswordController =
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController confirmemailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmpasswordController =
       TextEditingController();
 
   final double sizedBoxHight = 16;
@@ -72,9 +73,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     children: [
                       ///Name Input Field
                       TextFormField(
-                        controller: _nameController,
+                        controller: nameController,
                         validator: (value) {
-                          if (_nameController.text.isEmpty) {
+                          if (nameController.text.isEmpty) {
                             return "This field can't be empty";
                           }
                         },
@@ -102,12 +103,11 @@ class _SignUpPageState extends State<SignUpPage> {
 
                       ///E-mail Input Field
                       TextFormField(
-                        controller: _emailController,
-                        validator: (value) {
-                          if (_emailController.text.isEmpty) {
-                            return "This field can't be empty";
-                          }
-                        },
+                        controller: emailController,
+                        validator: (email) =>
+                            email != null && !EmailValidator.validate(email)
+                                ? 'Enter a valid email'
+                                : null,
                         style: GoogleFonts.poppins(
                           color: ThemeColors.whiteTextColor,
                         ),
@@ -132,12 +132,13 @@ class _SignUpPageState extends State<SignUpPage> {
 
                       ///confirm E-mail Input Field
                       TextFormField(
-                        controller: _confirmemailController,
-                        validator: (value) {
-                          if (_emailController.text.isEmpty) {
-                            return "This field can't be empty";
-                          }
-                        },
+                        controller: confirmemailController,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) => value != null &&
+                                emailController.text !=
+                                    confirmemailController.text
+                            ? 'Emails do not match'
+                            : null,
                         style: GoogleFonts.poppins(
                           color: ThemeColors.whiteTextColor,
                         ),
@@ -162,10 +163,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
                       ///Phone Input Field
                       TextFormField(
-                        controller: _phoneController,
+                        controller: phoneController,
                         validator: (value) {
-                          if (_phoneController.text.isEmpty) {
-                            return "This field can't be empty";
+                          if (phoneController.text.length != 10) {
+                            return "please enter your phone number";
                           }
                         },
                         style: GoogleFonts.poppins(
@@ -192,12 +193,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
                       ///Password Input Field
                       TextFormField(
-                        controller: _passwordController,
-                        validator: (value) {
-                          if (_passwordController.text.isEmpty) {
-                            return "This field can't be empty";
-                          }
-                        },
+                        controller: passwordController,
+                        validator: (value) => value != null && value.length < 6
+                            ? 'Password minimum length 6 charecters'
+                            : null,
                         obscureText: true,
                         style: GoogleFonts.poppins(
                           color: ThemeColors.whiteTextColor,
@@ -223,12 +222,13 @@ class _SignUpPageState extends State<SignUpPage> {
 
                       ///Confirm Password Input Field
                       TextFormField(
-                        controller: _confrimpasswordController,
-                        validator: (value) {
-                          if (_passwordController.text.isEmpty) {
-                            return "This field can't be empty";
-                          }
-                        },
+                        controller: confirmpasswordController,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) => value != null &&
+                                passwordController.text !=
+                                    confirmpasswordController.text
+                            ? 'Passwords do not match'
+                            : null,
                         obscureText: true,
                         style: GoogleFonts.poppins(
                           color: ThemeColors.whiteTextColor,
@@ -268,7 +268,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   fontSize: FontSize.medium,
                                   fontWeight: FontWeight.w600,
                                 ),
-                                text: "Already have an account? Then ",
+                                text: "Already have an account? ",
                                 children: [
                           TextSpan(
                             recognizer: TapGestureRecognizer()
@@ -299,15 +299,14 @@ class _SignUpPageState extends State<SignUpPage> {
         builder: (context) => Center(child: CircularProgressIndicator()));
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
       );
       final user = UserData(
-        fullName: _nameController.text.trim(),
-        email: _emailController.text,
+        fullName: nameController.text.trim(),
+        email: emailController.text,
       );
       user.createUser(user);
-      
     } on FirebaseAuthException catch (e) {
       print(e);
 

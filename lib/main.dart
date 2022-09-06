@@ -57,7 +57,7 @@ class IsLoggedIn extends StatelessWidget {
           } else if (snapshot.hasData) {
             return HomePage(); //change to MainPage
           } else {
-            return LoginPage();
+            return AuthPage();
           }
         });
   }
