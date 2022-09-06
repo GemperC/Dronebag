@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+  final VoidCallback onClickedSignIn;
+  const SignUpPage({
+    Key? key,
+    required this.onClickedSignIn,
+  }) : super(key: key);
 
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -19,8 +23,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _confirmemailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confrimpasswordController =
-      TextEditingController();
+  final TextEditingController _confrimpasswordController = TextEditingController();
+
   final double sizedBoxHight = 16;
   @override
   Widget build(BuildContext context) {

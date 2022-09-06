@@ -6,6 +6,7 @@ import 'package:dronebag/widgets/main_button.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:dronebag/widgets/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -140,37 +141,58 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Don't have an account? ",
-                        style: GoogleFonts.poppins(
-                          color: ThemeColors.whiteTextColor,
-                          fontSize: FontSize.medium,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignUpPage(),
-                          ),
-                        ),
-                        child: Text(
-                          "Sign Up",
-                          style: GoogleFonts.poppins(
-                            color: ThemeColors.primaryColor,
-                            fontSize: FontSize.medium,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Center(
+                        child: RichText(
+                            text: TextSpan(
+                                style: GoogleFonts.poppins(
+                                  color: ThemeColors.whiteTextColor,
+                                  fontSize: FontSize.medium,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                text: "Don't have an account? ",
+                                children: [
+                          TextSpan(
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = widget.onClickedSignUp,
+                            text: 'Sign Up',
+                            style: GoogleFonts.poppins(
+                              color: ThemeColors.primaryColor,
+                              fontSize: FontSize.medium,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
+                        ])))
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     Text(
+                    //       "Don't have an account? ",
+                    //       style: GoogleFonts.poppins(
+                    //         color: ThemeColors.whiteTextColor,
+                    //         fontSize: FontSize.medium,
+                    //         fontWeight: FontWeight.w600,
+                    //       ),
+                    //     ),
+                    //     GestureDetector(
+                    //       onTap: () => Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //           builder: (context) => SignUpPage(),
+                    //         ),
+                    //       ),
+                    //       child: Text(
+                    //         "Sign Up",
+                    //         style: GoogleFonts.poppins(
+                    //           color: ThemeColors.primaryColor,
+                    //           fontSize: FontSize.medium,
+                    //           fontWeight: FontWeight.w600,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    )
               ],
             ),
           ),
