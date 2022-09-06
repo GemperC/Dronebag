@@ -3,36 +3,42 @@ import 'app.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await GetStorage.init();
 
   runApp(Dronebag());
 }
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
-class Dronebag extends StatelessWidget {
-  List<PageViewModel> getPages() {
-    return [
-      PageViewModel(
-        title: 'asdasdas',
-        body: 'asdsadsa',
-      )
-    ];
-  }
-
+class Dronebag extends StatefulWidget {
   const Dronebag({Key? key}) : super(key: key);
 
   @override
+  State<Dronebag> createState() => _DronebagState();
+}
+
+class _DronebagState extends State<Dronebag> {
+  final introdata = GetStorage();
+
+  @override
+  void initState() {
+    super.initState();
+
+    introdata.writeIfNull('displayed', false);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: ThemeColors.primaryColor,
-        scaffoldBackgroundColor: ThemeColors.scaffoldBgColor,
-      ),
-      debugShowCheckedModeBanner: false,
-      navigatorKey: navigatorKey,
-      scaffoldMessengerKey: Utils.messengerKey,
-      home: IntroPage()
-    );
+    return GetMaterialApp(
+        theme: ThemeData(
+          primaryColor: ThemeColors.primaryColor,
+          scaffoldBackgroundColor: ThemeColors.scaffoldBgColor,
+        ),
+        debugShowCheckedModeBanner: false,
+        navigatorKey: navigatorKey,
+        scaffoldMessengerKey: Utils.messengerKey,
+        home: introdata.read('displayed') ? IsLoggedIn() : IntroPage()
+        );
   }
 }
 
@@ -51,7 +57,7 @@ class IsLoggedIn extends StatelessWidget {
           } else if (snapshot.hasData) {
             return HomePage(); //change to MainPage
           } else {
-            return StartPage();
+            return LoginPage();
           }
         });
   }

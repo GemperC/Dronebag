@@ -4,6 +4,9 @@ export 'package:firebase_auth/firebase_auth.dart';
 export 'package:flutter/material.dart';
 
 export 'package:introduction_screen/introduction_screen.dart';
+export 'package:get/get_navigation/src/root/get_material_app.dart';
+export 'package:get_storage/get_storage.dart';
+
 
 export 'package:dronebag/screens/home_screen.dart';
 export 'package:dronebag/screens/main_page.dart';
