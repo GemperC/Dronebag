@@ -1,7 +1,9 @@
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
+import 'package:dronebag/pages/first_layer/auth/auth.dart';
 import 'package:dronebag/pages/first_layer/login/login.dart';
 import 'package:dronebag/widgets/main_button.dart';
+import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -77,11 +79,11 @@ class _StartPageState extends State<StartPage> {
                   Spacer(),
                   Padding(
                     padding: const EdgeInsets.only(top: 25, bottom: 30),
-                    child: MainButton(
-                      onTap: () => Navigator.pushReplacement(
+                    child: MainButton2(
+                      onPressed: () => Navigator.pushReplacement(
                         context,
                         CupertinoPageRoute(
-                          builder: (context) => LoginPage(onClickedSignUp: toggle),
+                          builder: (context) => AuthPage(),
                         ),
                         result: false,
                       ),

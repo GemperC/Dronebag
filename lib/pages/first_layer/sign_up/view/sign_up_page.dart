@@ -1,6 +1,11 @@
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
-import 'package:dronebag/widgets/main_button.dart';
+import 'package:dronebag/domain/user_repository/user_repository.dart';
+import 'package:dronebag/main.dart';
+import 'package:dronebag/widgets/main_button_2.dart';
+import 'package:dronebag/widgets/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -16,14 +21,15 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _confirmemailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confrimpasswordController = TextEditingController();
+  final TextEditingController _confrimpasswordController =
+      TextEditingController();
 
   final double sizedBoxHight = 16;
   @override
@@ -61,7 +67,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 SizedBox(height: 50),
                 Form(
-                  key: _formKey,
+                  key: formKey,
                   child: Column(
                     children: [
                       ///Name Input Field
@@ -245,20 +251,69 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                       SizedBox(height: 50),
-                      MainButton(
+                      MainButton2(
                         text: 'Sign Up',
-                        onTap: () {
-                          _formKey.currentState!.validate();
-                        },
+                        onPressed: signUp,
                       ),
                     ],
                   ),
                 ),
+                Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Center(
+                        child: RichText(
+                            text: TextSpan(
+                                style: GoogleFonts.poppins(
+                                  color: ThemeColors.whiteTextColor,
+                                  fontSize: FontSize.medium,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                text: "Already have an account? Then ",
+                                children: [
+                          TextSpan(
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = widget.onClickedSignIn,
+                            text: 'Sign In',
+                            style: GoogleFonts.poppins(
+                              color: ThemeColors.primaryColor,
+                              fontSize: FontSize.medium,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
+                        ]))))
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future signUp() async {
+    final isValid = formKey.currentState!.validate();
+    if (!isValid) return;
+
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(child: CircularProgressIndicator()));
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      final user = UserData(
+        fullName: _nameController.text.trim(),
+        email: _emailController.text,
+      );
+      user.createUser(user);
+      
+    } on FirebaseAuthException catch (e) {
+      print(e);
+
+      Utils.showSnackBar(e.message);
+    }
+    // Navigator.of(context) not working!
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }
