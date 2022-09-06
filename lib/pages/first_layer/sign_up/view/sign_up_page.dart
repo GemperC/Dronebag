@@ -35,10 +35,10 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: ThemeColors.scaffoldBgColor,
-        elevation: 0,
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: ThemeColors.scaffoldBgColor,
+      //   elevation: 0,
+      // ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(30),
@@ -57,7 +57,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 7),
                   child: Text(
-                    "Please fill the form to continue.",
+                    "Please fill the form to continue",
                     style: GoogleFonts.poppins(
                       color: ThemeColors.greyTextColor,
                       fontSize: FontSize.medium,

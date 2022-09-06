@@ -16,7 +16,7 @@ dependencies:
     sdk: flutter
 
   provider: ^6.0.3
-
+  introduction_screen: ^3.0.2
   email_validator: ^2.1.17
 
   font_awesome_flutter: ^10.1.0

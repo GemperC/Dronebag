@@ -15,12 +15,10 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
 
-
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Dronebag'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('Dronebag'),
+      // ),
       body: Padding(
         padding: EdgeInsets.all(32),
         child: Column(

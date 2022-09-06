@@ -1,8 +1,7 @@
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/main.dart';
-import 'package:dronebag/pages/first_layer/sign_up/sign_up.dart';
-import 'package:dronebag/widgets/main_button.dart';
+import 'package:dronebag/pages/first_layer/reset_password/reset_password.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:dronebag/widgets/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,26 +10,26 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
-  final VoidCallback onClickedSignUp;
-  const LoginPage({
-    Key? key,
-    required this.onClickedSignUp,
-  }) : super(key: key);
+  // final VoidCallback onClickedSignUp;
+  // const LoginPage({
+  //   Key? key,
+  //   required this.onClickedSignUp,
+  // }) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
@@ -39,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(30, 60, 30, 30),
+          padding: const EdgeInsets.all(30),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 7),
                   child: Text(
-                    "Login to your account.",
+                    "Login to your account",
                     style: GoogleFonts.poppins(
                       color: ThemeColors.greyTextColor,
                       fontSize: FontSize.medium,
@@ -65,12 +64,12 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 70),
                 Form(
-                  key: _formKey,
+                  key: formKey,
                   child: Column(
                     children: [
                       ///Email Input Field
                       TextField(
-                        controller: _emailController,
+                        controller: emailController,
                         style: GoogleFonts.poppins(
                           color: ThemeColors.whiteTextColor,
                         ),
@@ -95,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
 
                       ///Password Input Field
                       TextField(
-                        controller: _passwordController,
+                        controller: passwordController,
                         obscureText: true,
                         style: GoogleFonts.poppins(
                           color: ThemeColors.whiteTextColor,
@@ -121,21 +120,33 @@ class _LoginPageState extends State<LoginPage> {
                         alignment: Alignment.centerRight,
                         child: Padding(
                           padding: const EdgeInsets.only(top: 12),
-                          child: Text(
-                            "Forgot password?",
-                            style: GoogleFonts.poppins(
-                              color: ThemeColors.greyTextColor,
-                              fontSize: FontSize.medium,
-                              fontWeight: FontWeight.w600,
-                              decoration: TextDecoration.underline,
+                          child: GestureDetector(
+                            child: Text(
+                              "Forgot password?",
+                              style: GoogleFonts.poppins(
+                                color: ThemeColors.greyTextColor,
+                                fontSize: FontSize.medium,
+                                fontWeight: FontWeight.w600,
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
+                            onTap: () =>
+                                Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ForgotPasswordPage(),
+                            )),
                           ),
                         ),
                       ),
-                      SizedBox(height: 70),
+                      SizedBox(height: 90),
                       MainButton2(
                         text: 'Login',
-                        onPressed: signIn,
+                        onPressed: () {
+                          signIn();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => IsLoggedIn()),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -152,47 +163,17 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 text: "Don't have an account? ",
                                 children: [
-                          TextSpan(
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = widget.onClickedSignUp,
-                            text: 'Sign Up',
-                            style: GoogleFonts.poppins(
-                              color: ThemeColors.primaryColor,
-                              fontSize: FontSize.medium,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          )
-                        ])))
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     Text(
-                    //       "Don't have an account? ",
-                    //       style: GoogleFonts.poppins(
-                    //         color: ThemeColors.whiteTextColor,
-                    //         fontSize: FontSize.medium,
-                    //         fontWeight: FontWeight.w600,
-                    //       ),
-                    //     ),
-                    //     GestureDetector(
-                    //       onTap: () => Navigator.push(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //           builder: (context) => SignUpPage(),
-                    //         ),
-                    //       ),
-                    //       child: Text(
-                    //         "Sign Up",
-                    //         style: GoogleFonts.poppins(
-                    //           color: ThemeColors.primaryColor,
-                    //           fontSize: FontSize.medium,
-                    //           fontWeight: FontWeight.w600,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    )
+                          // TextSpan(
+                          //   recognizer: TapGestureRecognizer()
+                          //     ..onTap = widget.onClickedSignUp,
+                          //   text: 'Sign Up',
+                          //   style: GoogleFonts.poppins(
+                          //     color: ThemeColors.primaryColor,
+                          //     fontSize: FontSize.medium,
+                          //     fontWeight: FontWeight.w600,
+                          //   ),
+                          // )
+                        ]))))
               ],
             ),
           ),
@@ -208,8 +189,8 @@ class _LoginPageState extends State<LoginPage> {
         builder: (context) => Center(child: CircularProgressIndicator()));
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
       );
     } on FirebaseAuthException catch (e) {
       print(e);
