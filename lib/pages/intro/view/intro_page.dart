@@ -24,7 +24,7 @@ class _IntroPageState extends State<IntroPage> {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => IsLoggedIn()),
     );
-    introdate.write('displayed', true);
+    introdate.write('displayed', true); //change to true in deployment
   }
 
   List<PageViewModel> getPages() {

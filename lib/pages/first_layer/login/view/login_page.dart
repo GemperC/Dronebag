@@ -140,13 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: 90),
                       MainButton2(
                         text: 'Login',
-                        onPressed: () {
-                          signIn();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => IsLoggedIn()),
-                          );
-                        },
+                        onPressed: signIn,
                       ),
                     ],
                   ),
