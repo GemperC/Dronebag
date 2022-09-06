@@ -14,6 +14,7 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
+  bool isLogin = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +81,7 @@ class _StartPageState extends State<StartPage> {
                       onTap: () => Navigator.pushReplacement(
                         context,
                         CupertinoPageRoute(
-                          builder: (context) => LoginPage(),
+                          builder: (context) => LoginPage(onClickedSignUp: toggle),
                         ),
                         result: false,
                       ),
@@ -95,4 +96,5 @@ class _StartPageState extends State<StartPage> {
       ),
     );
   }
+  void toggle() => setState(() => isLogin = !isLogin);
 }

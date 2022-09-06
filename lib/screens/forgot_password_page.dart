@@ -1,7 +1,6 @@
 import 'package:dronebag/screens/auth_page.dart';
-import 'package:dronebag/screens/login.dart';
 import 'package:dronebag/screens/login_widget.dart';
-import 'package:dronebag/screens/utils.dart';
+import 'package:dronebag/widgets/utils.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';

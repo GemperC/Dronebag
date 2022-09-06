@@ -1,14 +1,20 @@
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
+import 'package:dronebag/main.dart';
 import 'package:dronebag/pages/first_layer/sign_up/sign_up.dart';
 import 'package:dronebag/widgets/main_button.dart';
-import 'package:flutter/material.dart';
+import 'package:dronebag/widgets/main_button_2.dart';
+import 'package:dronebag/widgets/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  final VoidCallback onClickedSignUp;
+  const LoginPage({
+    Key? key,
+    required this.onClickedSignUp,
+  }) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -17,8 +23,16 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,13 +68,8 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: [
                       ///Email Input Field
-                      TextFormField(
+                      TextField(
                         controller: _emailController,
-                        validator: (value) {
-                          if (_emailController.text.isEmpty) {
-                            return "This field can't be empty";
-                          }
-                        },
                         style: GoogleFonts.poppins(
                           color: ThemeColors.whiteTextColor,
                         ),
@@ -84,13 +93,8 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: 16),
 
                       ///Password Input Field
-                      TextFormField(
+                      TextField(
                         controller: _passwordController,
-                        validator: (value) {
-                          if (_passwordController.text.isEmpty) {
-                            return "This field can't be empty";
-                          }
-                        },
                         obscureText: true,
                         style: GoogleFonts.poppins(
                           color: ThemeColors.whiteTextColor,
@@ -128,13 +132,10 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       SizedBox(height: 70),
-                      MainButton(
+                      MainButton2(
                         text: 'Login',
-                        onTap: () {
-                          _formKey.currentState!.validate();
-                        },
+                        onPressed: signIn,
                       ),
-                      
                     ],
                   ),
                 ),
@@ -176,5 +177,43 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future signIn() async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(child: CircularProgressIndicator()));
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+    } on FirebaseAuthException catch (e) {
+      print(e);
+
+      switch (e.code) {
+        case 'user-not-found':
+          Utils.showSnackBar('Invalid credentials');
+          break;
+
+        case 'unknown':
+          Utils.showSnackBar('Please enter your email and password');
+          break;
+
+        case 'invalid-email':
+          Utils.showSnackBar('Please enter a valid email address');
+          break;
+
+        case 'wrong-password':
+          Utils.showSnackBar('Incorrect password');
+          break;
+
+        default:
+          Utils.showSnackBar(e.message);
+      }
+    }
+    // Navigator.of(context) not working!
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }
