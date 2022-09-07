@@ -68,7 +68,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                         TextFormField(
                           controller: groupNameController,
                           validator: (value) {
-                            if (groupNameController.text.isEmpty) {
+                            if (groupNameController.text.length < 1) {
                               return "This field can't be empty";
                             }
                           },
@@ -97,19 +97,8 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                         MainButton2(
                           text: 'Create Group',
                           onPressed: () {
-                            final group = Group(
-                                groupName: groupNameController.text,
-                                group_admins: [
-                                  user.email!,
-                                ],
-                                group_users: []);
-                            createGroup(group);
-                            Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => GroupHomePage()),
-                            );
+                            createGroup();
+                            
                           },
                         ),
                       ],
@@ -128,16 +117,29 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       );
 
   //create group method
-  Future createGroup(Group group) async {
+  Future createGroup() async {
     final isValid = formKey.currentState!.validate();
-    if (!isValid) return;
+    if (!isValid)
+      return;
+    else {
+      final docGroup = FirebaseFirestore.instance.collection('groups').doc();
 
-    final docGroup = FirebaseFirestore.instance.collection('groups').doc();
-    group.id = docGroup.id;
-    group.groupKey = generateGroupKey();
+      final group = Group(
+          groupName: groupNameController.text.trim(),
+          group_admins: [user.email!],
+          group_users: [],
+          id: docGroup.id,
+          groupKey: generateGroupKey());
 
-    final json = group.toJson();
-    await docGroup.set(json);
+      final json = group.toJson();
+      await docGroup.set(json);
+      Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => GroupHomePage()),
+                            );
+    }
   }
 
   // generates a random group key

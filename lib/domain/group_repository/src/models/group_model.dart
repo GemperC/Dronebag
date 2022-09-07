@@ -4,29 +4,27 @@ class Group {
   String groupKey;
   List<String> group_users;
   List<String> group_admins;
-  //UserData? user;
 
   Group({
     this.id = '',
     required this.groupName,
     this.groupKey = '',
-    required this.group_admins ,
-    required this.group_users ,
+    required this.group_admins,
+    required this.group_users,
   });
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'Group Name': groupName,
-        'Group Key': groupKey,
-        'Group Users': group_users,
-        'Group Admins': group_admins,
-        //'Users': user,
+        'Group_Name': groupName,
+        'Group_Key': groupKey,
+        'Group_Users': group_users,
+        'Group_Admins': group_admins,
       };
 
   static Group fromJson(Map<String, dynamic> json) => Group(
-    groupName: json['Group Name'],
-    groupKey: json['Group key'], 
-    group_users: json['Group Admins'], 
-    group_admins: json['Group Users'], 
-    );
+        groupName: json['Group_Name'],
+        groupKey: json['Group_key'],
+        group_users: json['Group_Admins'],
+        group_admins: json['Group_Users'],
+      );
 }
