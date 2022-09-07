@@ -304,7 +304,8 @@ class _SignUpPageState extends State<SignUpPage> {
       );
       final user = UserData(
         fullName: nameController.text.trim(),
-        email: emailController.text,
+        email: emailController.text.trim(),
+        phone: phoneController.text.trim(),
       );
       user.createUser(user);
     } on FirebaseAuthException catch (e) {
