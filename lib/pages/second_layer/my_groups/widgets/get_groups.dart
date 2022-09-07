@@ -40,6 +40,7 @@ class _GetGroupsState extends State<GetGroups> {
                   itemCount: docIDs.length,
                   itemBuilder: (context, index) {
                     return ListTile(
+                      
                       title: GetMyGroups(documentId: docIDs[index]),
                       onTap: () async{
 

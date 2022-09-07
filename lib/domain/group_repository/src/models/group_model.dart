@@ -1,30 +1,31 @@
 class Group {
   String id;
-  final String groupName;
-  String groupKey;
-  List<String> group_users;
-  List<String> group_admins;
+  final String name;
+  String key;
+  List<String> users;
+  List<String> admins;
 
   Group({
     this.id = '',
-    required this.groupName,
-    this.groupKey = '',
-    required this.group_admins,
-    required this.group_users,
+    required this.name,
+    this.key = '',
+    required this.users,
+    required this.admins,
   });
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'Group_Name': groupName,
-        'Group_Key': groupKey,
-        'Group_Users': group_users,
-        'Group_Admins': group_admins,
+        'Group_Name': name,
+        'Group_Key': key,
+        'Group_Users': users,
+        'Group_Admins': admins,
       };
 
   static Group fromJson(Map<String, dynamic> json) => Group(
-        groupName: json['Group_Name'],
-        groupKey: json['Group_key'],
-        group_users: json['Group_Admins'],
-        group_admins: json['Group_Users'],
+        id: json['id'],
+        name: json['Group_Name'],
+        key: json['Group_key'],
+        users: json['Group_Admins'],
+        admins: json['Group_Users'],
       );
 }
