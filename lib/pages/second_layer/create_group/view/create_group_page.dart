@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -98,7 +99,6 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                           text: 'Create Group',
                           onPressed: () {
                             createGroup();
-                            
                           },
                         ),
                       ],
@@ -119,26 +119,23 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   //create group method
   Future createGroup() async {
     final isValid = formKey.currentState!.validate();
-    if (!isValid)
+    if (!isValid) {
       return;
-    else {
+    } else {
       final docGroup = FirebaseFirestore.instance.collection('groups').doc();
-
       final group = Group(
           name: groupNameController.text.trim(),
-          admins: [user.email!],
-          users: [],
+          users: {user.email!: 'admin'},
           id: docGroup.id,
           key: generateGroupKey());
 
       final json = group.toJson();
       await docGroup.set(json);
       Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MyGroupsPage()),
-                            );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MyGroupsPage()),
+      );
     }
   }
 

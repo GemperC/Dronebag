@@ -1,16 +1,18 @@
+import 'dart:ffi';
+
+import 'package:dronebag/domain/user_repository/src/models/models.dart';
+
 class Group {
   String id;
   final String name;
   String key;
-  List<String> users;
-  List<String> admins;
+  Map<String, String> users;
 
   Group({
     this.id = '',
     required this.name,
     this.key = '',
     required this.users,
-    required this.admins,
   });
 
   Map<String, dynamic> toJson() => {
@@ -18,7 +20,6 @@ class Group {
         'Group_Name': name,
         'Group_Key': key,
         'Group_Users': users,
-        'Group_Admins': admins,
       };
 
   static Group fromJson(Map<String, dynamic> json) => Group(
@@ -26,6 +27,5 @@ class Group {
         name: json['Group_Name'],
         key: json['Group_key'],
         users: json['Group_Admins'],
-        admins: json['Group_Users'],
       );
 }
