@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dronebag/widgets/get_my_groups.dart';
+import 'package:dronebag/pages/second_layer/my_groups/widgets/get_my_groups.dart';
 import 'package:flutter/material.dart';
 
 class MyGroupPage extends StatefulWidget {

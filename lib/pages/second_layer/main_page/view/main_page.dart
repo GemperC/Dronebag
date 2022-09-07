@@ -1,8 +1,8 @@
 
 import 'package:dronebag/pages/second_layer/create_group/create_group.dart';
-import 'package:dronebag/screens/getuser.dart';
-import 'package:dronebag/screens/group_home_page.dart';
-import 'package:dronebag/screens/join_group.dart';
+import 'package:dronebag/pages/second_layer/join_group/join_group.dart';
+import 'package:dronebag/pages/second_layer/my_groups/my_groups.dart';
+import 'package:dronebag/tests/getuser.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -57,7 +57,7 @@ class MainPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => GroupHomePage()),
+                    MaterialPageRoute(builder: (context) => MyGroupsPage()),
                   );
                 },
                 icon: FaIcon(FontAwesomeIcons.peopleGroup, size: 32),

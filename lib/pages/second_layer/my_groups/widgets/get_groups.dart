@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dronebag/pages/third_layer/group_main/view/group_main_page.dart';
-import 'package:dronebag/widgets/get_my_groups.dart';
+import 'package:dronebag/pages/third_layer/group_main/group_main.dart';
+import 'package:dronebag/pages/second_layer/my_groups/widgets/get_my_groups.dart';
 import 'package:flutter/material.dart';
 
 class GetGroups extends StatefulWidget {

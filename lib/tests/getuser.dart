@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/models/user.dart';
-import 'package:dronebag/screens/get_user_email.dart';
+import 'package:dronebag/tests/get_user_email.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';

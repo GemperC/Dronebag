@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
-import 'package:dronebag/screens/group_home_page.dart';
+import 'package:dronebag/pages/second_layer/my_groups/my_groups.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +68,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                         TextFormField(
                           controller: groupNameController,
                           validator: (value) {
-                            if (groupNameController.text.length < 1) {
+                            if (groupNameController.text.isEmpty) {
                               return "This field can't be empty";
                             }
                           },
@@ -137,7 +137,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => GroupHomePage()),
+                                  builder: (context) => MyGroupsPage()),
                             );
     }
   }
