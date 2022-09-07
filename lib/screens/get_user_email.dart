@@ -20,9 +20,9 @@ class GetUserEmail extends StatelessWidget {
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
             if (data['Email'] == user.email!) {
-              return Text('this is you! ${data['Email']}');
+              return Text('this is you! ${data['Email']}', style: TextStyle(color: Colors.white),);
             }
-            return Text('${data['Email']}');
+            return Text('${data['Email']}', style: TextStyle(color: Colors.white),);
           }
           return CircularProgressIndicator();
         }));

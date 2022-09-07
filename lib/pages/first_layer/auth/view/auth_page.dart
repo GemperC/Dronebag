@@ -1,7 +1,5 @@
 import 'package:dronebag/pages/first_layer/login/login.dart';
 import 'package:dronebag/pages/first_layer/sign_up/sign_up.dart';
-import 'package:dronebag/screens/login_widget.dart';
-import 'package:dronebag/screens/sighup_widget.dart';
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatefulWidget {

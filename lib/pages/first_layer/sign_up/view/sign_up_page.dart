@@ -33,6 +33,18 @@ class _SignUpPageState extends State<SignUpPage> {
       TextEditingController();
 
   final double sizedBoxHight = 16;
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    confirmemailController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    confirmpasswordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

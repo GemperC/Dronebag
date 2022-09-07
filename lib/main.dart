@@ -1,3 +1,5 @@
+
+
 import 'app.dart';
 
 Future main() async {
@@ -55,7 +57,7 @@ class IsLoggedIn extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Center(child: Text('Something went wrong!'));
           } else if (snapshot.hasData) {
-            return HomePage(); //change to MainPage
+            return MainPage(); //change to MainPage
           } else {
             return AuthPage();
           }
