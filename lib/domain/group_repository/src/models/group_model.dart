@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Group {
   String id;
   final String name;
@@ -31,13 +29,4 @@ class Group {
         admins: json['Group_Admins'] as List<dynamic>,
       );
 
-  // static String getAdmins(Map<String, dynamic> json) {
-  //   id: json['id'],
-  //     name: json['Group_Name'],
-  //     key: json['Group_Key'],
-  //     users: json['Group_Users'],
-  // return(
-
-  //   );
-  // }
 }
