@@ -1,8 +1,10 @@
+import 'dart:convert';
+
 class Group {
   String id;
   final String name;
   String key;
-  Map<String, String> users;
+  Map<String, dynamic> users;
 
   Group({
     this.id = '',
@@ -22,13 +24,7 @@ class Group {
         id: json['id'],
         name: json['Group_Name'],
         key: json['Group_Key'],
-        users: {'': ''},
+        users: json['Group_Users'],
       );
 
-  // static Group fromJson(Map<String, dynamic> json) => Group(
-  //   id: json['id'],
-  //   name: json['Group_Name'],
-  //   key: json['Group_Key'],
-  //   users: json['Group_Users'],
-  // );
 }
