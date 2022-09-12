@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,6 +6,7 @@ import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/pages/second_layer/my_groups/my_groups.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
+import 'package:dronebag/widgets/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -111,10 +111,6 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         ));
   }
 
-  InputDecoration decoration(String label) => InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(),
-      );
 
   //create group method
   Future createGroup() async {
@@ -132,6 +128,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
 
       final json = group.toJson();
       await docGroup.set(json);
+      Utils.showSnackBarWithColor('Group has been created', Colors.blue);
       Navigator.pop(context);
       Navigator.push(
         context,
@@ -155,22 +152,4 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       return chars[indexRandom];
     }).join('');
   }
-
-  // Future<UserData?> findUser() async {
-  //   final loggedUserEmail = FirebaseAuth.instance.currentUser!.email;
-  //   final docUser =
-  //       FirebaseFirestore.instance.collection('users').doc('JoCuxkiYkuHqNNptW6LG');
-  //   final snapshot = await docUser.get();
-
-  //   if (snapshot.exists) {
-  //     return UserData.fromJson(snapshot.data()!);
-  //   }
-  // }
-
-  // static UserData fromJson(Map<String, dynamic> json) => UserData(
-  //   email: json['Email'],
-  //   firstName: json['First Name'],
-  //   lastName: json['Last Name'],
-  //   );
-
 }

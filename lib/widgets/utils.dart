@@ -12,4 +12,14 @@ class Utils {
       ..removeCurrentSnackBar()
       ..showSnackBar(snackBar);
   }
+
+  static showSnackBarWithColor(String? text, Color? color) {
+    if (text == null) return;
+
+    final snackBar = SnackBar(content: Text(text), backgroundColor: color);
+
+    messengerKey.currentState!
+      ..removeCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
 }
