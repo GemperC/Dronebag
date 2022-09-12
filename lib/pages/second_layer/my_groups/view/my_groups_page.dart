@@ -25,7 +25,7 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
         child: Padding(
             padding: const EdgeInsets.all(30),
             child: StreamBuilder<List<Group>>(
-              stream: readGroups(),
+              stream: readMyGroups(),
               builder: ((context, snapshot) {
                 if (snapshot.hasData) {
                   final groups = snapshot.data!;
@@ -47,7 +47,7 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
 }
 
 //het all the groups from firestore and convert them to group objects
-Stream<List<Group>> readGroups() {
+Stream<List<Group>> readMyGroups() {
   final user = FirebaseAuth.instance.currentUser!;
   return FirebaseFirestore.instance
     .collection('groups')
