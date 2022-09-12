@@ -125,7 +125,8 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       final docGroup = FirebaseFirestore.instance.collection('groups').doc();
       final group = Group(
           name: groupNameController.text.trim(),
-          users: {user.email!: 'admin'},
+          admins: [user.email!],
+          users: [user.email!],
           id: docGroup.id,
           key: generateGroupKey());
 
