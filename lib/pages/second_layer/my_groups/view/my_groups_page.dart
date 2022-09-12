@@ -51,7 +51,7 @@ Stream<List<Group>> readMyGroups() {
   final user = FirebaseAuth.instance.currentUser!;
   return FirebaseFirestore.instance
     .collection('groups')
-    .where('Group_Admins', arrayContains: user.email!)
+    .where('Group_Users', arrayContains: user.email!)
     .snapshots()
     .map((snapshot) =>
         snapshot.docs.map((doc) => Group.fromJson(doc.data())).toList());}

@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dronebag/config/font_size.dart';
+import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/models/group.dart';
+import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class JoinGroupPage extends StatefulWidget {
   const JoinGroupPage({Key? key}) : super(key: key);
@@ -15,57 +17,116 @@ class JoinGroupPage extends StatefulWidget {
 class _JoinGroupPageState extends State<JoinGroupPage> {
   final user = FirebaseAuth.instance.currentUser!;
   final groupKeyController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    groupKeyController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Dronebag - Join Group'),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            TextField(
-              controller: groupKeyController,
-              cursorColor: Colors.white,
-              decoration: InputDecoration(
-                labelText: 'Ender Group Key',
-                enabledBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(width: 3, color: Colors.grey), //<-- SEE HERE
-                ),
+        appBar: AppBar(
+          backgroundColor: ThemeColors.scaffoldBgColor,
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(30),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Join a group",
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                      fontSize: FontSize.xxLarge,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 7),
+                    child: Text(
+                      "Please fill the form to continue",
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.greyTextColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 50),
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: groupKeyController,
+                          validator: (value) {
+                            if (groupKeyController.text.isEmpty) {
+                              return "This field can't be empty";
+                            }
+                          },
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.whiteTextColor,
+                          ),
+                          keyboardType: TextInputType.name,
+                          cursorColor: ThemeColors.primaryColor,
+                          decoration: InputDecoration(
+                            fillColor: ThemeColors.textFieldBgColor,
+                            filled: true,
+                            hintText: "Group Key",
+                            hintStyle: GoogleFonts.poppins(
+                              color: ThemeColors.textFieldHintColor,
+                              fontSize: FontSize.medium,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(18)),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 50),
+                        MainButton2(
+                          text: 'Join Group',
+                          onPressed: () {
+                            addUserToGroup(groupKeyController.text);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 10),
-            ElevatedButton(
-                style:
-                    ElevatedButton.styleFrom(minimumSize: Size.fromHeight(60)),
-                onPressed: () {
-                  final group = findGroupIDFromKey("key");
-                  if (group == "not_found") {
-                    return;
-                  } else {}
-                },
-                child: Text(
-                  'Enter',
-                  style: TextStyle(fontSize: 24),
-                ))
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 
-  findGroupIDFromKey(String key) {
-    return 'groupID';
-  }
+  Future addUserToGroup(String groupKey) async {
+    final isValid = formKey.currentState!.validate();
+    if (!isValid) {
+      return;
+    } else {
+      FirebaseFirestore.instance
+          .collection('groups')
+          .where("Group_Key", isEqualTo: groupKey)
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          final group =
+              FirebaseFirestore.instance.collection('groups').doc(doc.id);
+          group.update({'Group_Users': FieldValue.arrayUnion([user.email!])});
+        });
+      });
 
-  Future createGroup(Group group) async {
-    final docGroup = FirebaseFirestore.instance.collection('groups').doc();
-    group.group_admins.add(user.email!);
-
-    final json = group.toJson();
-    await docGroup.set(json);
+      // group.update({
+      //   "Group_Users" : user.email!
+      // });
+    }
   }
 }
