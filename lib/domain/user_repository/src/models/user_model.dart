@@ -34,7 +34,7 @@ class UserData {
     final loggedUserEmail = FirebaseAuth.instance.currentUser!.email;
     final docUser = FirebaseFirestore.instance
         .collection('users')
-        .doc('JoCuxkiYkuHqNNptW6LG');
+        .doc('');
     final snapshot = await docUser.get();
 
     if (snapshot.exists) {

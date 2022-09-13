@@ -1,11 +1,17 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dronebag/config/font_size.dart';
+import 'package:dronebag/config/theme_colors.dart';
+import 'package:dronebag/domain/user_repository/src/models/models.dart';
 import 'package:dronebag/pages/second_layer/create_group/create_group.dart';
 import 'package:dronebag/pages/second_layer/join_group/join_group.dart';
+import 'package:dronebag/pages/second_layer/main_page/widgets/getUserName.dart';
 import 'package:dronebag/pages/second_layer/my_groups/my_groups.dart';
 import 'package:dronebag/tests/getuser.dart';
+import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -13,82 +19,88 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
+    final userDoc =
+        FirebaseFirestore.instance.collection("users").doc(user.email!).get();
 
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Dronebag'),
-      // ),
-      body: Padding(
-        padding: EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text('Signed In as', style: TextStyle(fontSize: 16)),
-            SizedBox(height: 8),
-            Text(user.email!,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-
-            //test
-            SizedBox(height: 8),
-            ElevatedButton.icon(
-                style:
-                    ElevatedButton.styleFrom(minimumSize: Size.fromHeight(20)),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => GetUser()),
-                  );
-                },
-                icon: FaIcon(FontAwesomeIcons.react, size: 32),
-                label: Text('TEST', style: TextStyle(fontSize: 24))),
-            //test
-
-            SizedBox(height: 40),
-            ElevatedButton.icon(
-                style:
-                    ElevatedButton.styleFrom(minimumSize: Size.fromHeight(50)),
-                onPressed: () => FirebaseAuth.instance.signOut(),
-                icon: Icon(Icons.arrow_back, size: 32),
-                label: Text('Sign Out', style: TextStyle(fontSize: 24))),
-            SizedBox(height: 100),
-            ElevatedButton.icon(
-                style:
-                    ElevatedButton.styleFrom(minimumSize: Size.fromHeight(60)),
+      appBar: AppBar(
+        backgroundColor: ThemeColors.scaffoldBgColor,
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Welcome!",
+                style: GoogleFonts.poppins(
+                  color: ThemeColors.whiteTextColor,
+                  fontSize: FontSize.xxxLarge,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              GetUserName(),
+              Padding(
+                padding: const EdgeInsets.only(top: 7),
+                child: Text(
+                  "What you would like to do?",
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.greyTextColor,
+                    fontSize: FontSize.medium,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              SizedBox(height: 80),
+              MainButton2(
+                text: 'My Groups',
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => MyGroupsPage()),
                   );
                 },
-                icon: FaIcon(FontAwesomeIcons.peopleGroup, size: 32),
-                label: Text('My Groups', style: TextStyle(fontSize: 24))),
-            SizedBox(height: 20),
-            ElevatedButton.icon(
-                style:
-                    ElevatedButton.styleFrom(minimumSize: Size.fromHeight(60)),
+              ),
+              SizedBox(height: 20),
+              MainButton2(
+                text: 'Create Group',
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => CreateGroupPage()),
                   );
                 },
-                icon: FaIcon(FontAwesomeIcons.userGroup, size: 32),
-                label: Text('Create Group', style: TextStyle(fontSize: 24))),
-            SizedBox(height: 20),
-            ElevatedButton.icon(
-                style:
-                    ElevatedButton.styleFrom(minimumSize: Size.fromHeight(60)),
+              ),
+              SizedBox(height: 20),
+              MainButton2(
+                text: 'Join Group',
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => JoinGroupPage()),
                   );
                 },
-                icon: FaIcon(FontAwesomeIcons.handshake, size: 32),
-                label: Text('Join Group', style: TextStyle(fontSize: 24)))
-          ],
+              ),
+              SizedBox(height: 80),
+              MainButton2(
+                text: 'Sign Out',
+                onPressed: () => FirebaseAuth.instance.signOut(),
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  getUserName(String? userEmail) async {
+    final userDoc =
+        FirebaseFirestore.instance.collection('users').doc(userEmail);
+    final snapshot = await userDoc.get();
+
+    if (snapshot.exists) {
+      return UserData.fromJson(snapshot.data()!);
+    }
   }
 }

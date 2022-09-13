@@ -38,74 +38,72 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(30),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Lets create a group",
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Lets create a group",
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.whiteTextColor,
+                    fontSize: FontSize.xxLarge,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 7),
+                  child: Text(
+                    "Please fill the form to continue",
                     style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                      fontSize: FontSize.xxLarge,
+                      color: ThemeColors.greyTextColor,
+                      fontSize: FontSize.medium,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 7),
-                    child: Text(
-                      "Please fill the form to continue",
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.greyTextColor,
-                        fontSize: FontSize.medium,
-                        fontWeight: FontWeight.w600,
+                ),
+                SizedBox(height: 50),
+                Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: groupNameController,
+                        validator: (value) {
+                          if (groupNameController.text.isEmpty) {
+                            return "This field can't be empty";
+                          }
+                        },
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                        ),
+                        keyboardType: TextInputType.name,
+                        cursorColor: ThemeColors.primaryColor,
+                        decoration: InputDecoration(
+                          fillColor: ThemeColors.textFieldBgColor,
+                          filled: true,
+                          hintText: "Group Name",
+                          hintStyle: GoogleFonts.poppins(
+                            color: ThemeColors.textFieldHintColor,
+                            fontSize: FontSize.medium,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(18)),
+                          ),
+                        ),
                       ),
-                    ),
+                      SizedBox(height: 50),
+                      MainButton2(
+                        text: 'Create Group',
+                        onPressed: () {
+                          createGroup();
+                        },
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 50),
-                  Form(
-                    key: formKey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: groupNameController,
-                          validator: (value) {
-                            if (groupNameController.text.isEmpty) {
-                              return "This field can't be empty";
-                            }
-                          },
-                          style: GoogleFonts.poppins(
-                            color: ThemeColors.whiteTextColor,
-                          ),
-                          keyboardType: TextInputType.name,
-                          cursorColor: ThemeColors.primaryColor,
-                          decoration: InputDecoration(
-                            fillColor: ThemeColors.textFieldBgColor,
-                            filled: true,
-                            hintText: "Group Name",
-                            hintStyle: GoogleFonts.poppins(
-                              color: ThemeColors.textFieldHintColor,
-                              fontSize: FontSize.medium,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(18)),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 50),
-                        MainButton2(
-                          text: 'Create Group',
-                          onPressed: () {
-                            createGroup();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ));

@@ -34,74 +34,72 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(30),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Join a group",
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Join a group",
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.whiteTextColor,
+                    fontSize: FontSize.xxLarge,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 7),
+                  child: Text(
+                    "Please fill the form to continue",
                     style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                      fontSize: FontSize.xxLarge,
+                      color: ThemeColors.greyTextColor,
+                      fontSize: FontSize.medium,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 7),
-                    child: Text(
-                      "Please fill the form to continue",
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.greyTextColor,
-                        fontSize: FontSize.medium,
-                        fontWeight: FontWeight.w600,
+                ),
+                SizedBox(height: 50),
+                Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: groupKeyController,
+                        validator: (value) {
+                          if (groupKeyController.text.isEmpty) {
+                            return "This field can't be empty";
+                          }
+                        },
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                        ),
+                        keyboardType: TextInputType.name,
+                        cursorColor: ThemeColors.primaryColor,
+                        decoration: InputDecoration(
+                          fillColor: ThemeColors.textFieldBgColor,
+                          filled: true,
+                          hintText: "Group Key",
+                          hintStyle: GoogleFonts.poppins(
+                            color: ThemeColors.textFieldHintColor,
+                            fontSize: FontSize.medium,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(18)),
+                          ),
+                        ),
                       ),
-                    ),
+                      SizedBox(height: 50),
+                      MainButton2(
+                        text: 'Join Group',
+                        onPressed: () {
+                          addUserToGroup(groupKeyController.text);
+                        },
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 50),
-                  Form(
-                    key: formKey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: groupKeyController,
-                          validator: (value) {
-                            if (groupKeyController.text.isEmpty) {
-                              return "This field can't be empty";
-                            }
-                          },
-                          style: GoogleFonts.poppins(
-                            color: ThemeColors.whiteTextColor,
-                          ),
-                          keyboardType: TextInputType.name,
-                          cursorColor: ThemeColors.primaryColor,
-                          decoration: InputDecoration(
-                            fillColor: ThemeColors.textFieldBgColor,
-                            filled: true,
-                            hintText: "Group Key",
-                            hintStyle: GoogleFonts.poppins(
-                              color: ThemeColors.textFieldHintColor,
-                              fontSize: FontSize.medium,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(18)),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 50),
-                        MainButton2(
-                          text: 'Join Group',
-                          onPressed: () {
-                            addUserToGroup(groupKeyController.text);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ));
@@ -123,10 +121,6 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
           group.update({'Group_Users': FieldValue.arrayUnion([user.email!])});
         });
       });
-
-      // group.update({
-      //   "Group_Users" : user.email!
-      // });
     }
   }
 }

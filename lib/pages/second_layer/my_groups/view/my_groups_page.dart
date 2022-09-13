@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
