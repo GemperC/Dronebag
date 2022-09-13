@@ -1,9 +1,13 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
+import 'package:dronebag/pages/third_layer/group_main/view/group_main_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MyGroupsPage extends StatefulWidget {
   const MyGroupsPage({Key? key}) : super(key: key);
@@ -13,13 +17,23 @@ class MyGroupsPage extends StatefulWidget {
 }
 
 class _MyGroupsPageState extends State<MyGroupsPage> {
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(
-        backgroundColor: ThemeColors.scaffoldBgColor,
-      ),
+        title: Text(
+            
+                    "Your Group List",
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                      fontSize: FontSize.xxLarge,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+        
+        backgroundColor: ThemeColors.scaffoldBgColor),
+      
       body: SafeArea(
         child: Padding(
             padding: const EdgeInsets.all(30),
@@ -43,20 +57,45 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
       ),
     );
   }
-}
 
 //het all the groups from firestore and convert them to group objects
-Stream<List<Group>> readMyGroups() {
-  final user = FirebaseAuth.instance.currentUser!;
-  return FirebaseFirestore.instance
-    .collection('groups')
-    .where('Group_Users', arrayContains: user.email!)
-    .snapshots()
-    .map((snapshot) =>
-        snapshot.docs.map((doc) => Group.fromJson(doc.data())).toList());}
+  Stream<List<Group>> readMyGroups() {
+    final user = FirebaseAuth.instance.currentUser!;
+    return FirebaseFirestore.instance
+        .collection('groups')
+        .where('Group_Users', arrayContains: user.email!)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Group.fromJson(doc.data())).toList());
+  }
 
 //build the widget thast shows the groups
-Widget buildGroup(Group group) => Text(
-      group.name,
-      style: TextStyle(color: Colors.white),
-    );
+  Widget buildGroup(Group group) => ListTile(
+      onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MyGroupPage()),
+          ),
+      title: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            height: 80,
+            width: 450,
+            decoration: BoxDecoration(
+              color: ThemeColors.primaryColor,
+                  borderRadius: BorderRadius.all(Radius.circular(20))
+),
+            child: Center(
+              child: Text(
+                group.name,
+                style: GoogleFonts.poppins(
+                  color: ThemeColors.whiteTextColor,
+                  fontSize: FontSize.xxLarge,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ));
+}
