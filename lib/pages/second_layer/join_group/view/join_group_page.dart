@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/models/group.dart';
+import 'package:dronebag/pages/second_layer/my_groups/my_groups.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
+import 'package:dronebag/widgets/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -121,6 +123,13 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
           group.update({'Group_Users': FieldValue.arrayUnion([user.email!])});
         });
       });
+
+      Utils.showSnackBarWithColor('You have joined the Group', Colors.blue);
+      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MyGroupsPage()),
+      );
     }
   }
 }
