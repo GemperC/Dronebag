@@ -6,7 +6,6 @@ import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/pages/third_layer/group_main/view/group_main_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyGroupsPage extends StatefulWidget {
@@ -58,7 +57,7 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
     );
   }
 
-//het all the groups from firestore and convert them to group objects
+
   Stream<List<Group>> readMyGroups() {
     final user = FirebaseAuth.instance.currentUser!;
     return FirebaseFirestore.instance
@@ -73,7 +72,7 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
   Widget buildGroup(Group group) => ListTile(
       onTap: () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MyGroupPage()),
+            MaterialPageRoute(builder: (context) => MyGroupPage(groupID: group.id,)),
           ),
       title: Center(
         child: Padding(

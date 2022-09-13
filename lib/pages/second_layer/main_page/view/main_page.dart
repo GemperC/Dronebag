@@ -93,14 +93,4 @@ class MainPage extends StatelessWidget {
       ),
     );
   }
-
-  getUserName(String? userEmail) async {
-    final userDoc =
-        FirebaseFirestore.instance.collection('users').doc(userEmail);
-    final snapshot = await userDoc.get();
-
-    if (snapshot.exists) {
-      return UserData.fromJson(snapshot.data()!);
-    }
-  }
 }
