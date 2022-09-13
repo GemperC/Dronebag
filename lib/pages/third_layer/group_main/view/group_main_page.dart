@@ -3,6 +3,7 @@ import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
+import 'package:dronebag/pages/third_layer/group_members/view/view.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -112,7 +113,17 @@ class _MyGroupPageState extends State<MyGroupPage> {
                             SizedBox(height: 20),
                             MainButton2(text: 'Fly A Drone', onPressed: () {}),
                             SizedBox(height: 20),
-                            MainButton2(text: 'Members', onPressed: () {}),
+                            MainButton2(
+                                text: 'Members',
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => GroupMembers(
+                                              groupID: widget.groupID,
+                                            )),
+                                  );
+                                }),
                           ],
                         ),
                       ),
