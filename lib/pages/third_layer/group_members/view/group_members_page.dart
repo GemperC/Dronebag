@@ -49,7 +49,7 @@ class _GroupMembersState extends State<GroupMembers> {
                     itemCount: group.users.length,
                     itemBuilder: (context, index) {
                       final member = group.users[index];
-                      return groupMember(member, group, isAdmin);
+                      return groupMember(member, group, isAdmin, loggedUser.email!);
                     },
                   );
                 } else if (snapshot.hasError) {
@@ -64,7 +64,7 @@ class _GroupMembersState extends State<GroupMembers> {
     );
   }
 
-  Widget groupMember(String member, Group group, bool isAdmin) {
+  Widget groupMember(String member, Group group, bool isAdmin, String loggedUserEmail) {
     return FutureBuilder<UserData?>(
       future: fetchUser(member),
       builder: ((context, snapshot) {
@@ -73,7 +73,7 @@ class _GroupMembersState extends State<GroupMembers> {
 
           return user == null
               ? CircularProgressIndicator()
-              : buildMemberTile(user, group, isAdmin);
+              : buildMemberTile(user, group, isAdmin, loggedUserEmail);
         }
         return CircularProgressIndicator();
       }),
@@ -100,15 +100,15 @@ class _GroupMembersState extends State<GroupMembers> {
     }
   }
 
-  Widget buildMemberTile(UserData user, Group group, bool isAdmin) {
+  Widget buildMemberTile(UserData user, Group group, bool isAdmin, String loggedUserEmail) {
     bool userTileIsAdmin = false;
     bool loggedUserIsAdmin = isAdmin;
-    print(loggedUserIsAdmin);
+    
 
     if (group.admins.contains(user.email)) {
       return ListTile(
           onTap: (() {
-            if (loggedUserIsAdmin) {
+            if (loggedUserIsAdmin && user.email != loggedUserEmail) {
               final groupDoc = FirebaseFirestore.instance
                   .collection('groups')
                   .doc(widget.groupID);

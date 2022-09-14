@@ -42,12 +42,14 @@ class _MyGroupPageState extends State<MyGroupPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              group.name,
-                              style: GoogleFonts.poppins(
-                                color: ThemeColors.whiteTextColor,
-                                fontSize: FontSize.xxLarge,
-                                fontWeight: FontWeight.w600,
+                            Center(
+                              child: Text(
+                                group.name,
+                                style: GoogleFonts.poppins(
+                                  color: ThemeColors.whiteTextColor,
+                                  fontSize: FontSize.xxLarge,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                             SizedBox(height: 80),
