@@ -6,11 +6,9 @@ import 'package:dronebag/pages/second_layer/create_group/create_group.dart';
 import 'package:dronebag/pages/second_layer/join_group/join_group.dart';
 import 'package:dronebag/pages/second_layer/main_page/widgets/getUserName.dart';
 import 'package:dronebag/pages/second_layer/my_groups/my_groups.dart';
-import 'package:dronebag/tests/getuser.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MainPage extends StatelessWidget {
