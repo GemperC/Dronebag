@@ -4,6 +4,7 @@ import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_repository/src/models/models.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -40,12 +41,15 @@ class _GroupMembersState extends State<GroupMembers> {
               builder: ((context, snapshot) {
                 if (snapshot.hasData) {
                   final group = snapshot.data!;
+                  final loggedUser = FirebaseAuth.instance.currentUser!;
+                  bool isAdmin = false;
+                  if (group.admins.contains(loggedUser.email!)) isAdmin = true;
 
                   return ListView.builder(
                     itemCount: group.users.length,
                     itemBuilder: (context, index) {
                       final member = group.users[index];
-                      return groupMember(member, group);
+                      return groupMember(member, group, isAdmin);
                     },
                   );
                 } else if (snapshot.hasError) {
@@ -60,7 +64,7 @@ class _GroupMembersState extends State<GroupMembers> {
     );
   }
 
-  Widget groupMember(String member, Group group) {
+  Widget groupMember(String member, Group group, bool isAdmin) {
     return FutureBuilder<UserData?>(
       future: fetchUser(member),
       builder: ((context, snapshot) {
@@ -69,7 +73,7 @@ class _GroupMembersState extends State<GroupMembers> {
 
           return user == null
               ? CircularProgressIndicator()
-              : buildMemberTile(user, group);
+              : buildMemberTile(user, group, isAdmin);
         }
         return CircularProgressIndicator();
       }),
@@ -96,16 +100,56 @@ class _GroupMembersState extends State<GroupMembers> {
     }
   }
 
-  Widget buildMemberTile(UserData user, Group group) {
+  Widget buildMemberTile(UserData user, Group group, bool isAdmin) {
+    bool userTileIsAdmin = false;
+    bool loggedUserIsAdmin = isAdmin;
+    print(loggedUserIsAdmin);
+
+    if (group.admins.contains(user.email)) {
+      return ListTile(
+          onTap: (() {
+            if (loggedUserIsAdmin) {
+              final groupDoc = FirebaseFirestore.instance
+                  .collection('groups')
+                  .doc(widget.groupID);
+              groupDoc.update({
+                'Group_Admins': FieldValue.arrayRemove([user.email])
+              });
+            }
+          }),
+          title: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: 80,
+                width: 450,
+                decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                child: Center(
+                  child: Text(
+                    "${user.fullName} \n${user.email}",
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                      fontSize: FontSize.xxLarge,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ));
+    }
     return ListTile(
         onTap: (() {
-          
-          final groupDoc = FirebaseFirestore.instance
-              .collection('groups')
-              .doc(widget.groupID);
-          groupDoc.update({
-            'Group_Admins': FieldValue.arrayUnion([user.email])
-          });
+          if (loggedUserIsAdmin) {
+            final groupDoc = FirebaseFirestore.instance
+                .collection('groups')
+                .doc(widget.groupID);
+            groupDoc.update({
+              'Group_Admins': FieldValue.arrayUnion([user.email])
+            });
+          }
         }),
         title: Center(
           child: Padding(
