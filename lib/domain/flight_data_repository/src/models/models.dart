@@ -1,0 +1,1 @@
+export 'fight_data_model.dart';
