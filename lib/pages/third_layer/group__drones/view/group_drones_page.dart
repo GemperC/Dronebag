@@ -72,7 +72,6 @@ class _GroupDronesState extends State<GroupDrones> {
               builder: ((context, snapshot) {
                 if (snapshot.hasData) {
                   final drones = snapshot.data!;
-                  print(drones.first.id);
                   return ListView(
                       children: drones.map(buildDroneTile).toList());
                 } else if (snapshot.hasError) {
@@ -81,7 +80,9 @@ class _GroupDronesState extends State<GroupDrones> {
                         style: TextStyle(color: Colors.white)),
                   );
                 } else {
-                  return Center(child: CircularProgressIndicator());
+                  
+                  return Container(
+                      child: Center(child: CircularProgressIndicator()));
                 }
               }),
             )),
@@ -342,17 +343,18 @@ flight time: ${drone.flight_time}
   }
 
 //find how many hours left till drone maintnance
-int hoursUntillMaintnance(){
-  int flightTime = int.parse(flight_timeController.text);
-  int maintnanceCycle = int.parse(maintenanceController.text);
-  int hoursLeftToMaintnance;
+  int hoursUntillMaintnance() {
+    int flightTime = int.parse(flight_timeController.text);
+    int maintnanceCycle = int.parse(maintenanceController.text);
+    int hoursLeftToMaintnance;
 
- if (flightTime == 0) {return maintnanceCycle;}
- hoursLeftToMaintnance = (maintnanceCycle - flightTime%maintnanceCycle)%200;
-  return hoursLeftToMaintnance; 
-}
-
-
+    if (flightTime == 0) {
+      return maintnanceCycle;
+    }
+    hoursLeftToMaintnance =
+        (maintnanceCycle - flightTime % maintnanceCycle) % 200;
+    return hoursLeftToMaintnance;
+  }
 
   Widget fetchgroupDrones(
       String member, Group group, bool isAdmin, String loggedUserEmail) {

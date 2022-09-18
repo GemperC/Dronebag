@@ -37,107 +37,109 @@ class _MyGroupPageState extends State<MyGroupPage> {
                     appBar: AppBar(
                       backgroundColor: ThemeColors.scaffoldBgColor,
                     ),
-                    body: SafeArea(
-                      child: Padding(
-                        padding: const EdgeInsets.all(30),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Center(
-                              child: Text(
-                                group.name,
-                                style: GoogleFonts.poppins(
-                                  color: ThemeColors.whiteTextColor,
-                                  fontSize: FontSize.xxLarge,
-                                  fontWeight: FontWeight.w600,
+                    body: SingleChildScrollView(
+                      child: SafeArea(
+                        child: Padding(
+                          padding: const EdgeInsets.all(30),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Center(
+                                child: Text(
+                                  group.name,
+                                  style: GoogleFonts.poppins(
+                                    color: ThemeColors.whiteTextColor,
+                                    fontSize: FontSize.xxLarge,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 80),
-                            Center(
-                              child: Text(
-                                "Actions",
-                                style: GoogleFonts.poppins(
-                                  color: ThemeColors.greyTextColor,
-                                  fontSize: FontSize.large,
-                                  fontWeight: FontWeight.w600,
+                              SizedBox(height: 80),
+                              Center(
+                                child: Text(
+                                  "Actions",
+                                  style: GoogleFonts.poppins(
+                                    color: ThemeColors.greyTextColor,
+                                    fontSize: FontSize.large,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 20),
-                            MainButton2(
-                                text: 'Group Key',
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => Container(
-                                      height: 20,
-                                      width: 20,
-                                      child: AlertDialog(
-                                        title: Center(child: Text('Group Key')),
-                                        content: Container(
-                                          height: 40,
-                                          child: Center(
-                                            child: Text(
-                                              group.key,
-                                              style: GoogleFonts.poppins(
-                                                color: Colors.black,
-                                                fontSize: FontSize.large,
-                                                fontWeight: FontWeight.w600,
+                              SizedBox(height: 20),
+                              MainButton2(
+                                  text: 'Group Key',
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => Container(
+                                        height: 20,
+                                        width: 20,
+                                        child: AlertDialog(
+                                          title: Center(child: Text('Group Key')),
+                                          content: Container(
+                                            height: 40,
+                                            child: Center(
+                                              child: Text(
+                                                group.key,
+                                                style: GoogleFonts.poppins(
+                                                  color: Colors.black,
+                                                  fontSize: FontSize.large,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
                                               ),
                                             ),
                                           ),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () => {
+                                                      Clipboard.setData(
+                                                              ClipboardData(
+                                                                  text: group.key
+                                                                      .toString()))
+                                                          .then((value) {
+                                                        Utils.showSnackBarWithColor(
+                                                            'Key has been copied',
+                                                            Colors.blue);
+                                                      })
+                                                    },
+                                                child: Text('Copy')),
+                                            TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: Text('Back')),
+                                          ],
                                         ),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () => {
-                                                    Clipboard.setData(
-                                                            ClipboardData(
-                                                                text: group.key
-                                                                    .toString()))
-                                                        .then((value) {
-                                                      Utils.showSnackBarWithColor(
-                                                          'Key has been copied',
-                                                          Colors.blue);
-                                                    })
-                                                  },
-                                              child: Text('Copy')),
-                                          TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
-                                              child: Text('Back')),
-                                        ],
                                       ),
-                                    ),
-                                  );
-                                }),
-                            SizedBox(height: 20),
-                            MainButton2(text: 'Drones', onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => GroupDrones(
-                                              groupID: widget.groupID,
-                                            )),
-                                  );
-                                }),
-                            SizedBox(height: 20),
-                            MainButton2(text: 'Fly A Drone', onPressed: () {}),
-                            SizedBox(height: 20),
-                            MainButton2(text: 'Batteries', onPressed: () {}),
-                            SizedBox(height: 20),
-                            MainButton2(
-                                text: 'Members',
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => GroupMembers(
-                                              groupID: widget.groupID,
-                                            )),
-                                  );
-                                }),
-                          ],
+                                    );
+                                  }),
+                              SizedBox(height: 20),
+                              MainButton2(text: 'Drones', onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => GroupDrones(
+                                                groupID: widget.groupID,
+                                              )),
+                                    );
+                                  }),
+                              SizedBox(height: 20),
+                              MainButton2(text: 'Fly A Drone', onPressed: () {}),
+                              SizedBox(height: 20),
+                              MainButton2(text: 'Batteries', onPressed: () {}),
+                              SizedBox(height: 20),
+                              MainButton2(
+                                  text: 'Members',
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => GroupMembers(
+                                                groupID: widget.groupID,
+                                              )),
+                                    );
+                                  }),
+                            ],
+                          ),
                         ),
                       ),
                     ),
