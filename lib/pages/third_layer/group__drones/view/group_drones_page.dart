@@ -5,6 +5,7 @@ import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_repository/user_repository.dart';
+import 'package:dronebag/pages/third_layer/drone_details/view/view.dart';
 import 'package:dronebag/pages/third_layer/group_members/view/view.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:flutter/services.dart';
@@ -80,7 +81,6 @@ class _GroupDronesState extends State<GroupDrones> {
                         style: TextStyle(color: Colors.white)),
                   );
                 } else {
-                  
                   return Container(
                       child: Center(child: CircularProgressIndicator()));
                 }
@@ -104,6 +104,16 @@ class _GroupDronesState extends State<GroupDrones> {
 //build the tile of the drone
   Widget buildDroneTile(Drone drone) {
     return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => DroneDetails(
+                    groupID: widget.groupID,
+                    drone: drone,
+                  )),
+        );
+      },
       title: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -131,6 +141,7 @@ flight time: ${drone.flight_time}
     );
   }
 
+// dialog to add new drones to the group
   Future addDroneDialog() {
     return showDialog(
       context: context,
