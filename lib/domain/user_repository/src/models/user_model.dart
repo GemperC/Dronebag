@@ -30,21 +30,5 @@ class UserData {
     await docUser.set(json);
   }
 
-  Future<UserData?> findUser() async {
-    final loggedUserEmail = FirebaseAuth.instance.currentUser!.email;
-    final docUser = FirebaseFirestore.instance
-        .collection('users')
-        .doc('');
-    final snapshot = await docUser.get();
-
-    if (snapshot.exists) {
-      return UserData.fromJson(snapshot.data()!);
-    }
-  }
-
-  Stream<List<UserData>> readUsers() => FirebaseFirestore.instance
-      .collection('users')
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => UserData.fromJson(doc.data())).toList());
+ 
 }
