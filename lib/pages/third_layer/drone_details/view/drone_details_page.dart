@@ -39,53 +39,106 @@ class _DroneDetailsState extends State<DroneDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: ThemeColors.scaffoldBgColor,
-        title: Text(
-          "Drone Details",
-          style: GoogleFonts.poppins(
-            color: ThemeColors.whiteTextColor,
-            fontSize: FontSize.xxLarge,
-            fontWeight: FontWeight.w600,
+        appBar: AppBar(
+          backgroundColor: ThemeColors.scaffoldBgColor,
+          title: Text(
+            "Drone Details",
+            style: GoogleFonts.poppins(
+              color: ThemeColors.whiteTextColor,
+              fontSize: FontSize.xxLarge,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
-      ),
-      body: SafeArea(
-        child: Padding(
-            padding: const EdgeInsets.all(30),
-            child: buildDronePage(widget.drone)),
-      ),
-    );
+        body: buildDronePage(widget.drone));
   }
 
   Widget buildDronePage(Drone drone) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container(
-          height: 80,
-          width: 450,
-          decoration: BoxDecoration(
-              color: Colors.red,
-              borderRadius: BorderRadius.all(Radius.circular(20))),
-          child: Center(
-            child: Text(
-              """
-name: ${drone.name}
-date added: ${drone.date_added.year}.${drone.date_added.month}.${drone.date_added.day}
-flight time: ${drone.flight_time}
-""",
-              style: GoogleFonts.poppins(
-                color: ThemeColors.whiteTextColor,
-                fontSize: FontSize.medium,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            richText_listingDroneDetails('Name', drone.name),
+            SizedBox(height: 16),
+            richText_listingDroneDetails('Serial Number', drone.serial_number),
+            SizedBox(height: 16),
+            richText_listingDroneDetailsDates('Date Added', drone.date_added),
+            SizedBox(height: 16),
+            richText_listingDroneDetailsDates('Date Bought', drone.date_bought),
+            SizedBox(height: 16),
+            richText_listingDroneDetails('Flight Time', '${drone.flight_time} hours'),
+            SizedBox(height: 16),
+            richText_listingDroneDetails(
+                'Mainetenance Cycle', 'every ${drone.maintenance} hours'),
+            SizedBox(height: 16),
+            richText_listingDroneDetails('Next Maintenance in', '${drone.hours_till_maintenace} flight hours'),
+          ],
         ),
       ),
     );
   }
 
+  Widget richText_listingDroneDetails(String field, dynamic droneDetail) {
+    return RichText(
+      text: TextSpan(
+        children: <TextSpan>[
+          TextSpan(
+            text: "$field:    ",
+            style: GoogleFonts.poppins(
+              color: ThemeColors.whiteTextColor,
+              fontSize: FontSize.large,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          TextSpan(
+            text: '$droneDetail',
+            style: GoogleFonts.poppins(
+              color: ThemeColors.whiteTextColor,
+              fontSize: FontSize.large,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ],
+        style: GoogleFonts.poppins(
+          color: ThemeColors.whiteTextColor,
+          fontSize: FontSize.large,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
 
+  Widget richText_listingDroneDetailsDates(
+      String field, DateTime droneDetailDate) {
+    return RichText(
+      text: TextSpan(
+        children: <TextSpan>[
+          TextSpan(
+            text: "$field:    ",
+            style: GoogleFonts.poppins(
+              color: ThemeColors.whiteTextColor,
+              fontSize: FontSize.large,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          TextSpan(
+            text:
+                '${droneDetailDate.year}-${droneDetailDate.month}-${droneDetailDate.day}',
+            style: GoogleFonts.poppins(
+              color: ThemeColors.whiteTextColor,
+              fontSize: FontSize.large,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ],
+        style: GoogleFonts.poppins(
+          color: ThemeColors.whiteTextColor,
+          fontSize: FontSize.large,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
 }
