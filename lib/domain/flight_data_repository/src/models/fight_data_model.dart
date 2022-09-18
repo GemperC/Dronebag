@@ -19,7 +19,7 @@ class FlightData {
         'id': id,
         'comment': comment,
         'flight_purpose': flight_purpose,
-        'maintenance': flight_time,
+        'flight_time': flight_time,
         'date': date,
         'pilot': pilot,
       };
