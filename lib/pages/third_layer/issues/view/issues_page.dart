@@ -76,8 +76,7 @@ class _IssuesState extends State<Issues> {
               builder: ((context, snapshot) {
                 if (snapshot.hasData) {
                   final issues = snapshot.data!;
-                  print(issues.length);
-                  print(snapshot);
+                  //print(issues.length);
                   return ListView(
                       children: issues.map(buildIssueTile).toList());
                 } else if (snapshot.hasError) {
@@ -98,7 +97,11 @@ class _IssuesState extends State<Issues> {
 //fetch group's drones list
   Stream<List<Issue>> fetchGroupDroneIssues() {
     return FirebaseFirestore.instance
-        .collection('groups/${widget.groupID}/drones/${widget.droneID}/issues')
+        .collection('groups')
+        .doc(widget.groupID)
+        .collection('drones')
+        .doc(widget.droneID)
+        .collection('issues')
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Issue.fromJson(doc.data())).toList());
@@ -117,27 +120,25 @@ class _IssuesState extends State<Issues> {
               color: Colors.blue,
               borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Center(
-            child: Card(
-              child: Column(
-                children: [
-                  Text(
-                    '${issue.detail}',
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                      fontSize: FontSize.large,
-                      fontWeight: FontWeight.w600,
-                    ),
+            child: Column(
+              children: [
+                Text(
+                  '${issue.detail}',
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.whiteTextColor,
+                    fontSize: FontSize.large,
+                    fontWeight: FontWeight.w600,
                   ),
-                  Text(
-                    'Resolved?  ${issue.resolved}',
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                      fontSize: FontSize.large,
-                      fontWeight: FontWeight.w600,
-                    ),
+                ),
+                Text(
+                  'Resolved?  ${issue.resolved}',
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.whiteTextColor,
+                    fontSize: FontSize.large,
+                    fontWeight: FontWeight.w600,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
