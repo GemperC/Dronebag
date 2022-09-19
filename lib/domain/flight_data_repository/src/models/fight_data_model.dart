@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class FlightData {
   String id; //id of the flight data in the firestore database
   String comment;
   String flight_purpose;
-  String flight_time; // hours of active flight in the flight
+  int flight_time; // hours of active flight in the flight
   DateTime date;
   String pilot;
 
@@ -29,7 +31,7 @@ class FlightData {
         comment: json['comment'],
         flight_purpose: json['flight_purpose'],
         flight_time: json['flight_time'],
-        date: json['date'],
+        date: (json['date'] as Timestamp).toDate(),
         pilot: json['pilot'],
       );
 }

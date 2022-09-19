@@ -3,7 +3,9 @@ import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
+import 'package:dronebag/domain/flight_data_repository/fight_data_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
+import 'package:dronebag/domain/issue_repository/issue_repository.dart';
 import 'package:dronebag/domain/user_repository/user_repository.dart';
 import 'package:dronebag/pages/third_layer/drone_details/view/view.dart';
 import 'package:dronebag/pages/third_layer/group_members/view/view.dart';
@@ -13,28 +15,27 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 
-class FlightsData extends StatefulWidget {
+class FlightDataPage extends StatefulWidget {
   final String groupID;
   final String droneID;
-  const FlightsData({
+  const FlightDataPage({
     Key? key,
     required this.groupID,
     required this.droneID,
   }) : super(key: key);
 
   @override
-  State<FlightsData> createState() => _FlightsDataState();
+  State<FlightDataPage> createState() => _FlightDataPageState();
 }
 
-class _FlightsDataState extends State<FlightsData> {
+class _FlightDataPageState extends State<FlightDataPage> {
   final formKey = GlobalKey<FormState>();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController serial_numberController = TextEditingController();
-  final TextEditingController flight_timeController = TextEditingController();
-  final TextEditingController hours_till_maintenaceController =
-      TextEditingController();
-  final TextEditingController maintenanceController = TextEditingController();
-  final TextEditingController date_boughtController = TextEditingController();
+  final TextEditingController commentController = TextEditingController();
+  final TextEditingController flightDateController = TextEditingController();
+  final TextEditingController flightTimeController = TextEditingController();
+  final TextEditingController flightPurposeontroller = TextEditingController();
+  final TextEditingController pilotController = TextEditingController();
+
   final double sizedBoxHight = 16;
 
   @override
@@ -43,7 +44,7 @@ class _FlightsDataState extends State<FlightsData> {
       appBar: AppBar(
         backgroundColor: ThemeColors.scaffoldBgColor,
         title: Text(
-          "Group Drones List",
+          "Flights",
           style: GoogleFonts.poppins(
             color: ThemeColors.whiteTextColor,
             fontSize: FontSize.xxLarge,
@@ -53,7 +54,7 @@ class _FlightsDataState extends State<FlightsData> {
         actions: [
           TextButton(
             child: Text(
-              'Add New\nDrone',
+              'Add New\nRecoed',
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
                 color: Colors.blue,
@@ -62,7 +63,7 @@ class _FlightsDataState extends State<FlightsData> {
               ),
             ),
             onPressed: () {
-              addDroneDialog();
+              addFlightRecordDialog();
             },
           ),
         ],
@@ -70,13 +71,14 @@ class _FlightsDataState extends State<FlightsData> {
       body: SafeArea(
         child: Padding(
             padding: const EdgeInsets.all(30),
-            child: StreamBuilder<List<Drone>>(
-              stream: fetchGroupDrones(),
+            child: StreamBuilder<List<FlightData>>(
+              stream: fetchGroupDroneFlight(),
               builder: ((context, snapshot) {
                 if (snapshot.hasData) {
-                  final drones = snapshot.data!;
+                  final records = snapshot.data!;
+                  //print(issues.length);
                   return ListView(
-                      children: drones.map(buildDroneTile).toList());
+                      children: records.map(buildRecordTile).toList());
                 } else if (snapshot.hasError) {
                   return SingleChildScrollView(
                     child: Text('Something went wrong! \n\n${snapshot}',
@@ -93,29 +95,23 @@ class _FlightsDataState extends State<FlightsData> {
   }
 
 //fetch group's drones list
-  Stream<List<Drone>> fetchGroupDrones() {
+  Stream<List<FlightData>> fetchGroupDroneFlight() {
     return FirebaseFirestore.instance
         .collection('groups')
         .doc(widget.groupID)
         .collection('drones')
+        .doc(widget.droneID)
+        .collection('flight_data')
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Drone.fromJson(doc.data())).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => FlightData.fromJson(doc.data()))
+            .toList());
   }
 
 //build the tile of the drone
-  Widget buildDroneTile(Drone drone) {
+  Widget buildRecordTile(FlightData record) {
     return ListTile(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => DroneDetails(
-                    groupID: widget.groupID,
-                    drone: drone,
-                  )),
-        );
-      },
+      onTap: () {},
       title: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -125,13 +121,25 @@ class _FlightsDataState extends State<FlightsData> {
               color: Colors.blue,
               borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Center(
-            child: Text(
-              '${drone.name}',
-              style: GoogleFonts.poppins(
-                color: ThemeColors.whiteTextColor,
-                fontSize: FontSize.large,
-                fontWeight: FontWeight.w600,
-              ),
+            child: Column(
+              children: [
+                Text(
+                  '${record.comment}',
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.whiteTextColor,
+                    fontSize: FontSize.large,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  '${record.date}',
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.whiteTextColor,
+                    fontSize: FontSize.large,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -140,14 +148,14 @@ class _FlightsDataState extends State<FlightsData> {
   }
 
 // dialog to add new drones to the group
-  Future addDroneDialog() {
+  Future addFlightRecordDialog() {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: ThemeColors.scaffoldBgColor,
         scrollable: true,
         title: Text(
-          "Add New Drone",
+          "Add New Flight",
           style: GoogleFonts.poppins(
             color: ThemeColors.whiteTextColor,
             fontSize: FontSize.large,
@@ -161,9 +169,9 @@ class _FlightsDataState extends State<FlightsData> {
               child: Column(
                 children: [
                   TextFormField(
-                    controller: nameController,
+                    controller: commentController,
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (commentController.text.isEmpty)
                         return "This field can't be empty";
                     },
                     style: GoogleFonts.poppins(
@@ -174,88 +182,7 @@ class _FlightsDataState extends State<FlightsData> {
                     decoration: InputDecoration(
                       fillColor: ThemeColors.textFieldBgColor,
                       filled: true,
-                      hintText: "Drone Name",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: serial_numberController,
-                    validator: (value) {
-                      if (nameController.text.isEmpty)
-                        return "This field can't be empty";
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.name,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Serial number",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: flight_timeController,
-                    validator: (value) {
-                      if (nameController.text.isEmpty)
-                        return "This field can't be empty";
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.number,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Flight Time",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: maintenanceController,
-                    validator: (value) {
-                      if (nameController.text.isEmpty)
-                        return "This field can't be empty";
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.number,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Maintnenace cycle in hours",
+                      hintText: "Flight Details",
                       hintStyle: GoogleFonts.poppins(
                         color: ThemeColors.textFieldHintColor,
                         fontSize: FontSize.small,
@@ -270,7 +197,7 @@ class _FlightsDataState extends State<FlightsData> {
                   SizedBox(height: sizedBoxHight),
                   DateTimeField(
                     format: DateFormat('yyyy-MM-dd'),
-                    controller: date_boughtController,
+                    controller: flightDateController,
                     onShowPicker: ((context, currentValue) {
                       return showDatePicker(
                           context: context,
@@ -279,7 +206,7 @@ class _FlightsDataState extends State<FlightsData> {
                           lastDate: DateTime(2100));
                     }),
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (flightDateController.text.isEmpty)
                         return "This field can't be empty";
                     },
                     style: GoogleFonts.poppins(
@@ -290,7 +217,88 @@ class _FlightsDataState extends State<FlightsData> {
                     decoration: InputDecoration(
                       fillColor: ThemeColors.textFieldBgColor,
                       filled: true,
-                      hintText: "Date bought",
+                      hintText: "Date of the flight",
+                      hintStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.small,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: sizedBoxHight),
+                  TextFormField(
+                    controller: flightTimeController,
+                    validator: (value) {
+                      if (flightTimeController.text.isEmpty)
+                        return "This field can't be empty";
+                    },
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                    keyboardType: TextInputType.name,
+                    cursorColor: ThemeColors.primaryColor,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      hintText: "Flight Time in Hours",
+                      hintStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.small,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: sizedBoxHight),
+                  TextFormField(
+                    controller: flightPurposeontroller,
+                    validator: (value) {
+                      if (flightPurposeontroller.text.isEmpty)
+                        return "This field can't be empty";
+                    },
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                    keyboardType: TextInputType.name,
+                    cursorColor: ThemeColors.primaryColor,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      hintText: "Flight Purpose",
+                      hintStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.small,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: sizedBoxHight),
+                  TextFormField(
+                    controller: pilotController,
+                    validator: (value) {
+                      if (pilotController.text.isEmpty)
+                        return "This field can't be empty";
+                    },
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                    keyboardType: TextInputType.name,
+                    cursorColor: ThemeColors.primaryColor,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      hintText: "Pilot",
                       hintStyle: GoogleFonts.poppins(
                         color: ThemeColors.textFieldHintColor,
                         fontSize: FontSize.small,
@@ -313,55 +321,41 @@ class _FlightsDataState extends State<FlightsData> {
               child: Text('Cancel')),
           TextButton(
               onPressed: () {
-                createDrone();
+                createFlightRecord();
               },
-              child: Text('Add Drone')),
+              child: Text('Add Record')),
         ],
       ),
     );
   }
 
 //create a new drone and add it to the group
-  Future createDrone() async {
+  Future createFlightRecord() async {
     final isValid = formKey.currentState!.validate();
     if (!isValid) {
       return;
     } else {
-      final docDrone = FirebaseFirestore.instance
+      final docRecord = FirebaseFirestore.instance
           .collection('groups')
           .doc(widget.groupID)
           .collection('drones')
+          .doc(widget.droneID)
+          .collection('flight_data')
           .doc();
-      final drone = Drone(
-        name: nameController.text.trim(),
-        serial_number: serial_numberController.text,
-        flight_time: int.parse(flight_timeController.text),
-        id: docDrone.id,
-        hours_till_maintenace: hoursUntillMaintnance(),
-        maintenance: int.parse(maintenanceController.text),
-        date_added: DateTime.now(),
-        date_bought: DateTime.parse(date_boughtController.text),
+      final issue = FlightData(
+        comment: commentController.text,
+        id: docRecord.id,
+        date: DateTime.parse(flightDateController.text),
+        flight_time: int.parse(flightTimeController.text),
+        flight_purpose: flightPurposeontroller.text,
+        pilot: pilotController.text
       );
 
-      final json = drone.toJson();
-      await docDrone.set(json);
+      final json = issue.toJson();
+      await docRecord.set(json);
       Utils.showSnackBarWithColor(
-          'Drone has been added to the group', Colors.blue);
+          'New issue has been added to the drone', Colors.blue);
       Navigator.pop(context);
     }
-  }
-
-//find how many hours left till drone maintnance
-  int hoursUntillMaintnance() {
-    int flightTime = int.parse(flight_timeController.text);
-    int maintnanceCycle = int.parse(maintenanceController.text);
-    int hoursLeftToMaintnance;
-
-    if (flightTime == 0) {
-      return maintnanceCycle;
-    }
-    hoursLeftToMaintnance =
-        (maintnanceCycle - flightTime % maintnanceCycle) % 200;
-    return hoursLeftToMaintnance;
   }
 }

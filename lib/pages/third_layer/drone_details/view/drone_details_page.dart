@@ -167,7 +167,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => FlightsData(
+                            builder: (context) => FlightDataPage(
                                   groupID: widget.groupID,
                                   droneID: drone.id,
                                 )),
