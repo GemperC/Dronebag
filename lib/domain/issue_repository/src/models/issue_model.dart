@@ -1,13 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Issue {
   String id; //id of the drone in the firestore database
   String detail; // detail of the issue
-  bool resolved; // was the issue revolved
-  String date; // hours of active flight
+  String resolved; // was the issue revolved
+  DateTime date; // hours of active flight
 
   Issue ({
     this.id = '',
     required this.detail,
-    this.resolved = false,
+    this.resolved = 'no',
     required this.date,
   });
 
@@ -22,7 +24,7 @@ class Issue {
         id: json['id'],
         detail: json['detail'],
         resolved: json['resolved'],
-        date: json['date'],
+        date: (json['date'] as Timestamp).toDate(),
 
       );
 }

@@ -93,9 +93,7 @@ class _GroupDronesState extends State<GroupDrones> {
 //fetch group's drones list
   Stream<List<Drone>> fetchGroupDrones() {
     return FirebaseFirestore.instance
-        .collection('groups')
-        .doc(widget.groupID)
-        .collection('drones')
+        .collection('groups/${widget.groupID}/drones')
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Drone.fromJson(doc.data())).toList());
@@ -118,20 +116,16 @@ class _GroupDronesState extends State<GroupDrones> {
         padding: const EdgeInsets.all(8.0),
         child: Container(
           height: 80,
-          width: 450,
+          width: 250,
           decoration: BoxDecoration(
-              color: Colors.red,
+              color: Colors.blue,
               borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Center(
             child: Text(
-              """
-name: ${drone.name}
-date added: ${drone.date_added.year}.${drone.date_added.month}.${drone.date_added.day}
-flight time: ${drone.flight_time}
-""",
+              '${drone.name}',
               style: GoogleFonts.poppins(
                 color: ThemeColors.whiteTextColor,
-                fontSize: FontSize.medium,
+                fontSize: FontSize.large,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -366,6 +360,4 @@ flight time: ${drone.flight_time}
         (maintnanceCycle - flightTime % maintnanceCycle) % 200;
     return hoursLeftToMaintnance;
   }
-
-
 }
