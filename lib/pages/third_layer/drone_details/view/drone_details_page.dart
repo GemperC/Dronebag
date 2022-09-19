@@ -148,7 +148,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                     }),
                 SizedBox(width: 20),
                 Text(
-                  '10 Records',
+                  '0 Records',
                   style: GoogleFonts.poppins(
                     color: ThemeColors.whiteTextColor,
                     fontSize: FontSize.large,
@@ -175,7 +175,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                     }),
                 SizedBox(width: 20),
                 Text(
-                  '10 Records',
+                  '0 Records',
                   style: GoogleFonts.poppins(
                     color: ThemeColors.whiteTextColor,
                     fontSize: FontSize.large,
@@ -302,7 +302,8 @@ class _DroneDetailsState extends State<DroneDetails> {
                   ),
                   SizedBox(height: sizedBoxHight),
                   TextFormField(
-                    controller: serial_numberController..text = widget.drone.serial_number,
+                    controller: serial_numberController
+                      ..text = widget.drone.serial_number,
                     validator: (value) {
                       if (nameController.text.isEmpty)
                         return "This field can't be empty";
