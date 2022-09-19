@@ -4,37 +4,45 @@ import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
+import 'package:dronebag/domain/issue_repository/issue_repository.dart';
 import 'package:dronebag/domain/maintnance_history_repository/maintnance_history_repository.dart';
 import 'package:dronebag/domain/user_repository/user_repository.dart';
+import 'package:dronebag/pages/third_layer/drone_details/view/view.dart';
+import 'package:dronebag/pages/third_layer/group_members/view/view.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 
-class MaintenanceHistory extends StatefulWidget {
+class MaintenanceRecords extends StatefulWidget {
   final String groupID;
   final String droneID;
-  const MaintenanceHistory({
+  const MaintenanceRecords({
     Key? key,
     required this.groupID,
     required this.droneID,
   }) : super(key: key);
 
   @override
-  State<MaintenanceHistory> createState() => _MaintenanceHistoryState();
+  State<MaintenanceRecords> createState() => _MaintenanceRecordsState();
 }
 
-class _MaintenanceHistoryState extends State<MaintenanceHistory> {
+class _MaintenanceRecordsState extends State<MaintenanceRecords> {
   final formKey = GlobalKey<FormState>();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController serial_numberController = TextEditingController();
-  final TextEditingController flight_timeController = TextEditingController();
-  final TextEditingController hours_till_maintenaceController =
+  final TextEditingController maintenanceDetailController =
       TextEditingController();
-  final TextEditingController maintenanceController = TextEditingController();
-  final TextEditingController date_boughtController = TextEditingController();
+  final TextEditingController maintenanceDateController =
+      TextEditingController();
+
   final double sizedBoxHight = 16;
+
+  @override
+  void dispose() {
+    maintenanceDateController.dispose();
+    maintenanceDetailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +50,7 @@ class _MaintenanceHistoryState extends State<MaintenanceHistory> {
       appBar: AppBar(
         backgroundColor: ThemeColors.scaffoldBgColor,
         title: Text(
-          "Group Drones List",
+          "Maintenance History",
           style: GoogleFonts.poppins(
             color: ThemeColors.whiteTextColor,
             fontSize: FontSize.xxLarge,
@@ -52,7 +60,7 @@ class _MaintenanceHistoryState extends State<MaintenanceHistory> {
         actions: [
           TextButton(
             child: Text(
-              'Add New\nDrone',
+              'Add New\nRecord',
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
                 color: Colors.blue,
@@ -61,7 +69,7 @@ class _MaintenanceHistoryState extends State<MaintenanceHistory> {
               ),
             ),
             onPressed: () {
-              addDroneDialog();
+              addMaintenanceRecordDialog();
             },
           ),
         ],
@@ -70,12 +78,13 @@ class _MaintenanceHistoryState extends State<MaintenanceHistory> {
         child: Padding(
             padding: const EdgeInsets.all(30),
             child: StreamBuilder<List<Maintenance>>(
-              stream: fetchGroupDronesMaintenanceHistory(),
+              stream: fetchGroupDroneMaintenances(),
               builder: ((context, snapshot) {
                 if (snapshot.hasData) {
-                  final maintenances = snapshot.data!;
+                  final records = snapshot.data!;
+                  //print(issues.length);
                   return ListView(
-                      children: maintenances.map(buildMaintenanceHistoryTile).toList());
+                      children: records.map(buildRecordTile).toList());
                 } else if (snapshot.hasError) {
                   return SingleChildScrollView(
                     child: Text('Something went wrong! \n\n${snapshot}',
@@ -92,7 +101,7 @@ class _MaintenanceHistoryState extends State<MaintenanceHistory> {
   }
 
 //fetch group's drones list
-  Stream<List<Maintenance>> fetchGroupDronesMaintenanceHistory() {
+  Stream<List<Maintenance>> fetchGroupDroneMaintenances() {
     return FirebaseFirestore.instance
         .collection('groups')
         .doc(widget.groupID)
@@ -100,16 +109,15 @@ class _MaintenanceHistoryState extends State<MaintenanceHistory> {
         .doc(widget.droneID)
         .collection('maintenance_history')
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Maintenance.fromJson(doc.data())).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Maintenance.fromJson(doc.data()))
+            .toList());
   }
 
 //build the tile of the drone
-  Widget buildMaintenanceHistoryTile(Maintenance maintenance) {
+  Widget buildRecordTile(Maintenance record) {
     return ListTile(
-      onTap: () {
-
-      },
+      onTap: () {},
       title: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -119,13 +127,25 @@ class _MaintenanceHistoryState extends State<MaintenanceHistory> {
               color: Colors.blue,
               borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Center(
-            child: Text(
-              '${maintenance.detail}',
-              style: GoogleFonts.poppins(
-                color: ThemeColors.whiteTextColor,
-                fontSize: FontSize.large,
-                fontWeight: FontWeight.w600,
-              ),
+            child: Column(
+              children: [
+                Text(
+                  '${record.detail}',
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.whiteTextColor,
+                    fontSize: FontSize.large,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  '${record.date}',
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.whiteTextColor,
+                    fontSize: FontSize.large,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -134,14 +154,14 @@ class _MaintenanceHistoryState extends State<MaintenanceHistory> {
   }
 
 // dialog to add new drones to the group
-  Future addDroneDialog() {
+  Future addMaintenanceRecordDialog() {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: ThemeColors.scaffoldBgColor,
         scrollable: true,
         title: Text(
-          "Add New Drone",
+          "Add New Record",
           style: GoogleFonts.poppins(
             color: ThemeColors.whiteTextColor,
             fontSize: FontSize.large,
@@ -155,9 +175,9 @@ class _MaintenanceHistoryState extends State<MaintenanceHistory> {
               child: Column(
                 children: [
                   TextFormField(
-                    controller: nameController,
+                    controller: maintenanceDetailController,
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (maintenanceDetailController.text.isEmpty)
                         return "This field can't be empty";
                     },
                     style: GoogleFonts.poppins(
@@ -168,88 +188,7 @@ class _MaintenanceHistoryState extends State<MaintenanceHistory> {
                     decoration: InputDecoration(
                       fillColor: ThemeColors.textFieldBgColor,
                       filled: true,
-                      hintText: "Drone Name",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: serial_numberController,
-                    validator: (value) {
-                      if (nameController.text.isEmpty)
-                        return "This field can't be empty";
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.name,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Serial number",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: flight_timeController,
-                    validator: (value) {
-                      if (nameController.text.isEmpty)
-                        return "This field can't be empty";
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.number,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Flight Time",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: maintenanceController,
-                    validator: (value) {
-                      if (nameController.text.isEmpty)
-                        return "This field can't be empty";
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.number,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Maintnenace cycle in hours",
+                      hintText: "Maintenance Detail",
                       hintStyle: GoogleFonts.poppins(
                         color: ThemeColors.textFieldHintColor,
                         fontSize: FontSize.small,
@@ -264,7 +203,7 @@ class _MaintenanceHistoryState extends State<MaintenanceHistory> {
                   SizedBox(height: sizedBoxHight),
                   DateTimeField(
                     format: DateFormat('yyyy-MM-dd'),
-                    controller: date_boughtController,
+                    controller: maintenanceDateController,
                     onShowPicker: ((context, currentValue) {
                       return showDatePicker(
                           context: context,
@@ -273,7 +212,7 @@ class _MaintenanceHistoryState extends State<MaintenanceHistory> {
                           lastDate: DateTime(2100));
                     }),
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (maintenanceDateController.text.isEmpty)
                         return "This field can't be empty";
                     },
                     style: GoogleFonts.poppins(
@@ -284,7 +223,7 @@ class _MaintenanceHistoryState extends State<MaintenanceHistory> {
                     decoration: InputDecoration(
                       fillColor: ThemeColors.textFieldBgColor,
                       filled: true,
-                      hintText: "Date bought",
+                      hintText: "Date of the maintenance",
                       hintStyle: GoogleFonts.poppins(
                         color: ThemeColors.textFieldHintColor,
                         fontSize: FontSize.small,
@@ -307,55 +246,38 @@ class _MaintenanceHistoryState extends State<MaintenanceHistory> {
               child: Text('Cancel')),
           TextButton(
               onPressed: () {
-                createDrone();
+                createMaintenanceHistoryRecord();
               },
-              child: Text('Add Drone')),
+              child: Text('Add Record')),
         ],
       ),
     );
   }
 
 //create a new drone and add it to the group
-  Future createDrone() async {
+  Future createMaintenanceHistoryRecord() async {
     final isValid = formKey.currentState!.validate();
     if (!isValid) {
       return;
     } else {
-      final docDrone = FirebaseFirestore.instance
+      final docRecord = FirebaseFirestore.instance
           .collection('groups')
           .doc(widget.groupID)
           .collection('drones')
+          .doc(widget.droneID)
+          .collection('maintenance_history')
           .doc();
-      final drone = Drone(
-        name: nameController.text.trim(),
-        serial_number: serial_numberController.text,
-        flight_time: int.parse(flight_timeController.text),
-        id: docDrone.id,
-        hours_till_maintenace: hoursUntillMaintnance(),
-        maintenance: int.parse(maintenanceController.text),
-        date_added: DateTime.now(),
-        date_bought: DateTime.parse(date_boughtController.text),
+      final record = Maintenance(
+        detail: maintenanceDetailController.text.trim(),
+        id: docRecord.id,
+        date: DateTime.parse(maintenanceDateController.text),
       );
 
-      final json = drone.toJson();
-      await docDrone.set(json);
+      final json = record.toJson();
+      await docRecord.set(json);
       Utils.showSnackBarWithColor(
-          'Drone has been added to the group', Colors.blue);
+          'New issue has been added to the drone', Colors.blue);
       Navigator.pop(context);
     }
-  }
-
-//find how many hours left till drone maintnance
-  int hoursUntillMaintnance() {
-    int flightTime = int.parse(flight_timeController.text);
-    int maintnanceCycle = int.parse(maintenanceController.text);
-    int hoursLeftToMaintnance;
-
-    if (flightTime == 0) {
-      return maintnanceCycle;
-    }
-    hoursLeftToMaintnance =
-        (maintnanceCycle - flightTime % maintnanceCycle) % 200;
-    return hoursLeftToMaintnance;
   }
 }

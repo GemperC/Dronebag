@@ -29,13 +29,9 @@ class Issues extends StatefulWidget {
 
 class _IssuesState extends State<Issues> {
   final formKey = GlobalKey<FormState>();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController serial_numberController = TextEditingController();
-  final TextEditingController flight_timeController = TextEditingController();
-  final TextEditingController hours_till_maintenaceController =
-      TextEditingController();
-  final TextEditingController maintenanceController = TextEditingController();
-  final TextEditingController date_boughtController = TextEditingController();
+  final TextEditingController issueDetailController = TextEditingController();
+  final TextEditingController issueDateController = TextEditingController();
+
   final double sizedBoxHight = 16;
 
   @override
@@ -63,7 +59,7 @@ class _IssuesState extends State<Issues> {
               ),
             ),
             onPressed: () {
-              addDroneDialog();
+              addIssueDialog();
             },
           ),
         ],
@@ -147,14 +143,14 @@ class _IssuesState extends State<Issues> {
   }
 
 // dialog to add new drones to the group
-  Future addDroneDialog() {
+  Future addIssueDialog() {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: ThemeColors.scaffoldBgColor,
         scrollable: true,
         title: Text(
-          "Add New Drone",
+          "Add New Issue",
           style: GoogleFonts.poppins(
             color: ThemeColors.whiteTextColor,
             fontSize: FontSize.large,
@@ -168,9 +164,9 @@ class _IssuesState extends State<Issues> {
               child: Column(
                 children: [
                   TextFormField(
-                    controller: nameController,
+                    controller: issueDetailController,
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (issueDetailController.text.isEmpty)
                         return "This field can't be empty";
                     },
                     style: GoogleFonts.poppins(
@@ -181,88 +177,7 @@ class _IssuesState extends State<Issues> {
                     decoration: InputDecoration(
                       fillColor: ThemeColors.textFieldBgColor,
                       filled: true,
-                      hintText: "Drone Name",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: serial_numberController,
-                    validator: (value) {
-                      if (nameController.text.isEmpty)
-                        return "This field can't be empty";
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.name,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Serial number",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: flight_timeController,
-                    validator: (value) {
-                      if (nameController.text.isEmpty)
-                        return "This field can't be empty";
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.number,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Flight Time",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: maintenanceController,
-                    validator: (value) {
-                      if (nameController.text.isEmpty)
-                        return "This field can't be empty";
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.number,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Maintnenace cycle in hours",
+                      hintText: "Issue Detail",
                       hintStyle: GoogleFonts.poppins(
                         color: ThemeColors.textFieldHintColor,
                         fontSize: FontSize.small,
@@ -277,7 +192,7 @@ class _IssuesState extends State<Issues> {
                   SizedBox(height: sizedBoxHight),
                   DateTimeField(
                     format: DateFormat('yyyy-MM-dd'),
-                    controller: date_boughtController,
+                    controller: issueDateController,
                     onShowPicker: ((context, currentValue) {
                       return showDatePicker(
                           context: context,
@@ -286,7 +201,7 @@ class _IssuesState extends State<Issues> {
                           lastDate: DateTime(2100));
                     }),
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (issueDateController.text.isEmpty)
                         return "This field can't be empty";
                     },
                     style: GoogleFonts.poppins(
@@ -297,7 +212,7 @@ class _IssuesState extends State<Issues> {
                     decoration: InputDecoration(
                       fillColor: ThemeColors.textFieldBgColor,
                       filled: true,
-                      hintText: "Date bought",
+                      hintText: "Date of the issue",
                       hintStyle: GoogleFonts.poppins(
                         color: ThemeColors.textFieldHintColor,
                         fontSize: FontSize.small,
@@ -320,55 +235,41 @@ class _IssuesState extends State<Issues> {
               child: Text('Cancel')),
           TextButton(
               onPressed: () {
-                createDrone();
+                createIssue();
               },
-              child: Text('Add Drone')),
+              child: Text('Add Issue')),
         ],
       ),
     );
   }
 
 //create a new drone and add it to the group
-  Future createDrone() async {
+  Future createIssue() async {
     final isValid = formKey.currentState!.validate();
     if (!isValid) {
       return;
     } else {
-      final docDrone = FirebaseFirestore.instance
+      final docIssue = FirebaseFirestore.instance
           .collection('groups')
           .doc(widget.groupID)
           .collection('drones')
+          .doc(widget.droneID)
+          .collection('issues')
           .doc();
-      final drone = Drone(
-        name: nameController.text.trim(),
-        serial_number: serial_numberController.text,
-        flight_time: int.parse(flight_timeController.text),
-        id: docDrone.id,
-        hours_till_maintenace: hoursUntillMaintnance(),
-        maintenance: int.parse(maintenanceController.text),
-        date_added: DateTime.now(),
-        date_bought: DateTime.parse(date_boughtController.text),
+      final issue = Issue(
+        detail: issueDetailController.text.trim(),
+        id: docIssue.id,
+        date: DateTime.parse(issueDateController.text),
+        resolved: 'no',
       );
 
-      final json = drone.toJson();
-      await docDrone.set(json);
+      final json = issue.toJson();
+      await docIssue.set(json);
       Utils.showSnackBarWithColor(
-          'Drone has been added to the group', Colors.blue);
+          'New issue has been added to the drone', Colors.blue);
       Navigator.pop(context);
     }
   }
 
-//find how many hours left till drone maintnance
-  int hoursUntillMaintnance() {
-    int flightTime = int.parse(flight_timeController.text);
-    int maintnanceCycle = int.parse(maintenanceController.text);
-    int hoursLeftToMaintnance;
 
-    if (flightTime == 0) {
-      return maintnanceCycle;
-    }
-    hoursLeftToMaintnance =
-        (maintnanceCycle - flightTime % maintnanceCycle) % 200;
-    return hoursLeftToMaintnance;
-  }
 }
