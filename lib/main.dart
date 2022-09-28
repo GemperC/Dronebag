@@ -1,5 +1,3 @@
-
-
 import 'app.dart';
 
 Future main() async {

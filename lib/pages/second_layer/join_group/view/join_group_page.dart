@@ -50,7 +50,7 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 7),
                   child: Text(
-                    "Please fill the form to continue",
+                    "Please fill in the group's key to continue",
                     style: GoogleFonts.poppins(
                       color: ThemeColors.greyTextColor,
                       fontSize: FontSize.medium,

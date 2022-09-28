@@ -1,11 +1,12 @@
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
+import 'package:dronebag/domain/drone_repository/drone_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/pages/third_layer/group_main/view/group_main_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyGroupsPage extends StatefulWidget {
@@ -19,20 +20,16 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       appBar: AppBar(
-        title: Text(
-            
-                    "Your Group List",
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                      fontSize: FontSize.xxLarge,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-        
-        backgroundColor: ThemeColors.scaffoldBgColor),
-      
+          title: Text(
+            "Your current Groups",
+            style: GoogleFonts.poppins(
+              color: ThemeColors.whiteTextColor,
+              fontSize: FontSize.xxLarge,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          backgroundColor: ThemeColors.scaffoldBgColor),
       body: SafeArea(
         child: Padding(
             padding: const EdgeInsets.all(30),
@@ -43,7 +40,7 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
                   final groups = snapshot.data!;
 
                   return ListView(
-                    children: groups.map(buildGroup).toList(),
+                    children: groups.map(buildGroupTile).toList(),
                   );
                 } else if (snapshot.hasError) {
                   return Text('Something went wrong! \n\n${snapshot}',
@@ -57,7 +54,6 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
     );
   }
 
-
   Stream<List<Group>> readMyGroups() {
     final user = FirebaseAuth.instance.currentUser!;
     return FirebaseFirestore.instance
@@ -69,32 +65,59 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
   }
 
 //build the widget thast shows the groups
-  Widget buildGroup(Group group) => ListTile(
+  Widget buildGroupTile(Group group) => ListTile(
+      // go to the group main page
       onTap: () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MyGroupPage(groupID: group.id,)),
+            MaterialPageRoute(
+                builder: (context) => MyGroupPage(groupID: group.id)),
           ),
+      //build the tile info and design
       title: Center(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          // padding betwwent he cards
+          padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
           child: Container(
-            height: 80,
-            width: 450,
             decoration: BoxDecoration(
-              color: ThemeColors.primaryColor,
-                  borderRadius: BorderRadius.all(Radius.circular(20))
-),
-            child: Center(
-              child: Text(
-                group.name,
-                style: GoogleFonts.poppins(
-                  color: ThemeColors.whiteTextColor,
-                  fontSize: FontSize.xxLarge,
-                  fontWeight: FontWeight.w600,
-                ),
+                color: Color.fromARGB(95, 123, 118, 150),
+                borderRadius: BorderRadius.all(Radius.circular(12))),
+            child: Padding(
+              // padding of the text in the cards
+              padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
+              child: Column(
+                children: [
+                  Align(
+                    //alingemt of the titel
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      group.name,
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.whiteTextColor,
+                        fontSize: FontSize.xxLarge,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    //alingemt of the titel
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      '${group.users.length} Members',
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.large,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+          
+                ],
               ),
             ),
           ),
         ),
       ));
+
+
+      
 }
