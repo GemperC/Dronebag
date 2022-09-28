@@ -79,7 +79,7 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
           padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
           child: Container(
             decoration: BoxDecoration(
-                color: Color.fromARGB(95, 123, 118, 150),
+                color: Color.fromARGB(255, 65, 61, 82),
                 borderRadius: BorderRadius.all(Radius.circular(12))),
             child: Padding(
               // padding of the text in the cards

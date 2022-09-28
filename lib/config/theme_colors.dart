@@ -9,4 +9,6 @@ class ThemeColors {
   static const Color titleColor = Color(0xFF14213F);
   static const Color whiteTextColor = Colors.white;
   static const Color greyTextColor = Color(0xFF595959);
+
+  static const Color dialogBoxColor = Color.fromARGB(255, 65, 61, 82);
 }
