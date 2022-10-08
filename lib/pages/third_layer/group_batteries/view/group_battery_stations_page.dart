@@ -278,6 +278,7 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
           TextButton(
               onPressed: () {
                 createBatteryStation();
+                Navigator.pop(context);
               },
               child: Text('Add Battery stations')),
         ],
