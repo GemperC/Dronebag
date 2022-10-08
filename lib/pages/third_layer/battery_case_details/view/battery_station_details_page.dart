@@ -70,39 +70,51 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(38),
-            child: StreamBuilder<List<Battery>>(
-                stream: fetchBatteries(),
-                builder: ((context, snapshot) {
-                  if (snapshot.hasData) {
-                    final batteries = snapshot.data!;
-                    batteries.sort(
-                      (a, b) {
-                        return a.serial_number.compareTo(b.serial_number);
-                      },
-                    );
-                    return GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 2,
-                      ),
-                      itemCount: batteries.length,
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return buildBatteryTile(batteries[index]);
-                      },
-                    );
-                    // children:
-                    //     batteries.map(buildBatteryTile).toList());
-                  } else if (snapshot.hasError) {
-                    return SingleChildScrollView(
-                      child: Text('Something went wrong! \n\n$snapshot',
-                          style: const TextStyle(color: Colors.white)),
-                    );
-                  } else {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                })),
+            child: Column(children: [
+              Text(
+                'Batteries',
+                style: GoogleFonts.poppins(
+                  color: ThemeColors.textFieldHintColor,
+                  fontSize: FontSize.large,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              StreamBuilder<List<Battery>>(
+                  stream: fetchBatteries(),
+                  builder: ((context, snapshot) {
+                    if (snapshot.hasData) {
+                      final batteries = snapshot.data!;
+                      batteries.sort(
+                        (a, b) {
+                          return a.serial_number.compareTo(b.serial_number);
+                        },
+                      );
+                      return GridView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 2,
+                          
+                        ),
+                        itemCount: batteries.length,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return buildBatteryTile(batteries[index]);
+                        },
+                      );
+                      // children:
+                      //     batteries.map(buildBatteryTile).toList());
+                    } else if (snapshot.hasError) {
+                      return SingleChildScrollView(
+                        child: Text('Something went wrong! \n\n$snapshot',
+                            style: const TextStyle(color: Colors.white)),
+                      );
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  })),
+            ]),
           ),
         ));
   }
