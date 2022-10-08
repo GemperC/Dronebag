@@ -24,12 +24,9 @@ class BatteryStationDetails extends StatefulWidget {
 
 class _BatteryStationDetailsState extends State<BatteryStationDetails> {
   final formKey = GlobalKey<FormState>();
-  final TextEditingController nameController = TextEditingController();
   final TextEditingController serial_numberController = TextEditingController();
-  final TextEditingController flight_timeController = TextEditingController();
-  final TextEditingController hours_till_maintenaceController =
+  final TextEditingController batteryIssueDetailController =
       TextEditingController();
-  final TextEditingController maintenanceController = TextEditingController();
   final TextEditingController date_boughtController = TextEditingController();
   final double sizedBoxHight = 16;
 
@@ -94,10 +91,8 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           childAspectRatio: 2,
-                          
                         ),
                         itemCount: batteries.length,
-                        scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           return buildBatteryTile(batteries[index]);
@@ -138,29 +133,104 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
       batteryColor = Colors.red;
     }
     return ListTile(
-        // go to the battery case page
-        onTap: () {},
-        // build the tile info and design
-        title: Center(
-          child: Padding(
-            // padding betwwent he cards
-            padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-            child: Container(
-              height: 60,
-              width: 100,
-              decoration: BoxDecoration(
-                  color: batteryColor,
-                  borderRadius: BorderRadius.all(Radius.circular(12))),
-              child: Column(
-                children: [
-                  Text("Battery"),
-                  Text(battery.serial_number),
-                  Text("Cycle: ${battery.cycle}"),
-                ],
-              ),
+      // go to the battery case page
+
+      // build the tile info and design
+      title: Center(
+        child: Padding(
+          // padding betwwent he cards
+          padding: const EdgeInsets.all(8),
+          child: Container(
+            height: 80,
+            width: 120,
+            decoration: BoxDecoration(
+                color: batteryColor,
+                borderRadius: BorderRadius.all(Radius.circular(12))),
+            child: Column(
+              children: [
+                Text(
+                  battery.serial_number,
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: FontSize.medium,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Text(
+                  "Cycle: ${battery.cycle}",
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: FontSize.medium,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Text(
+                  'Issues:',
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: FontSize.medium,
+                    fontWeight: FontWeight.w400,
+                  ),
+                )
+              ],
             ),
           ),
-        ));
+        ),
+      ),
+      onTap: () {
+        batteryDetailDialog(battery);
+      },
+    );
+  }
+
+  Future batteryDetailDialog(Battery battery) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: ThemeColors.scaffoldBgColor,
+        scrollable: true,
+        title: Text(
+          "Battery ${battery.serial_number}",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins(
+            color: ThemeColors.whiteTextColor,
+            fontSize: FontSize.large,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        content: Container(
+          width: 300,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Cycle',
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.textFieldHintColor,
+                      fontSize: FontSize.small,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Close')),
+          TextButton(
+              onPressed: () {
+                //createIssue();
+              },
+              child: Text('Add Issue')),
+        ],
+      ),
+    );
   }
 
   Widget buildBatteryStationPage(BatteryStation batteryStation) {
@@ -269,194 +339,6 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                 style: GoogleFonts.poppins(color: ThemeColors.whiteTextColor))
           ],
         ),
-      ),
-    );
-  }
-
-  Future editDroneDialog() {
-    return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: ThemeColors.scaffoldBgColor,
-        scrollable: true,
-        title: Text(
-          "Edit Drone",
-          style: GoogleFonts.poppins(
-            color: ThemeColors.whiteTextColor,
-            fontSize: FontSize.large,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        content: Container(
-          width: 300,
-          child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: nameController..text = widget.batteryStation.id,
-                    validator: (value) {
-                      if (nameController.text.isEmpty) {
-                        return "This field can't be empty";
-                      }
-                      return null;
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.name,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Drone Name",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: const OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: serial_numberController
-                      ..text = widget.batteryStation.serial_number,
-                    validator: (value) {
-                      if (nameController.text.isEmpty) {
-                        return "This field can't be empty";
-                      }
-                      return null;
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.name,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Serial number",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: const OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: flight_timeController,
-                    validator: (value) {
-                      if (nameController.text.isEmpty) {
-                        return "This field can't be empty";
-                      }
-                      return null;
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.number,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Flight Time",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: const OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: maintenanceController,
-                    validator: (value) {
-                      if (nameController.text.isEmpty) {
-                        return "This field can't be empty";
-                      }
-                      return null;
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.number,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Maintnenace cycle in hours",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: const OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: sizedBoxHight),
-                  DateTimeField(
-                    format: DateFormat('yyyy-MM-dd'),
-                    controller: date_boughtController,
-                    onShowPicker: ((context, currentValue) {
-                      return showDatePicker(
-                          context: context,
-                          firstDate: DateTime(1900),
-                          initialDate: currentValue ?? DateTime.now(),
-                          lastDate: DateTime(2100));
-                    }),
-                    validator: (value) {
-                      if (nameController.text.isEmpty) {
-                        return "This field can't be empty";
-                      }
-                      return null;
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.datetime,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Date bought",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: const OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
-                ],
-              )),
-        ),
-        actions: [
-          TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel')),
-          TextButton(onPressed: () {}, child: const Text('Update Drone')),
-        ],
       ),
     );
   }
