@@ -101,8 +101,6 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                           return buildBatteryTile(batteries[index]);
                         },
                       );
-                      // children:
-                      //     batteries.map(buildBatteryTile).toList());
                     } else if (snapshot.hasError) {
                       return SingleChildScrollView(
                         child: Text('Something went wrong! \n\n$snapshot',
@@ -112,6 +110,13 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                       return const Center(child: CircularProgressIndicator());
                     }
                   })),
+                  SizedBox(height: 20),
+                  Text('Station\'s issues',
+                  style: GoogleFonts.poppins(
+                  color: ThemeColors.textFieldHintColor,
+                  fontSize: FontSize.large,
+                  fontWeight: FontWeight.w600,
+                ),)
             ]),
           ),
         ));
@@ -251,7 +256,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                   ),
                   SizedBox(width: 50),
                   Text(
-                    'Issues: 4',
+                    'Issues: ',
                     style: GoogleFonts.poppins(
                       color: Colors.white,
                       fontSize: FontSize.xMedium,
@@ -298,13 +303,18 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                     final batteryIssues = snapshot.data!;
                     //print(issues.length);
                     return SizedBox(
-                      width: double.maxFinite,
-                      height: double.maxFinite,
-                      child: ListView(
-                          children: batteryIssues
-                              .map(buildBatteryIssueTile)
-                              .toList()),
-                    );
+                        width: double.maxFinite,
+                        height: double.maxFinite,
+                        child: ListView.builder(
+                          itemCount: batteryIssues.length,
+                          itemBuilder: (context, index) {
+                            return buildBatteryIssueTile(
+                                batteryIssues[index], battery.id);
+                          },
+                          // children: batteryIssues
+                          //     .map(buildBatteryIssueTile)
+                          //     .toList()),
+                        ));
                   } else if (snapshot.hasError) {
                     return SingleChildScrollView(
                       child: Text('Something went wrong! \n\n${snapshot}',
@@ -335,27 +345,26 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
   }
 
   Future createBatteryIssue(Battery battery) async {
-      final docBatteryIssue = FirebaseFirestore.instance
-          .collection('groups')
-          .doc(widget.groupID)
-          .collection('battery_stations')
-          .doc(widget.batteryStation.id)
-          .collection('batteries')
-          .doc(battery.id)
-          .collection('battery_issues')
-          .doc();
-      final batteryIssue = BatteryIssue(
-        detail: "",
-        id: docBatteryIssue.id,
-        date: DateTime.now(),
-        resolved: 'no',
-      );
+    final docBatteryIssue = FirebaseFirestore.instance
+        .collection('groups')
+        .doc(widget.groupID)
+        .collection('battery_stations')
+        .doc(widget.batteryStation.id)
+        .collection('batteries')
+        .doc(battery.id)
+        .collection('battery_issues')
+        .doc();
+    final batteryIssue = BatteryIssue(
+      detail: "",
+      id: docBatteryIssue.id,
+      date: DateTime.now(),
+      resolved: 'no',
+    );
 
-      final json = batteryIssue.toJson();
-      await docBatteryIssue.set(json);
-      Utils.showSnackBarWithColor(
-          'New issue has been added to the battery', Colors.blue);
-    
+    final json = batteryIssue.toJson();
+    await docBatteryIssue.set(json);
+    Utils.showSnackBarWithColor(
+        'New issue has been added to the battery', Colors.blue);
   }
 
   Stream<List<BatteryIssue>> fetchBatteryIssue(Battery battery) {
@@ -366,48 +375,71 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
         .doc(widget.batteryStation.id)
         .collection('batteries')
         .doc(battery.id)
-        .collection('issues')
+        .collection('battery_issues')
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => BatteryIssue.fromJson(doc.data()))
             .toList());
   }
 
-  Widget buildBatteryIssueTile(BatteryIssue batteryIssue) {
+  Widget buildBatteryIssueTile(BatteryIssue batteryIssue, String batteryID) {
     return ListTile(
-      onTap: () {},
       title: Padding(
         padding: const EdgeInsets.all(0),
         child: Container(
-          height: 60,
-          width: 60,
           decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.all(Radius.circular(20))),
+              color: Color.fromARGB(255, 32, 32, 32),
+              borderRadius: BorderRadius.all(Radius.circular(5))),
           child: Center(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 50,
-                  width: 100,
-                  child: TextFormField(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      '${batteryIssue.date.day}-${batteryIssue.date.month}-${batteryIssue.date.year}',
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.whiteTextColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  TextFormField(
+                    maxLines: null,
+                    onChanged: (value) {
+                      final docBatteryIssue = FirebaseFirestore.instance
+                          .collection('groups')
+                          .doc(widget.groupID)
+                          .collection('battery_stations')
+                          .doc(widget.batteryStation.id)
+                          .collection('batteries')
+                          .doc(batteryID)
+                          .collection("battery_issues")
+                          .doc(batteryIssue.id);
+                      docBatteryIssue.update({'detail': value});
+                    },
                     initialValue: batteryIssue.detail,
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
-                      fontSize: FontSize.large,
-                      fontWeight: FontWeight.w600,
+                      fontSize: FontSize.medium,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
-                ),
-                Text(
-                  'Resolved?  ${batteryIssue.resolved}',
-                  style: GoogleFonts.poppins(
-                    color: ThemeColors.whiteTextColor,
-                    fontSize: FontSize.large,
-                    fontWeight: FontWeight.w600,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Resolved?  ${batteryIssue.resolved}',
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.whiteTextColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
