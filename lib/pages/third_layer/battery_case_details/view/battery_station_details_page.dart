@@ -1,6 +1,9 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
+import 'package:dronebag/domain/battery_repository/battery_repository.dart';
 import 'package:dronebag/domain/battery_station_repository/src/models/models.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
@@ -66,7 +69,81 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
             ),
           ],
         ),
-        body: buildBatteryStationPage(widget.batteryStation));
+        body: SingleChildScrollView(
+          child: SafeArea(
+              child: Padding(
+            padding: const EdgeInsets.all(38),
+            child: Column(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 65, 61, 82),
+                      borderRadius: BorderRadius.all(Radius.circular(12))),
+                  child: StreamBuilder<List<Battery>>(
+                      stream: fetchBatteries(),
+                      builder: ((context, snapshot) {
+                        if (snapshot.hasData) {
+                          final batteries = snapshot.data!;
+                          batteries.sort(
+                            (a, b) {
+                              return a.serial_number.compareTo(b.serial_number);
+                            },
+                          );
+
+                          return ListView(
+                              shrinkWrap: true,
+                              children:
+                                  batteries.map(buildBatteryTile).toList());
+                        } else if (snapshot.hasError) {
+                          return SingleChildScrollView(
+                            child: Text('Something went wrong! \n\n$snapshot',
+                                style: const TextStyle(color: Colors.white)),
+                          );
+                        } else {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                      })),
+                ),
+              ],
+            ),
+          )),
+        ));
+  }
+
+//fetch batteries list
+  Stream<List<Battery>> fetchBatteries() {
+    return FirebaseFirestore.instance
+        .collection(
+            'groups/${widget.groupID}/battery_stations/${widget.batteryStation.id}/batteries')
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Battery.fromJson(doc.data())).toList());
+  }
+
+//build the tile of the battery
+  Widget buildBatteryTile(Battery battery) {
+    // if (){}
+    print(battery.serial_number);
+    return ListTile(
+
+        // go to the battery case page
+        onTap: () {},
+        // build the tile info and design
+        title: Center(
+          child: Padding(
+            // padding betwwent he cards
+            padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+            child: Container(
+              height: 60,
+              width: 100,
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 15, 180, 98),
+                  borderRadius: BorderRadius.all(Radius.circular(12))),
+              child: Text(battery.serial_number),
+            ),
+          ),
+        ));
   }
 
   Widget buildBatteryStationPage(BatteryStation batteryStation) {
@@ -77,7 +154,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 65, 61, 82),
                   borderRadius: BorderRadius.all(Radius.circular(12))),
               child: Padding(
@@ -91,7 +168,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         Container(
                           height: 80,
                           width: 100,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Colors.green,
                             borderRadius: BorderRadius.all(Radius.circular(12)),
                           ),
@@ -99,12 +176,12 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                             padding: const EdgeInsets.all(15),
                             child: Column(
                               children: [
-                                Align(
+                                const Align(
                                   alignment: Alignment.center,
                                   child: Text('B1'),
                                 ),
-                                SizedBox(height: 10),
-                                Align(
+                                const SizedBox(height: 10),
+                                const Align(
                                   alignment: Alignment.center,
                                   child: Text('120'),
                                 ),
@@ -115,7 +192,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         Container(
                           height: 80,
                           width: 100,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Colors.green,
                             borderRadius: BorderRadius.all(Radius.circular(12)),
                           ),
@@ -129,7 +206,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         Container(
                           height: 80,
                           width: 100,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Colors.green,
                             borderRadius: BorderRadius.all(Radius.circular(12)),
                           ),
@@ -137,7 +214,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         Container(
                           height: 80,
                           width: 100,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Colors.green,
                             borderRadius: BorderRadius.all(Radius.circular(12)),
                           ),
@@ -151,7 +228,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         Container(
                           height: 80,
                           width: 100,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Colors.green,
                             borderRadius: BorderRadius.all(Radius.circular(12)),
                           ),
@@ -159,7 +236,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         Container(
                           height: 80,
                           width: 100,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Colors.green,
                             borderRadius: BorderRadius.all(Radius.circular(12)),
                           ),
@@ -170,7 +247,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                 ),
               ),
             ),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             Text('issues',
                 style: GoogleFonts.poppins(color: ThemeColors.whiteTextColor))
           ],
@@ -178,7 +255,6 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
       ),
     );
   }
-
 
   Future editDroneDialog() {
     return showDialog(
@@ -203,8 +279,10 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                   TextFormField(
                     controller: nameController..text = widget.batteryStation.id,
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (nameController.text.isEmpty) {
                         return "This field can't be empty";
+                      }
+                      return null;
                     },
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
@@ -220,7 +298,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
@@ -231,8 +309,10 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                     controller: serial_numberController
                       ..text = widget.batteryStation.serial_number,
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (nameController.text.isEmpty) {
                         return "This field can't be empty";
+                      }
+                      return null;
                     },
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
@@ -248,7 +328,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
@@ -258,8 +338,10 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                   TextFormField(
                     controller: flight_timeController,
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (nameController.text.isEmpty) {
                         return "This field can't be empty";
+                      }
+                      return null;
                     },
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
@@ -275,7 +357,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
@@ -285,8 +367,10 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                   TextFormField(
                     controller: maintenanceController,
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (nameController.text.isEmpty) {
                         return "This field can't be empty";
+                      }
+                      return null;
                     },
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
@@ -302,7 +386,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
@@ -320,8 +404,10 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                           lastDate: DateTime(2100));
                     }),
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (nameController.text.isEmpty) {
                         return "This field can't be empty";
+                      }
+                      return null;
                     },
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
@@ -337,7 +423,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
@@ -351,12 +437,8 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel')),
-          TextButton(
-              onPressed: () {
-                ;
-              },
-              child: Text('Update Drone')),
+              child: const Text('Cancel')),
+          TextButton(onPressed: () {}, child: const Text('Update Drone')),
         ],
       ),
     );

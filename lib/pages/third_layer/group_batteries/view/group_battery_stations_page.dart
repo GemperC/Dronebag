@@ -309,27 +309,26 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
 
       //create batteries to the battery station
       for (int i = 1; i <= int.parse(battery_pairsController.text); i++) {
-        final docBattery = FirebaseFirestore.instance
-            .collection('groups')
-            .doc(widget.groupID)
-            .collection('battery_stations')
-            .doc(docBatteryStation.id)
-            .collection('batteries')
-            .doc();
-        final battery = Battery(
-          serial_number: '${serial_numberController.text}${i}',
-          id: docBattery.id,
-          cycle: 0,
-        );
-
-        final json = battery.toJson();
-        await docBattery.set(json);
+        for (int j = 0; j < 2; j++) {
+          final docBattery = FirebaseFirestore.instance
+              .collection('groups')
+              .doc(widget.groupID)
+              .collection('battery_stations')
+              .doc(docBatteryStation.id)
+              .collection('batteries')
+              .doc();
+          final battery = Battery(
+            serial_number: '${serial_numberController.text}${i}',
+            id: docBattery.id,
+            cycle: 0,
+          );
+          final json = battery.toJson();
+          await docBattery.set(json);
+        }
       }
       Utils.showSnackBarWithColor(
           'Battery Station has been added to the group', Colors.blue);
       Navigator.pop(context);
     }
   }
-
-  
 }
