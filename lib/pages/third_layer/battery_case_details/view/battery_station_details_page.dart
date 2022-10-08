@@ -63,51 +63,47 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              onPressed: () {
-                buildBatteryStationPage(widget.batteryStation);
-              },
+              onPressed: () {},
             ),
           ],
         ),
         body: SingleChildScrollView(
-          child: SafeArea(
-              child: Padding(
+          child: Padding(
             padding: const EdgeInsets.all(38),
-            child: Column(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 65, 61, 82),
-                      borderRadius: BorderRadius.all(Radius.circular(12))),
-                  child: StreamBuilder<List<Battery>>(
-                      stream: fetchBatteries(),
-                      builder: ((context, snapshot) {
-                        if (snapshot.hasData) {
-                          final batteries = snapshot.data!;
-                          batteries.sort(
-                            (a, b) {
-                              return a.serial_number.compareTo(b.serial_number);
-                            },
-                          );
-
-                          return ListView(
-                              shrinkWrap: true,
-                              children:
-                                  batteries.map(buildBatteryTile).toList());
-                        } else if (snapshot.hasError) {
-                          return SingleChildScrollView(
-                            child: Text('Something went wrong! \n\n$snapshot',
-                                style: const TextStyle(color: Colors.white)),
-                          );
-                        } else {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-                      })),
-                ),
-              ],
-            ),
-          )),
+            child: StreamBuilder<List<Battery>>(
+                stream: fetchBatteries(),
+                builder: ((context, snapshot) {
+                  if (snapshot.hasData) {
+                    final batteries = snapshot.data!;
+                    batteries.sort(
+                      (a, b) {
+                        return a.serial_number.compareTo(b.serial_number);
+                      },
+                    );
+                    return GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 2,
+                      ),
+                      itemCount: batteries.length,
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return buildBatteryTile(batteries[index]);
+                      },
+                    );
+                    // children:
+                    //     batteries.map(buildBatteryTile).toList());
+                  } else if (snapshot.hasError) {
+                    return SingleChildScrollView(
+                      child: Text('Something went wrong! \n\n$snapshot',
+                          style: const TextStyle(color: Colors.white)),
+                    );
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                })),
+          ),
         ));
   }
 
@@ -123,10 +119,13 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
 
 //build the tile of the battery
   Widget buildBatteryTile(Battery battery) {
-    // if (){}
-    print(battery.serial_number);
+    Color batteryColor = Colors.green;
+    if (battery.cycle >= 100 && battery.cycle < 150) {
+      batteryColor = Colors.orange;
+    } else if (battery.cycle >= 150) {
+      batteryColor = Colors.red;
+    }
     return ListTile(
-
         // go to the battery case page
         onTap: () {},
         // build the tile info and design
@@ -137,10 +136,16 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
             child: Container(
               height: 60,
               width: 100,
-              decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 15, 180, 98),
+              decoration: BoxDecoration(
+                  color: batteryColor,
                   borderRadius: BorderRadius.all(Radius.circular(12))),
-              child: Text(battery.serial_number),
+              child: Column(
+                children: [
+                  Text("Battery"),
+                  Text(battery.serial_number),
+                  Text("Cycle: ${battery.cycle}"),
+                ],
+              ),
             ),
           ),
         ));
@@ -444,3 +449,48 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
     );
   }
 }
+
+
+/*
+SingleChildScrollView(
+          child: SafeArea(
+              child: Padding(
+            padding: const EdgeInsets.all(38),
+            child: Column(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 65, 61, 82),
+                      borderRadius: BorderRadius.all(Radius.circular(12))),
+                  child: StreamBuilder<List<Battery>>(
+                      stream: fetchBatteries(),
+                      builder: ((context, snapshot) {
+                        if (snapshot.hasData) {
+                          final batteries = snapshot.data!;
+                          batteries.sort(
+                            (a, b) {
+                              return a.serial_number.compareTo(b.serial_number);
+                            },
+                          );
+                          return ListView(
+                            scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              children:
+                                  batteries.map(buildBatteryTile).toList());
+                        } else if (snapshot.hasError) {
+                          return SingleChildScrollView(
+                            child: Text('Something went wrong! \n\n$snapshot',
+                                style: const TextStyle(color: Colors.white)),
+                          );
+                        } else {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                      })),
+                ),
+              ],
+            ),
+          )),
+        )
+
+*/
