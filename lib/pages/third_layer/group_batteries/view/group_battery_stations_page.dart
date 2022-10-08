@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
+import 'package:dronebag/domain/battery_repository/src/models/models.dart';
 import 'package:dronebag/domain/battery_station_repository/src/models/models.dart';
 
 import 'package:dronebag/pages/third_layer/battery_case_details/battery_case_details.dart';
@@ -68,8 +69,9 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
                 if (snapshot.hasData) {
                   final batteryStations = snapshot.data!;
                   return ListView(
-                      children:
-                          batteryStations.map(buildBatteryStationTile).toList());
+                      children: batteryStations
+                          .map(buildBatteryStationTile)
+                          .toList());
                 } else if (snapshot.hasError) {
                   return SingleChildScrollView(
                     child: Text('Something went wrong! \n\n${snapshot}',
@@ -90,8 +92,9 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
     return FirebaseFirestore.instance
         .collection('groups/${widget.groupID}/battery_stations')
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => BatteryStation.fromJson(doc.data())).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => BatteryStation.fromJson(doc.data()))
+            .toList());
   }
 
 //build the tile of the drone
@@ -288,23 +291,45 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
     if (!isValid) {
       return;
     } else {
-      final docBattery = FirebaseFirestore.instance
+      //create battery station
+      final docBatteryStation = FirebaseFirestore.instance
           .collection('groups')
           .doc(widget.groupID)
           .collection('battery_stations')
           .doc();
-      final battery = BatteryStation(
+      final batteryStation = BatteryStation(
         serial_number: serial_numberController.text,
-        id: docBattery.id,
+        id: docBatteryStation.id,
         battrey_pairs: int.parse(battery_pairsController.text),
         date_bought: DateTime.parse(date_boughtController.text),
       );
 
-      final json = battery.toJson();
-      await docBattery.set(json);
+      final json = batteryStation.toJson();
+      await docBatteryStation.set(json);
+
+      //create batteries to the battery station
+      for (int i = 1; i <= int.parse(battery_pairsController.text); i++) {
+        final docBattery = FirebaseFirestore.instance
+            .collection('groups')
+            .doc(widget.groupID)
+            .collection('battery_stations')
+            .doc(docBatteryStation.id)
+            .collection('batteries')
+            .doc();
+        final battery = Battery(
+          serial_number: '${serial_numberController.text}${i}',
+          id: docBattery.id,
+          cycle: 0,
+        );
+
+        final json = battery.toJson();
+        await docBattery.set(json);
+      }
       Utils.showSnackBarWithColor(
-          'Battery Case has been added to the group', Colors.blue);
+          'Battery Station has been added to the group', Colors.blue);
       Navigator.pop(context);
     }
   }
+
+  
 }

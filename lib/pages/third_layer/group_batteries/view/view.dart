@@ -1,1 +1,1 @@
-export 'group_battries_page.dart';
+export 'group_battery_stations_page.dart';
