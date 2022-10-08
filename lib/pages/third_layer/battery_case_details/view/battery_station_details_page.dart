@@ -295,36 +295,39 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                       ),
                     )
                   ]))),
-              SizedBox(height: 30),
-              StreamBuilder<List<BatteryIssue>>(
-                stream: fetchBatteryIssue(battery),
-                builder: ((context, snapshot) {
-                  if (snapshot.hasData) {
-                    final batteryIssues = snapshot.data!;
-                    //print(issues.length);
-                    return SizedBox(
-                        width: double.maxFinite,
-                        height: double.maxFinite,
-                        child: ListView.builder(
-                          itemCount: batteryIssues.length,
-                          itemBuilder: (context, index) {
-                            return buildBatteryIssueTile(
-                                batteryIssues[index], battery.id);
-                          },
-                          // children: batteryIssues
-                          //     .map(buildBatteryIssueTile)
-                          //     .toList()),
-                        ));
-                  } else if (snapshot.hasError) {
-                    return SingleChildScrollView(
-                      child: Text('Something went wrong! \n\n${snapshot}',
-                          style: TextStyle(color: Colors.white)),
-                    );
-                  } else {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                }),
-              )
+              Container(
+                child: StreamBuilder<List<BatteryIssue>>(
+                  stream: fetchBatteryIssue(battery),
+                  builder: ((context, snapshot) {
+                    if (snapshot.hasData) {
+                      final batteryIssues = snapshot.data!;
+                      //print(issues.length);
+                      return SizedBox(
+                          width: double.maxFinite,
+                          height: double.maxFinite,
+                          child: ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: batteryIssues.length,
+                            itemBuilder: (context, index) {
+                              return buildBatteryIssueTile(
+                                  batteryIssues[index], battery.id);
+                            },
+                            // children: batteryIssues
+                            //     .map(buildBatteryIssueTile)
+                            //     .toList()),
+                          ));
+                    } else if (snapshot.hasError) {
+                      return SingleChildScrollView(
+                        child: Text('Something went wrong! \n\n${snapshot}',
+                            style: TextStyle(color: Colors.white)),
+                      );
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  }),
+                ),
+              ),
+              SizedBox(height: 30)
             ],
           ),
         ),
