@@ -428,7 +428,7 @@ class _DroneDetailsState extends State<DroneDetails> {
               child: Text('Cancel')),
           TextButton(
               onPressed: () {
-                ;
+                
               },
               child: Text('Update Drone')),
         ],

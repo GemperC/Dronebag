@@ -27,6 +27,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
   final TextEditingController serial_numberController = TextEditingController();
   final TextEditingController batteryIssueDetailController =
       TextEditingController();
+  final TextEditingController batteryCycleController = TextEditingController();
   final TextEditingController date_boughtController = TextEditingController();
   final double sizedBoxHight = 16;
 
@@ -205,11 +206,46 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
               Row(
                 children: [
                   Text(
-                    'Cycle',
+                    'Cycle: ',
                     style: GoogleFonts.poppins(
-                      color: ThemeColors.textFieldHintColor,
-                      fontSize: FontSize.small,
+                      color: Colors.white,
+                      fontSize: FontSize.xMedium,
                       fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  SizedBox(
+                    width: 60,
+                    height: 50,
+                    child: TextField(
+                      onChanged: (value) {
+                        final docBattery = FirebaseFirestore.instance
+                            .collection('groups')
+                            .doc(widget.groupID)
+                            .collection('battery_stations')
+                            .doc(widget.batteryStation.id)
+                            .collection('batteries')
+                            .doc(battery.id);
+                        docBattery.update({'cycle': int.parse(value)});
+                      },
+                      controller: batteryCycleController,
+                      style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        fillColor: ThemeColors.textFieldBgColor,
+                        filled: true,
+                        hintText: "0-200",
+                        hintStyle: GoogleFonts.poppins(
+                          color: ThemeColors.textFieldHintColor,
+                          fontSize: FontSize.small,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                      ),
                     ),
                   )
                 ],
@@ -227,164 +263,9 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
               onPressed: () {
                 //createIssue();
               },
-              child: Text('Add Issue')),
+              child: Text('Update Battery')),
         ],
       ),
     );
   }
-
-  Widget buildBatteryStationPage(BatteryStation batteryStation) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(38.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 65, 61, 82),
-                  borderRadius: BorderRadius.all(Radius.circular(12))),
-              child: Padding(
-                // padding of the text in the cards
-                padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          height: 80,
-                          width: 100,
-                          decoration: const BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Column(
-                              children: [
-                                const Align(
-                                  alignment: Alignment.center,
-                                  child: Text('B1'),
-                                ),
-                                const SizedBox(height: 10),
-                                const Align(
-                                  alignment: Alignment.center,
-                                  child: Text('120'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 80,
-                          width: 100,
-                          decoration: const BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: sizedBoxHight),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          height: 80,
-                          width: 100,
-                          decoration: const BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                          ),
-                        ),
-                        Container(
-                          height: 80,
-                          width: 100,
-                          decoration: const BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: sizedBoxHight),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          height: 80,
-                          width: 100,
-                          decoration: const BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                          ),
-                        ),
-                        Container(
-                          height: 80,
-                          width: 100,
-                          decoration: const BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 50),
-            Text('issues',
-                style: GoogleFonts.poppins(color: ThemeColors.whiteTextColor))
-          ],
-        ),
-      ),
-    );
-  }
 }
-
-
-/*
-SingleChildScrollView(
-          child: SafeArea(
-              child: Padding(
-            padding: const EdgeInsets.all(38),
-            child: Column(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 65, 61, 82),
-                      borderRadius: BorderRadius.all(Radius.circular(12))),
-                  child: StreamBuilder<List<Battery>>(
-                      stream: fetchBatteries(),
-                      builder: ((context, snapshot) {
-                        if (snapshot.hasData) {
-                          final batteries = snapshot.data!;
-                          batteries.sort(
-                            (a, b) {
-                              return a.serial_number.compareTo(b.serial_number);
-                            },
-                          );
-                          return ListView(
-                            scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              children:
-                                  batteries.map(buildBatteryTile).toList());
-                        } else if (snapshot.hasError) {
-                          return SingleChildScrollView(
-                            child: Text('Something went wrong! \n\n$snapshot',
-                                style: const TextStyle(color: Colors.white)),
-                          );
-                        } else {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-                      })),
-                ),
-              ],
-            ),
-          )),
-        )
-
-*/
