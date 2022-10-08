@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Battery {
+class BatteryStation {
   String id; //id of the battery case in the firestore database
   String serial_number; // serial number of the battery case in the army
   int battrey_pairs; // how much battery pairs the case has
   DateTime date_bought; // when did the battery case was purchased
 
-  Battery ({
+  BatteryStation ({
     this.id = '',
     required this.serial_number,
     required this.date_bought,
@@ -20,7 +20,7 @@ class Battery {
         'date_bought': date_bought,
       };
 
-  static Battery fromJson(Map<String, dynamic> json) => Battery(
+  static BatteryStation fromJson(Map<String, dynamic> json) => BatteryStation(
         id: json['id'],
         serial_number: json['serial_number'],
         date_bought: (json['date_bought'] as Timestamp).toDate(),

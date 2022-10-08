@@ -1,0 +1,376 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dronebag/app.dart';
+import 'package:dronebag/config/font_size.dart';
+import 'package:dronebag/config/theme_colors.dart';
+import 'package:dronebag/domain/battery_station_repository/src/models/models.dart';
+import 'package:dronebag/domain/drone_repository/drone_repository.dart';
+import 'package:dronebag/domain/group_repository/group_repository.dart';
+import 'package:dronebag/domain/maintnance_history_repository/maintnance_history_repository.dart';
+import 'package:dronebag/domain/user_repository/user_repository.dart';
+import 'package:dronebag/pages/third_layer/flights_data/flights_data.dart';
+import 'package:dronebag/pages/third_layer/group_members/view/view.dart';
+import 'package:dronebag/pages/third_layer/issues/issues.dart';
+import 'package:dronebag/pages/third_layer/maintenance_history/maintenance_history.dart';
+import 'package:dronebag/widgets/main_button_2.dart';
+import 'package:dronebag/widgets/main_button_3.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:intl/intl.dart';
+
+class BatteryStationDetails extends StatefulWidget {
+  final String groupID;
+  final BatteryStation batteryStation;
+  const BatteryStationDetails({
+    Key? key,
+    required this.groupID,
+    required this.batteryStation,
+  }) : super(key: key);
+
+  @override
+  State<BatteryStationDetails> createState() => _BatteryStationDetailsState();
+}
+
+class _BatteryStationDetailsState extends State<BatteryStationDetails> {
+  final formKey = GlobalKey<FormState>();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController serial_numberController = TextEditingController();
+  final TextEditingController flight_timeController = TextEditingController();
+  final TextEditingController hours_till_maintenaceController =
+      TextEditingController();
+  final TextEditingController maintenanceController = TextEditingController();
+  final TextEditingController date_boughtController = TextEditingController();
+  final double sizedBoxHight = 16;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: ThemeColors.scaffoldBgColor,
+          title: Text(
+            "Battery Station ${widget.batteryStation.serial_number}",
+            style: GoogleFonts.poppins(
+              color: ThemeColors.whiteTextColor,
+              fontSize: FontSize.xxLarge,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: Text(
+                'Edit Station \nDetails',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  color: Colors.blue,
+                  fontSize: FontSize.medium,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              onPressed: () {
+                buildBatteryStationPage(widget.batteryStation);
+              },
+            ),
+          ],
+        ),
+        body: buildBatteryStationPage(widget.batteryStation));
+  }
+
+  Widget buildBatteryStationPage(BatteryStation batteryStation) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(38.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 65, 61, 82),
+                  borderRadius: BorderRadius.all(Radius.circular(12))),
+              child: Padding(
+                // padding of the text in the cards
+                padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          height: 80,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Text('B1'),
+                                ),
+                                SizedBox(height: 10),
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Text('120'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 80,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: sizedBoxHight),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          height: 80,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
+                        ),
+                        Container(
+                          height: 80,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: sizedBoxHight),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          height: 80,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
+                        ),
+                        Container(
+                          height: 80,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 50),
+            Text('issues',
+                style: GoogleFonts.poppins(color: ThemeColors.whiteTextColor))
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  Future editDroneDialog() {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: ThemeColors.scaffoldBgColor,
+        scrollable: true,
+        title: Text(
+          "Edit Drone",
+          style: GoogleFonts.poppins(
+            color: ThemeColors.whiteTextColor,
+            fontSize: FontSize.large,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        content: Container(
+          width: 300,
+          child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: nameController..text = widget.batteryStation.id,
+                    validator: (value) {
+                      if (nameController.text.isEmpty)
+                        return "This field can't be empty";
+                    },
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                    keyboardType: TextInputType.name,
+                    cursorColor: ThemeColors.primaryColor,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      hintText: "Drone Name",
+                      hintStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.small,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: sizedBoxHight),
+                  TextFormField(
+                    controller: serial_numberController
+                      ..text = widget.batteryStation.serial_number,
+                    validator: (value) {
+                      if (nameController.text.isEmpty)
+                        return "This field can't be empty";
+                    },
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                    keyboardType: TextInputType.name,
+                    cursorColor: ThemeColors.primaryColor,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      hintText: "Serial number",
+                      hintStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.small,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: sizedBoxHight),
+                  TextFormField(
+                    controller: flight_timeController,
+                    validator: (value) {
+                      if (nameController.text.isEmpty)
+                        return "This field can't be empty";
+                    },
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                    keyboardType: TextInputType.number,
+                    cursorColor: ThemeColors.primaryColor,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      hintText: "Flight Time",
+                      hintStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.small,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: sizedBoxHight),
+                  TextFormField(
+                    controller: maintenanceController,
+                    validator: (value) {
+                      if (nameController.text.isEmpty)
+                        return "This field can't be empty";
+                    },
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                    keyboardType: TextInputType.number,
+                    cursorColor: ThemeColors.primaryColor,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      hintText: "Maintnenace cycle in hours",
+                      hintStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.small,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: sizedBoxHight),
+                  DateTimeField(
+                    format: DateFormat('yyyy-MM-dd'),
+                    controller: date_boughtController,
+                    onShowPicker: ((context, currentValue) {
+                      return showDatePicker(
+                          context: context,
+                          firstDate: DateTime(1900),
+                          initialDate: currentValue ?? DateTime.now(),
+                          lastDate: DateTime(2100));
+                    }),
+                    validator: (value) {
+                      if (nameController.text.isEmpty)
+                        return "This field can't be empty";
+                    },
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                    keyboardType: TextInputType.datetime,
+                    cursorColor: ThemeColors.primaryColor,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      hintText: "Date bought",
+                      hintStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.small,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel')),
+          TextButton(
+              onPressed: () {
+                ;
+              },
+              child: Text('Update Drone')),
+        ],
+      ),
+    );
+  }
+}

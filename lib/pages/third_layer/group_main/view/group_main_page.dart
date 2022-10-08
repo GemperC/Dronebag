@@ -97,7 +97,7 @@ class _MyGroupPageState extends State<MyGroupPage> {
                                   groupMenuButton(
                                     FontAwesomeIcons.batteryFull,
                                     'Batteries',
-                                    GroupBatteries(groupID: widget.groupID),
+                                    GroupBatteryStations(groupID: widget.groupID),
                                   ),
                                   groupMenuButton(
                                     FontAwesomeIcons.plane,
