@@ -81,12 +81,12 @@ class _MyGroupPageState extends State<MyGroupPage> {
                                   groupMenuButton(
                                     FontAwesomeIcons.userPlus,
                                     'Members',
-                                    GroupMembers(groupID: widget.groupID),
+                                    GroupMembers(group: group),
                                   ),
                                   groupMenuButton(
                                     FontAwesomeIcons.gear,
                                     'Settings',
-                                    GroupMembers(groupID: widget.groupID),
+                                    GroupMembers(group: group),
                                   ),
                                 ],
                               ),
@@ -107,7 +107,7 @@ class _MyGroupPageState extends State<MyGroupPage> {
                                   groupMenuButton(
                                     FontAwesomeIcons.planeArrival,
                                     'Fly a Drone',
-                                    GroupMembers(groupID: widget.groupID),
+                                    GroupMembers(group: group),
                                   ),
                                 ],
                               ),
