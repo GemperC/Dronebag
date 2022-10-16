@@ -3,6 +3,7 @@ import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
+import 'package:dronebag/pages/third_layer/fly_drone/fly_drone.dart';
 import 'package:dronebag/pages/third_layer/group__drones/view/view.dart';
 import 'package:dronebag/pages/third_layer/group_batteries/group_battries.dart';
 import 'package:dronebag/pages/third_layer/group_members/view/view.dart';
@@ -107,7 +108,7 @@ class _MyGroupPageState extends State<MyGroupPage> {
                                   groupMenuButton(
                                     FontAwesomeIcons.planeArrival,
                                     'Fly a Drone',
-                                    GroupMembers(group: group),
+                                    StartFlightPage(group: group),
                                   ),
                                 ],
                               ),

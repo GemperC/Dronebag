@@ -20,6 +20,8 @@ class GroupMembers extends StatefulWidget {
 }
 
 class _GroupMembersState extends State<GroupMembers> {
+  final StreamController<List<UserData>> _membersController =
+      StreamController<List<UserData>>.broadcast();
   final loggedUser = FirebaseAuth.instance.currentUser!;
 
   @override
@@ -37,109 +39,121 @@ class _GroupMembersState extends State<GroupMembers> {
           backgroundColor: ThemeColors.scaffoldBgColor),
       body: SafeArea(
         child: Padding(
-            padding: const EdgeInsets.all(30),
-            child: StreamBuilder<List<UserData>>(
-              stream: fetchGroupMembers(widget.group.users),
-              builder: ((context, snapshot) {
-                if (snapshot.hasData) {
-                  final groupMembersList = snapshot.data!;
-                  return ListView.builder(
-                    itemCount: groupMembersList.length,
-                    itemBuilder: (context, index) {
-                      return buildMemberTile(groupMembersList[index]);
-                    },
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Something went wrong! \n\n${snapshot}',
-                      style: TextStyle(color: Colors.white));
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
-              }),
-            )),
+          padding: const EdgeInsets.all(30),
+          child:
+              // StreamBuilder<List<UserData>>(
+              //   stream: fetchGroupMembers(widget.group.users),
+              //   builder: ((context, snapshot) {
+              //     if (snapshot.hasData) {
+              //       final groupMembersList = snapshot.data!;
+              ListView.builder(
+            itemCount: widget.group.users.length,
+            itemBuilder: (context, index) {
+              return buildMemberTile(widget.group.users[index]);
+            },
+          ),
+        ),
       ),
     );
+    // );
+    // } else if (snapshot.hasError) {
+    //   return Text('Something went wrong! \n\n${snapshot}',
+    //       style: TextStyle(color: Colors.white));
+    // } else {
+    //   return Center(child: CircularProgressIndicator());
+    // }
+    // }),
+    // )),
+    // ),
+    // );
   }
 
-  Stream<List<UserData>> fetchGroupMembers(List<dynamic> groupMembers) {
-    return FirebaseFirestore.instance
-        .collection('users')
-        .where('Email', isEqualTo: 'testuser@gmail.com')
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => UserData.fromJson(doc.data())).toList());
-  }
+  // Stream<List<UserData>> fetchGroupMembers(List<dynamic> groupMembers) {
+  //   Stream<List<UserData>> streamOfListUserData;
+  //   List<UserData> userdata = [];
+  //   groupMembers.forEach((member) {
+  //     var data = FirebaseFirestore.instance
+  //         .collection('users')
+  //         .doc(member)
+  //         .snapshots()
+  //         .map((snapshot) =>
+  //             UserData.fromJson(snapshot.data() as Map<String, dynamic>))
+  //         .toList();
+  //     _membersController.sink.add(data);
+  //   });
+  //   return _membersController.stream;
+  // }
 
-  Widget buildMemberTile(UserData user) {
+  Widget buildMemberTile(String user) {
     // if (widget.group.admins.contains(user.email)) {
-      return ListTile(
-          onTap: (() {
-            // if (loggedUserIsAdmin && user.email != loggedUser.email) {
-            //   final groupDoc = FirebaseFirestore.instance
-            //       .collection('groups')
-            //       .doc(widget.group.id);
-            //   groupDoc.update({
-            //     'Group_Admins': FieldValue.arrayRemove([user.email])
-            //   });
-            // }
-          }),
-          title: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 80,
-                width: 450,
-                decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                child: Center(
-                  child: Text(
-                    "${user.fullName} \n${user.email}",
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                      fontSize: FontSize.xxLarge,
-                      fontWeight: FontWeight.w600,
-                    ),
+    return ListTile(
+        onTap: (() {
+          // if (loggedUserIsAdmin && user.email != loggedUser.email) {
+          //   final groupDoc = FirebaseFirestore.instance
+          //       .collection('groups')
+          //       .doc(widget.group.id);
+          //   groupDoc.update({
+          //     'Group_Admins': FieldValue.arrayRemove([user.email])
+          //   });
+          // }
+        }),
+        title: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              height: 80,
+              width: 450,
+              decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              child: Center(
+                child: Text(
+                  "$user",
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.whiteTextColor,
+                    fontSize: FontSize.xxLarge,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
             ),
-          ));
-    }
-    // return ListTile(
-    //     onTap: (() {
-    //       if (loggedUserIsAdmin) {
-    //         final groupDoc = FirebaseFirestore.instance
-    //             .collection('groups')
-    //             .doc(widget.group.id);
-    //         groupDoc.update({
-    //           'Group_Admins': FieldValue.arrayUnion([user.email])
-    //         });
-    //       }
-    //     }),
-    //     title: Center(
-    //       child: Padding(
-    //         padding: const EdgeInsets.all(8.0),
-    //         child: Container(
-    //           height: 80,
-    //           width: 450,
-    //           decoration: BoxDecoration(
-    //               color: ThemeColors.primaryColor,
-    //               borderRadius: BorderRadius.all(Radius.circular(20))),
-    //           child: Center(
-    //             child: Text(
-    //               "${user.fullName} \n${user.email}",
-    //               style: GoogleFonts.poppins(
-    //                 color: ThemeColors.whiteTextColor,
-    //                 fontSize: FontSize.xxLarge,
-    //                 fontWeight: FontWeight.w600,
-    //               ),
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //     ));
+          ),
+        ));
   }
+  // return ListTile(
+  //     onTap: (() {
+  //       if (loggedUserIsAdmin) {
+  //         final groupDoc = FirebaseFirestore.instance
+  //             .collection('groups')
+  //             .doc(widget.group.id);
+  //         groupDoc.update({
+  //           'Group_Admins': FieldValue.arrayUnion([user.email])
+  //         });
+  //       }
+  //     }),
+  //     title: Center(
+  //       child: Padding(
+  //         padding: const EdgeInsets.all(8.0),
+  //         child: Container(
+  //           height: 80,
+  //           width: 450,
+  //           decoration: BoxDecoration(
+  //               color: ThemeColors.primaryColor,
+  //               borderRadius: BorderRadius.all(Radius.circular(20))),
+  //           child: Center(
+  //             child: Text(
+  //               "${user.fullName} \n${user.email}",
+  //               style: GoogleFonts.poppins(
+  //                 color: ThemeColors.whiteTextColor,
+  //                 fontSize: FontSize.xxLarge,
+  //                 fontWeight: FontWeight.w600,
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ));
+}
   // Widget groupMember(
   //     String member, Group group, bool isAdmin, String loggedUserEmail) {
   //       lo
@@ -167,7 +181,6 @@ class _GroupMembersState extends State<GroupMembers> {
   //     return UserData.fromJson(snapshot.data()!);
   //   }
   // }
-
 
 
 

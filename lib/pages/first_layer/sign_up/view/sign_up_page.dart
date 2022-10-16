@@ -271,17 +271,17 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
                 Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Center(
-                        child: RichText(
-                            text: TextSpan(
-                                style: GoogleFonts.poppins(
-                                  color: ThemeColors.whiteTextColor,
-                                  fontSize: FontSize.medium,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                text: "Already have an account? ",
-                                children: [
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Center(
+                    child: RichText(
+                      text: TextSpan(
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        text: "Already have an account? ",
+                        children: [
                           TextSpan(
                             recognizer: TapGestureRecognizer()
                               ..onTap = widget.onClickedSignIn,
@@ -291,8 +291,12 @@ class _SignUpPageState extends State<SignUpPage> {
                               fontSize: FontSize.medium,
                               fontWeight: FontWeight.w600,
                             ),
-                          )
-                        ]))))
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
