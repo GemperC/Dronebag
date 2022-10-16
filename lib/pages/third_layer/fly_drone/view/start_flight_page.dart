@@ -230,7 +230,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                 borderRadius: BorderRadius.all(Radius.circular(12))),
             child: Padding(
               // padding of the text in the cards
-              padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: Column(
                 children: [
                   Align(
@@ -240,19 +240,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                       drone.name,
                       style: GoogleFonts.poppins(
                         color: ThemeColors.whiteTextColor,
-                        fontSize: FontSize.xxLarge,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    //alingemt of the titel
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Maintenance in ${drone.hours_till_maintenace} hours',
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.medium,
+                        fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -261,26 +249,38 @@ class _StartFlightPageState extends State<StartFlightPage> {
                     //alingemt of the titel
                     alignment: Alignment.topLeft,
                     child: Text(
-                      'Airtime is ${drone.flight_time} hours',
+                      'Serial: ${drone.serial_number}',
                       style: GoogleFonts.poppins(
                         color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.medium,
+                        fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
-                  Align(
-                    //alingemt of the titel
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Active issues ${drone.flight_time}',
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.medium,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
+                  // Align(
+                  //   //alingemt of the titel
+                  //   alignment: Alignment.topLeft,
+                  //   child: Text(
+                  //     'Airtime is ${drone.flight_time} hours',
+                  //     style: GoogleFonts.poppins(
+                  //       color: ThemeColors.textFieldHintColor,
+                  //       fontSize: FontSize.medium,
+                  //       fontWeight: FontWeight.w400,
+                  //     ),
+                  //   ),
+                  // ),
+                  // Align(
+                  //   //alingemt of the titel
+                  //   alignment: Alignment.topLeft,
+                  //   child: Text(
+                  //     'Active issues ${drone.flight_time}',
+                  //     style: GoogleFonts.poppins(
+                  //       color: ThemeColors.textFieldHintColor,
+                  //       fontSize: FontSize.medium,
+                  //       fontWeight: FontWeight.w400,
+                  //     ),
+                  //   ),
+                  // ),
           
                 ],
               ),
