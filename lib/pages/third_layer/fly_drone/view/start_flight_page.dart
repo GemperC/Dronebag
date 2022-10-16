@@ -13,6 +13,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
+import '../widgets/widgets.dart';
+
 
 class StartFlightPage extends StatefulWidget {
   final Group group;
@@ -147,60 +149,69 @@ class _StartFlightPageState extends State<StartFlightPage> {
         ));
   }
 
-
   Future addDroneDialog() {
     return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: ThemeColors.scaffoldBgColor,
-        scrollable: true,
-        title: Text(
-          "Add Drones to the flight",
-          style: GoogleFonts.poppins(
-            color: ThemeColors.whiteTextColor,
-            fontSize: FontSize.large,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        content: Container(
-          height: 500,
-          width: 300,
-          child: StreamBuilder<List<Drone>>(
-              stream: fetchGroupDrones(),
-              builder: ((context, snapshot) {
-                if (snapshot.hasData) {
-                  final drones = snapshot.data!;
-                  return Container(
-                    child: ListView(
-                      shrinkWrap: true,
-                        children: drones.map(buildDroneTile).toList()),
-                  );
-                } else if (snapshot.hasError) {
-                  return SingleChildScrollView(
-                    child: Text('Something went wrong! \n\n${snapshot}',
-                        style: TextStyle(color: Colors.white)),
-                  );
-                } else {
-                  return Container(
-                      child: Center(child: CircularProgressIndicator()));
-                }
+        context: context,
+        builder: (context) {
+          Color tileColor = Colors.grey;
+          return AlertDialog(
+            backgroundColor: ThemeColors.scaffoldBgColor,
+            scrollable: true,
+            title: Text(
+              "Add Drones to the flight",
+              style: GoogleFonts.poppins(
+                color: ThemeColors.whiteTextColor,
+                fontSize: FontSize.large,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            content: StatefulBuilder(
+              builder: ((context, setState) {
+                return Container(
+                  height: 500,
+                  width: 300,
+                  child: StreamBuilder<List<Drone>>(
+                    stream: fetchGroupDrones(),
+                    builder: ((context, snapshot) {
+                      if (snapshot.hasData) {
+                        final drones = snapshot.data!;
+                        return Container(
+                          child: ListView.builder(
+                            itemCount: drones.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return BuildDroneTile(drone: drones[index]);
+                            },
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return SingleChildScrollView(
+                          child: Text('Something went wrong! \n\n${snapshot}',
+                              style: TextStyle(color: Colors.white)),
+                        );
+                      } else {
+                        return Container(
+                            child: Center(child: CircularProgressIndicator()));
+                      }
+                    }),
+                  ),
+                );
               }),
             ),
-        ),
-        actions: [
-          TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('Cancel')),
-          TextButton(
-              onPressed: () {
-                ;
-              },
-              child: Text('Add Drone/s to flight')),
-        ],
-      ),
-    );
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Cancel')),
+              TextButton(
+                  onPressed: () {
+                    ;
+                  },
+                  child: Text('Done')),
+            ],
+          );
+        });
   }
 
 //fetch group's drones list
@@ -213,84 +224,94 @@ class _StartFlightPageState extends State<StartFlightPage> {
   }
 
 //build the tile of the drone
-  Widget buildDroneTile(Drone drone) {
+  Widget buildDroneTile(Drone drone, Color containerColor) {
     return ListTile(
-      // go to the drone page
-      onTap: () {
+        // go to the drone page
+        onTap: () {
+          setState(() {
+            containerColor = Colors.blue;
+          });
+        },
+        // build the tile info and design
+        title: Center(
+          child: Padding(
+            // padding betwwent he cards
+            padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: containerColor,
 
-      },
-      // build the tile info and design
-      title: Center(
-        child: Padding(
-          // padding betwwent he cards
-          padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Color.fromARGB(255, 65, 61, 82),
-                borderRadius: BorderRadius.all(Radius.circular(12))),
-            child: Padding(
-              // padding of the text in the cards
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: Column(
-                children: [
-                  Align(
-                    //alingemt of the titel
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      drone.name,
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.whiteTextColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
+                  // color: Color.fromARGB(255, 65, 61, 82),
+                  borderRadius: BorderRadius.all(Radius.circular(12))),
+              child: Padding(
+                // padding of the text in the cards
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                child: Column(
+                  children: [
+                    Align(
+                      //alingemt of the titel
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        drone.name,
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                          fontSize: FontSize.small,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
-                  ),
-                  Align(
-                    //alingemt of the titel
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Serial: ${drone.serial_number}',
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
+                    Align(
+                      //alingemt of the titel
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Serial Number: ${drone.serial_number}',
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.textFieldHintColor,
+                          fontSize: FontSize.small,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
-                  ),
-                  // Align(
-                  //   //alingemt of the titel
-                  //   alignment: Alignment.topLeft,
-                  //   child: Text(
-                  //     'Airtime is ${drone.flight_time} hours',
-                  //     style: GoogleFonts.poppins(
-                  //       color: ThemeColors.textFieldHintColor,
-                  //       fontSize: FontSize.medium,
-                  //       fontWeight: FontWeight.w400,
-                  //     ),
-                  //   ),
-                  // ),
-                  // Align(
-                  //   //alingemt of the titel
-                  //   alignment: Alignment.topLeft,
-                  //   child: Text(
-                  //     'Active issues ${drone.flight_time}',
-                  //     style: GoogleFonts.poppins(
-                  //       color: ThemeColors.textFieldHintColor,
-                  //       fontSize: FontSize.medium,
-                  //       fontWeight: FontWeight.w400,
-                  //     ),
-                  //   ),
-                  // ),
-          
-                ],
+                    // Align(
+                    //   //alingemt of the titel
+                    //   alignment: Alignment.topLeft,
+                    //   child: Text(
+                    //     'Airtime is ${drone.flight_time} hours',
+                    //     style: GoogleFonts.poppins(
+                    //       color: ThemeColors.textFieldHintColor,
+                    //       fontSize: FontSize.medium,
+                    //       fontWeight: FontWeight.w400,
+                    //     ),
+                    //   ),
+                    // ),
+                    // Align(
+                    //   //alingemt of the titel
+                    //   alignment: Alignment.topLeft,
+                    //   child: Text(
+                    //     'Active issues ${drone.flight_time}',
+                    //     style: GoogleFonts.poppins(
+                    //       color: ThemeColors.textFieldHintColor,
+                    //       fontSize: FontSize.medium,
+                    //       fontWeight: FontWeight.w400,
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      )
-    );
+        ));
   }
 
-
-
+  Color getColor(Color colorUnpressed, Color colorPressed) {
+    final getColor = (Set<MaterialState> states) {
+      if (states.contains(MaterialState.pressed)) {
+        return colorPressed;
+      } else {
+        return colorUnpressed;
+      }
+    };
+    return Colors.green;
+  }
 }
