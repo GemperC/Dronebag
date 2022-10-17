@@ -9,6 +9,7 @@ import 'package:dronebag/domain/battery_station_repository/src/models/models.dar
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_repository/src/models/models.dart';
+import 'package:dronebag/pages/third_layer/fly_drone/fly_drone.dart';
 import 'package:flutter/gestures.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,6 +17,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../widgets/widgets.dart';
 
 const List<String> list = <String>['Practice', 'Mission'];
+List<Drone> droneList = <Drone>[];
 
 class StartFlightPage extends StatefulWidget {
   final Group group;
@@ -37,6 +39,8 @@ class _StartFlightPageState extends State<StartFlightPage> {
   final TextEditingController date_boughtController = TextEditingController();
   final double sizedBoxHight = 16;
   final user = FirebaseAuth.instance.currentUser!;
+  late UserData loggedUser;
+  // late List<Drone> droneList;
   String dropdownValue = list.first;
 
   @override
@@ -113,6 +117,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                         )))
                   ],
                 ),
+                SizedBox(height: 15),
                 Align(
                   alignment: Alignment.topLeft,
                   child: FutureBuilder<UserData?>(
@@ -120,6 +125,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         final user = snapshot.data!;
+                        loggedUser = snapshot.data!;
                         return RichText(
                           text: TextSpan(children: [
                             TextSpan(
@@ -149,6 +155,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                     },
                   ),
                 ),
+                SizedBox(height: 12),
                 Align(
                   alignment: Alignment.topLeft,
                   child: Row(
@@ -164,10 +171,10 @@ class _StartFlightPageState extends State<StartFlightPage> {
                       DropdownButton<String>(
                         elevation: 16,
                         style: GoogleFonts.poppins(
-                                color: ThemeColors.greyTextColor,
-                                fontSize: FontSize.medium,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          color: ThemeColors.greyTextColor,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w600,
+                        ),
                         underline: Container(
                           height: 2,
                           color: ThemeColors.greyTextColor,
@@ -189,14 +196,25 @@ class _StartFlightPageState extends State<StartFlightPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 200),
+                SizedBox(height: 150),
                 Center(
                   child: SizedBox(
                     height: 160,
                     width: 160,
                     child: FittedBox(
                       child: FloatingActionButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StopFlightPage(
+                                  group: widget.group,
+                                  droneList: droneList,
+                                  pilot: loggedUser,
+                                  flightPurpose: dropdownValue),
+                            ),
+                          );
+                        },
                         child: Text(
                           'Start Flight',
                           textAlign: TextAlign.center,
@@ -305,5 +323,81 @@ class _StartFlightPageState extends State<StartFlightPage> {
     if (snapshot.exists) {
       return UserData.fromJson(snapshot.data()!);
     }
+  }
+}
+
+class BuildDroneTile extends StatefulWidget {
+  final Drone drone;
+  const BuildDroneTile({
+    Key? key,
+    required this.drone,
+  }) : super(key: key);
+
+  @override
+  State<BuildDroneTile> createState() => _BuildDroneTileState();
+}
+
+class _BuildDroneTileState extends State<BuildDroneTile> {
+  bool pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+        // go to the drone page
+        onTap: () {
+          setState(() {
+            pressed = !pressed;
+            if (pressed) {
+              droneList.add(widget.drone);
+            } else {droneList.remove(widget.drone);}
+          });
+        },
+        // build the tile info and design
+        title: Center(
+          child: Padding(
+            // padding betwwent he cards
+            padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+            child: Container(
+              decoration: BoxDecoration(
+                  color:
+                      pressed ? Colors.blue : Color.fromARGB(255, 65, 61, 82),
+
+                  // color: Color.fromARGB(255, 65, 61, 82),
+                  borderRadius: BorderRadius.all(Radius.circular(12))),
+              child: Padding(
+                // padding of the text in the cards
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                child: Column(
+                  children: [
+                    Align(
+                      //alingemt of the titel
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        widget.drone.name,
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                          fontSize: FontSize.small,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      //alingemt of the titel
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Serial Number: ${widget.drone.serial_number}',
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.textFieldHintColor,
+                          fontSize: FontSize.small,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ));
   }
 }
