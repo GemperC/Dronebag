@@ -299,7 +299,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                   child: Text('Cancel')),
               TextButton(
                   onPressed: () {
-                    ;
+                    Navigator.pop(context);
                   },
                   child: Text('Done')),
             ],

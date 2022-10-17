@@ -16,8 +16,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/widgets.dart';
 
-const List<String> listy = <String>['Practice', 'Mission'];
-
 class StopFlightPage extends StatefulWidget {
   final Group group;
   final List<Drone> droneList;
@@ -44,7 +42,6 @@ class _StopFlightPageState extends State<StopFlightPage> {
   final TextEditingController date_boughtController = TextEditingController();
   final double sizedBoxHight = 16;
   final user = FirebaseAuth.instance.currentUser!;
-  String dropdownValue = listy.first;
 
   @override
   void initState() {
@@ -60,12 +57,14 @@ class _StopFlightPageState extends State<StopFlightPage> {
           appBar: AppBar(
             automaticallyImplyLeading: false,
             backgroundColor: ThemeColors.scaffoldBgColor,
-            title: Text(
-              "Flight Details",
-              style: GoogleFonts.poppins(
-                color: ThemeColors.whiteTextColor,
-                fontSize: FontSize.xxLarge,
-                fontWeight: FontWeight.w600,
+            title: Center(
+              child: Text(
+                "Flight Details",
+                style: GoogleFonts.poppins(
+                  color: ThemeColors.whiteTextColor,
+                  fontSize: FontSize.xxLarge,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -100,84 +99,77 @@ class _StopFlightPageState extends State<StopFlightPage> {
                     ),
                   ),
                   SizedBox(height: 50),
-                  SizedBox(height: 15),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: FutureBuilder<UserData?>(
-                      future: fetchUser(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final user = snapshot.data!;
-                          return RichText(
-                            text: TextSpan(children: [
-                              TextSpan(
-                                text: '${widget.droneList.map(
-                                  (drone) => drone.name,
-                                )}',
-                                style: GoogleFonts.poppins(
-                                  color: ThemeColors.whiteTextColor,
-                                  fontSize: FontSize.medium,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              TextSpan(
-                                text: user.fullName,
-                                style: GoogleFonts.poppins(
-                                  color: ThemeColors.greyTextColor,
-                                  fontSize: FontSize.medium,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ]),
-                          );
-                        } else if (snapshot.hasError) {
-                          return Text('Something went wrong! \n\n${snapshot}',
-                              style: TextStyle(color: Colors.white));
-                        } else {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      },
+                  Text(
+                    'You are flying the drones:',
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                      fontSize: FontSize.medium,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(height: 12),
+                  SizedBox(width: 12),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: droneList.length,
+                    itemBuilder: ((context, index) {
+                      return Center(
+                        child: Text(
+                          '${droneList[index].name}  |  Serial: ${droneList[index].serial_number}',
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.greyTextColor,
+                            fontSize: FontSize.medium,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                  SizedBox(height: 15),
                   Align(
-                    alignment: Alignment.topLeft,
-                    child: Row(
-                      children: [
-                        Text(
-                          'Flight purpose:   ',
+                    alignment: Alignment.center,
+                    child: RichText(
+                      text: TextSpan(children: [
+                        TextSpan(
+                          text: 'Pilot\'s Full Name:   ',
                           style: GoogleFonts.poppins(
                             color: ThemeColors.whiteTextColor,
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        DropdownButton<String>(
-                          elevation: 16,
+                        TextSpan(
+                          text: widget.pilot.fullName,
                           style: GoogleFonts.poppins(
                             color: ThemeColors.greyTextColor,
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w600,
                           ),
-                          underline: Container(
-                            height: 2,
-                            color: ThemeColors.greyTextColor,
-                          ),
-                          items:
-                              listy.map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          value: dropdownValue,
-                          onChanged: (String? value) {
-                            setState(() {
-                              dropdownValue = value!;
-                            });
-                          },
                         ),
-                      ],
+                      ]),
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  Align(
+                    alignment: Alignment.center,
+                    child: RichText(
+                      text: TextSpan(children: [
+                        TextSpan(
+                          text: 'Flight\'s Purpose:   ',
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.whiteTextColor,
+                            fontSize: FontSize.medium,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextSpan(
+                          text: widget.flightPurpose,
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.greyTextColor,
+                            fontSize: FontSize.medium,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ]),
                     ),
                   ),
                   SizedBox(height: 150),
@@ -209,14 +201,6 @@ class _StopFlightPageState extends State<StopFlightPage> {
             ),
           )),
     );
-  }
-
-  void dropdownCallback(String? selectedvalue) {
-    if (selectedvalue is String) {
-      setState(() {
-        dropdownValue = selectedvalue;
-      });
-    }
   }
 
 //fetch group's drones list
