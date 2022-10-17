@@ -54,157 +54,161 @@ class _StopFlightPageState extends State<StopFlightPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: ThemeColors.scaffoldBgColor,
-          title: Text(
-            "Fly a Drone",
-            style: GoogleFonts.poppins(
-              color: ThemeColors.whiteTextColor,
-              fontSize: FontSize.xxLarge,
-              fontWeight: FontWeight.w600,
+    return WillPopScope(
+      onWillPop: () async => true,
+      child: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: ThemeColors.scaffoldBgColor,
+            title: Text(
+              "Flight Details",
+              style: GoogleFonts.poppins(
+                color: ThemeColors.whiteTextColor,
+                fontSize: FontSize.xxLarge,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(38),
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "Lets start a Flight",
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                      fontSize: FontSize.xxLarge,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 7),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(38),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.center,
                     child: Text(
-                      "But first fill the details below",
+                      "You started a Flight!",
                       style: GoogleFonts.poppins(
-                        color: ThemeColors.greyTextColor,
-                        fontSize: FontSize.medium,
+                        color: ThemeColors.whiteTextColor,
+                        fontSize: FontSize.xxLarge,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 50),
-                SizedBox(height: 15),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: FutureBuilder<UserData?>(
-                    future: fetchUser(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        final user = snapshot.data!;
-                        return RichText(
-                          text: TextSpan(children: [
-                            TextSpan(
-                              text: '${widget.droneList.map(
-                                (drone) => drone.name,
-                              )}',
-                              style: GoogleFonts.poppins(
-                                color: ThemeColors.whiteTextColor,
-                                fontSize: FontSize.medium,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            TextSpan(
-                              text: user.fullName,
-                              style: GoogleFonts.poppins(
-                                color: ThemeColors.greyTextColor,
-                                fontSize: FontSize.medium,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ]),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('Something went wrong! \n\n${snapshot}',
-                            style: TextStyle(color: Colors.white));
-                      } else {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(height: 12),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Row(
-                    children: [
-                      Text(
-                        'Flight purpose:   ',
-                        style: GoogleFonts.poppins(
-                          color: ThemeColors.whiteTextColor,
-                          fontSize: FontSize.medium,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      DropdownButton<String>(
-                        elevation: 16,
+                  Align(
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 7),
+                      child: Text(
+                        "below are the flight details",
                         style: GoogleFonts.poppins(
                           color: ThemeColors.greyTextColor,
                           fontSize: FontSize.medium,
                           fontWeight: FontWeight.w600,
-                        ),
-                        underline: Container(
-                          height: 2,
-                          color: ThemeColors.greyTextColor,
-                        ),
-                        items:
-                            listy.map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        value: dropdownValue,
-                        onChanged: (String? value) {
-                          setState(() {
-                            dropdownValue = value!;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 150),
-                Center(
-                  child: SizedBox(
-                    height: 160,
-                    width: 160,
-                    child: FittedBox(
-                      child: FloatingActionButton(
-                        backgroundColor: Colors.red,
-                        onPressed: () {
-                          droneList.clear();
-                        },
-                        child: Text(
-                          'Stop Flight',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            color: ThemeColors.whiteTextColor,
-                            fontSize: 6,
-                            fontWeight: FontWeight.w700,
-                          ),
                         ),
                       ),
                     ),
                   ),
-                )
-              ],
+                  SizedBox(height: 50),
+                  SizedBox(height: 15),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: FutureBuilder<UserData?>(
+                      future: fetchUser(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final user = snapshot.data!;
+                          return RichText(
+                            text: TextSpan(children: [
+                              TextSpan(
+                                text: '${widget.droneList.map(
+                                  (drone) => drone.name,
+                                )}',
+                                style: GoogleFonts.poppins(
+                                  color: ThemeColors.whiteTextColor,
+                                  fontSize: FontSize.medium,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              TextSpan(
+                                text: user.fullName,
+                                style: GoogleFonts.poppins(
+                                  color: ThemeColors.greyTextColor,
+                                  fontSize: FontSize.medium,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ]),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('Something went wrong! \n\n${snapshot}',
+                              style: TextStyle(color: Colors.white));
+                        } else {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Row(
+                      children: [
+                        Text(
+                          'Flight purpose:   ',
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.whiteTextColor,
+                            fontSize: FontSize.medium,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        DropdownButton<String>(
+                          elevation: 16,
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.greyTextColor,
+                            fontSize: FontSize.medium,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          underline: Container(
+                            height: 2,
+                            color: ThemeColors.greyTextColor,
+                          ),
+                          items:
+                              listy.map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          value: dropdownValue,
+                          onChanged: (String? value) {
+                            setState(() {
+                              dropdownValue = value!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 150),
+                  Center(
+                    child: SizedBox(
+                      height: 160,
+                      width: 160,
+                      child: FittedBox(
+                        child: FloatingActionButton(
+                          backgroundColor: Colors.red,
+                          onPressed: () {
+                            droneList.clear();
+                          },
+                          child: Text(
+                            'Stop Flight',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              color: ThemeColors.whiteTextColor,
+                              fontSize: 6,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-        ));
+          )),
+    );
   }
 
   void dropdownCallback(String? selectedvalue) {

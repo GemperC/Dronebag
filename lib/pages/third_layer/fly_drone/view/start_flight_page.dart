@@ -204,7 +204,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                     child: FittedBox(
                       child: FloatingActionButton(
                         onPressed: () {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (context) => StopFlightPage(
