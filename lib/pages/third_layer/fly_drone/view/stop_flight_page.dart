@@ -10,6 +10,7 @@ import 'package:dronebag/domain/drone_repository/drone_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_repository/src/models/models.dart';
 import 'package:dronebag/pages/third_layer/fly_drone/fly_drone.dart';
+import 'package:dronebag/services/local_notifications.dart';
 import 'package:flutter/gestures.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,11 +43,36 @@ class _StopFlightPageState extends State<StopFlightPage> {
   final TextEditingController date_boughtController = TextEditingController();
   final double sizedBoxHight = 16;
   final user = FirebaseAuth.instance.currentUser!;
-
+  String notificationMsg = 'Waiting for notifications';
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
+    LocalNotificationsService.initState();
+
+    FirebaseMessaging.instance.getInitialMessage().then((event) {
+      setState(() {
+        if (event != null) {
+          notificationMsg =
+              '${event.notification!.title} ${event.notification!.body} | terminated state';
+        }
+      });
+    });
+
+    FirebaseMessaging.onMessage.listen((event) {
+      LocalNotificationsService.showNotificationOnForeground(event);
+      setState(() {
+        notificationMsg =
+            '${event.notification!.title} ${event.notification!.body} | forground state';
+      });
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      setState(() {
+        notificationMsg =
+            '${event.notification!.title} ${event.notification!.body} | background state';
+      });
+    });
   }
 
   @override
@@ -89,7 +115,7 @@ class _StopFlightPageState extends State<StopFlightPage> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 7),
                       child: Text(
-                        "below are the flight details",
+                        '$notificationMsg', //"below are the flight details",
                         style: GoogleFonts.poppins(
                           color: ThemeColors.greyTextColor,
                           fontSize: FontSize.medium,
@@ -100,7 +126,7 @@ class _StopFlightPageState extends State<StopFlightPage> {
                   ),
                   SizedBox(height: 50),
                   Text(
-                    'You are flying the drones:',
+                    'You are piloting the drones:',
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
                       fontSize: FontSize.medium,

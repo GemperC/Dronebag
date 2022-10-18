@@ -1,10 +1,14 @@
 import 'app.dart';
 
+Future<void> backgroudHandler(RemoteMessage message) async {
+  print('this is message from backgroud');
+}
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await GetStorage.init();
-
+  FirebaseMessaging.onBackgroundMessage(backgroudHandler);
   runApp(Dronebag());
 }
 
@@ -37,8 +41,7 @@ class _DronebagState extends State<Dronebag> {
         debugShowCheckedModeBanner: false,
         navigatorKey: navigatorKey,
         scaffoldMessengerKey: Utils.messengerKey,
-        home: introdata.read('displayed') ? IsLoggedIn() : IntroPage()
-        );
+        home: introdata.read('displayed') ? IsLoggedIn() : IntroPage());
   }
 }
 
