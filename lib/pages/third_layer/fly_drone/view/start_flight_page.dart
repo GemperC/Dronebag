@@ -204,6 +204,8 @@ class _StartFlightPageState extends State<StartFlightPage> {
                     child: FittedBox(
                       child: FloatingActionButton(
                         onPressed: () {
+                          PostCall notification = PostCall();
+                          print(notification.makeCall());
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -349,7 +351,9 @@ class _BuildDroneTileState extends State<BuildDroneTile> {
             pressed = !pressed;
             if (pressed) {
               droneList.add(widget.drone);
-            } else {droneList.remove(widget.drone);}
+            } else {
+              droneList.remove(widget.drone);
+            }
           });
         },
         // build the tile info and design
