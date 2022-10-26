@@ -204,8 +204,10 @@ class _StartFlightPageState extends State<StartFlightPage> {
                     child: FittedBox(
                       child: FloatingActionButton(
                         onPressed: () {
-                          PostCall notification = PostCall();
+                          PostCall notification = PostCall(topic: widget.group.name);
+                          suscribeToTopic();
                           print(notification.makeCall());
+
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -234,6 +236,10 @@ class _StartFlightPageState extends State<StartFlightPage> {
             ),
           ),
         ));
+  }
+
+  Future suscribeToTopic() async {
+    await FirebaseMessaging.instance.unsubscribeFromTopic(widget.group.name);
   }
 
   void dropdownCallback(String? selectedvalue) {
