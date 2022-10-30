@@ -111,6 +111,15 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
     if (!isValid) {
       return;
     } else {
+      final docuserSettings = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.email)
+          .collection('settings')
+          .doc();
+      final usersettings = UserSettings(id: docuserSettings.id);
+      final json = usersettings.toJson();
+      await docuserSettings.set(json);
+
       FirebaseFirestore.instance
           .collection('groups')
           .where("Group_Key", isEqualTo: groupKey)
@@ -122,18 +131,15 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
           group.update({
             'Group_Users': FieldValue.arrayUnion([user.email!])
           });
+          print(doc.get('Group_Name'));
+          final usersetting = FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.email)
+              .collection('settings')
+              .doc(docuserSettings.id)
+              .update({'group': doc.get('Group_Name')});
         });
       });
-      final docuserSettings = FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.email)
-          .collection('settings')
-          .doc();
-      final usersettings =
-          UserSettings(id: docuserSettings.id, notifications: false);
-
-      final json = usersettings.toJson();
-      await docuserSettings.set(json);
 
       Utils.showSnackBarWithColor('You have joined the Group', Colors.blue);
       Navigator.pop(context);

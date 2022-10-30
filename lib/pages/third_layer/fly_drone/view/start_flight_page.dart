@@ -1,5 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
-
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
@@ -13,6 +13,7 @@ import 'package:dronebag/pages/third_layer/fly_drone/fly_drone.dart';
 import 'package:flutter/gestures.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 
 import '../widgets/widgets.dart';
 
@@ -204,7 +205,13 @@ class _StartFlightPageState extends State<StartFlightPage> {
                     child: FittedBox(
                       child: FloatingActionButton(
                         onPressed: () {
-                          PostCall notification = PostCall(topic: widget.group.name, pilot: loggedUser.fullName, drones: droneList);
+                          // sendNotificationToAdmins(widget.group.name,
+                          //     loggedUser.fullName, droneList);
+                          PostCall notification = PostCall(
+                              topic: widget.group.name,
+                              purpose: dropdownValue,
+                              pilot: loggedUser.fullName,
+                              drones: droneList);
                           notification.makeCall();
 
                           Navigator.pushReplacement(
@@ -237,6 +244,28 @@ class _StartFlightPageState extends State<StartFlightPage> {
         ));
   }
 
+  Future sendNotificationToAdmins(
+      String topic, String pilot, List<Drone> drones) async {
+    http.post(
+      Uri.parse('https://fcm.googleapis.com/fcm/send'),
+      headers: {
+        'content-type': 'application/json',
+        'Authorization':
+            'key=AAAAksIRG_g:APA91bHSF8IAwnFTcUpYlqvZpGT1vzhfsDR7XeCfQfrSUydQWZqDI7SVzRBuCl90CMp6xp_wOLqZ3x2MblT-SH1RKbACcX3RQFHHYqp0efb2Y8M1zhY0-e6E3e32c2_PVs_QbKIrjqpr'
+      },
+      body: jsonEncode(
+        {
+            "to": "/topics/$topic",
+            "notification": {
+              "title": "$pilot started a flight!",
+              "body":
+                  "In the group $topic \n$pilot is flying the drones:\n${drones.map((e) => e.name)}",
+            },
+            "priority": "high",
+        },
+      ),
+    );
+  }
 
   void dropdownCallback(String? selectedvalue) {
     if (selectedvalue is String) {

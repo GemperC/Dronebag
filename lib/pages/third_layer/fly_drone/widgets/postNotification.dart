@@ -1,15 +1,18 @@
 import 'dart:async';
 import 'dart:convert' show Encoding, json;
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
+import 'package:dronebag/pages/third_layer/fly_drone/fly_drone.dart';
 import 'package:http/http.dart' as http;
 
 class PostCall {
   String topic;
+  String purpose;
   String pilot;
   List<Drone> drones;
 
   PostCall({
     required this.topic,
+    required this.purpose,
     required this.pilot,
     required this.drones,
   });
@@ -24,10 +27,8 @@ class PostCall {
     };
     final data = {
       "notification": {
-        "title": "$pilot started a flight!",
-        "body": "$pilot is flying the drones:\n${drones.map((drone) {
-          drone.name;
-        })}",
+        "title": "$pilot started a $purpose flight!",
+        "body": "$pilot is flying the drones:\n${drones.map((e) => e.name)}",
       },
       "priority": "high",
       "data": {
