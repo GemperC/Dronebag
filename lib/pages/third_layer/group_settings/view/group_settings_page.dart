@@ -4,7 +4,9 @@ import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_repository/src/models/models.dart';
+import 'package:dronebag/domain/user_settings_repository/src/models/models.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -39,12 +41,12 @@ class _GroupSettingsState extends State<GroupSettings> {
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(38),
-            child: FutureBuilder<UserData?>(
-                future: fetchUser(),
+            child: StreamBuilder<List<UserSettings>>(
+                stream: fetchUserSettings(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    final user = snapshot.data;
-                    return user == null
+                    final userSettings = snapshot.data!.first;
+                    return userSettings == null
                         ? CircularProgressIndicator()
                         : Column(
                             children: [
@@ -88,11 +90,33 @@ class _GroupSettingsState extends State<GroupSettings> {
                                   data: Theme.of(context).copyWith(
                                       unselectedWidgetColor: Colors.grey),
                                   child: Checkbox(
-                                    value: getNotificationsCheckBox,
+                                    value: userSettings.notifications,
                                     onChanged: (value) {
+                                      if (value!) {
+                                        print(
+                                            'sucsribed to ${widget.group.name}');
+
+                                        FirebaseMessaging.instance
+                                            .subscribeToTopic(
+                                                widget.group.name);
+                                      } else if (!value) {
+                                        print(
+                                            'unsucsribed from ${widget.group.name}');
+                                        FirebaseMessaging.instance
+                                            .unsubscribeFromTopic(
+                                                widget.group.name);
+                                      }
                                       setState(() {
-                                        getNotificationsCheckBox = value!;
+                                        getNotificationsCheckBox = value;
                                       });
+                                      final docSetting = FirebaseFirestore
+                                          .instance
+                                          .collection('users')
+                                          .doc(loggedUser.email)
+                                          .collection('settings')
+                                          .doc(userSettings.id);
+                                      docSetting
+                                          .update({'notifications': value});
                                     },
                                   ),
                                 ),
@@ -100,19 +124,29 @@ class _GroupSettingsState extends State<GroupSettings> {
                             ],
                           );
                   } else {
-            return Scaffold();
-          }
+                    return Scaffold();
+                  }
                 }),
           ),
         ));
   }
 
-  Future<UserData?> fetchUserSettings() async {
-    final userDoc =
-        FirebaseFirestore.instance.collection('users').doc(loggedUser.email).collection("settings");
-    final snapshot = await userSettingsDoc.get();
-    if (snapshot.exists) {
-      return UserData.fromJson(snapshot.data()!);
-    }
+  Stream<List<UserSettings>> fetchUserSettings() {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(loggedUser.email)
+        .collection("settings")
+        .where("group", isEqualTo: widget.group.name)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => UserSettings.fromJson(doc.data()))
+            .toList());
+
+    // final userSettingsDoc =
+    //     FirebaseFirestore.instance.collection('users').doc(loggedUser.email).collection("settings").where("group", isEqualTo: widget.group.name);
+    // final snapshot = await userSettingsDoc.get();
+    // if (snapshot.exists) {
+    //   return UserData.fromJson(snapshot.data()!);
+    // }
   }
 }

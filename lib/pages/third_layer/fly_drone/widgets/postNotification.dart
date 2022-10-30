@@ -26,7 +26,7 @@ class PostCall {
       "notification": {
         "title": "$pilot started a flight!",
         "body": "$pilot is flying the drones:\n${drones.map((drone) {
-          "\n${drone.name}";
+          drone.name;
         })}",
       },
       "priority": "high",

@@ -208,7 +208,6 @@ class _StopFlightPageState extends State<StopFlightPage> {
                           backgroundColor: Colors.red,
                           onPressed: () {
                             droneList.clear();
-                            saveDeviceToken();
                           },
                           child: Text(
                             'Stop Flight',
@@ -248,18 +247,18 @@ class _StopFlightPageState extends State<StopFlightPage> {
     }
   }
 
-  Future<String?> saveDeviceToken() async {
-    String? deviceToken = '@';
-    await FirebaseMessaging.instance.subscribeToTopic(widget.group.name);
-    try {
-      deviceToken = await FirebaseMessaging.instance.getToken();
-    } catch (e) {
-      print('could not get token');
-      print(e.toString());
-    }
-    if (deviceToken != null) {
-      print("--------------Device Token--------------" + deviceToken);
-    }
-    return deviceToken;
-  }
+  // Future<String?> saveDeviceToken() async {
+  //   String? deviceToken = '@';
+  //   await FirebaseMessaging.instance.subscribeToTopic(widget.group.name);
+  //   try {
+  //     deviceToken = await FirebaseMessaging.instance.getToken();
+  //   } catch (e) {
+  //     print('could not get token');
+  //     print(e.toString());
+  //   }
+  //   if (deviceToken != null) {
+  //     print("--------------Device Token--------------" + deviceToken);
+  //   }
+  //   return deviceToken;
+  // }
 }

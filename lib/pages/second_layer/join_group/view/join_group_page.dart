@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
+import 'package:dronebag/domain/user_settings_repository/src/models/models.dart';
 import 'package:dronebag/pages/second_layer/my_groups/my_groups.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:dronebag/widgets/utils.dart';
@@ -85,8 +86,7 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
                           ),
                           border: OutlineInputBorder(
                             borderSide: BorderSide.none,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(18)),
+                            borderRadius: BorderRadius.all(Radius.circular(18)),
                           ),
                         ),
                       ),
@@ -119,9 +119,21 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
         querySnapshot.docs.forEach((doc) {
           final group =
               FirebaseFirestore.instance.collection('groups').doc(doc.id);
-          group.update({'Group_Users': FieldValue.arrayUnion([user.email!])});
+          group.update({
+            'Group_Users': FieldValue.arrayUnion([user.email!])
+          });
         });
       });
+      final docuserSettings = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.email)
+          .collection('settings')
+          .doc();
+      final usersettings =
+          UserSettings(id: docuserSettings.id, notifications: false);
+
+      final json = usersettings.toJson();
+      await docuserSettings.set(json);
 
       Utils.showSnackBarWithColor('You have joined the Group', Colors.blue);
       Navigator.pop(context);
