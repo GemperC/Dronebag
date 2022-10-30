@@ -1,0 +1,1 @@
+export 'user_settings_model.dart';

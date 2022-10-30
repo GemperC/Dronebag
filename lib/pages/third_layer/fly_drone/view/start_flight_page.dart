@@ -204,7 +204,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                     child: FittedBox(
                       child: FloatingActionButton(
                         onPressed: () {
-                          PostCall notification = PostCall(topic: widget.group.name);
+                          PostCall notification = PostCall(topic: widget.group.name, pilot: loggedUser.fullName, drones: droneList);
                           suscribeToTopic();
                           print(notification.makeCall());
 

@@ -7,6 +7,7 @@ import 'package:dronebag/pages/third_layer/fly_drone/fly_drone.dart';
 import 'package:dronebag/pages/third_layer/group__drones/view/view.dart';
 import 'package:dronebag/pages/third_layer/group_batteries/group_battries.dart';
 import 'package:dronebag/pages/third_layer/group_members/view/view.dart';
+import 'package:dronebag/pages/third_layer/group_settings/view/view.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,7 +25,6 @@ class MyGroupPage extends StatefulWidget {
 }
 
 class _MyGroupPageState extends State<MyGroupPage> {
-  final group = FirebaseFirestore.instance.collection('groups').doc();
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +87,7 @@ class _MyGroupPageState extends State<MyGroupPage> {
                                   groupMenuButton(
                                     FontAwesomeIcons.gear,
                                     'Settings',
-                                    GroupMembers(group: group),
+                                    GroupSettings(group: group),
                                   ),
                                 ],
                               ),
