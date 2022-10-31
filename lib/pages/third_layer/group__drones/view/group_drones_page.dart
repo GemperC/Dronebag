@@ -101,88 +101,90 @@ class _GroupDronesState extends State<GroupDrones> {
 
 //build the tile of the drone
   Widget buildDroneTile(Drone drone) {
+    Color maintenanceTextColor = ThemeColors.textFieldHintColor;
+    if (drone.hours_till_maintenace <= 0) {
+      maintenanceTextColor = Colors.red;
+    }
     return ListTile(
-      // go to the drone page
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => DroneDetails(
-                    groupID: widget.groupID,
-                    drone: drone,
-                  )),
-        );
-      },
-      // build the tile info and design
-      title: Center(
-        child: Padding(
-          // padding betwwent he cards
-          padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Color.fromARGB(255, 65, 61, 82),
-                borderRadius: BorderRadius.all(Radius.circular(12))),
-            child: Padding(
-              // padding of the text in the cards
-              padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
-              child: Column(
-                children: [
-                  Align(
-                    //alingemt of the titel
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      drone.name,
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.whiteTextColor,
-                        fontSize: FontSize.xxLarge,
-                        fontWeight: FontWeight.w600,
+        // go to the drone page
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DroneDetails(
+                      groupID: widget.groupID,
+                      drone: drone,
+                    )),
+          );
+        },
+        // build the tile info and design
+        title: Center(
+          child: Padding(
+            // padding betwwent he cards
+            padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 65, 61, 82),
+                  borderRadius: BorderRadius.all(Radius.circular(12))),
+              child: Padding(
+                // padding of the text in the cards
+                padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
+                child: Column(
+                  children: [
+                    Align(
+                      //alingemt of the titel
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        drone.name,
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                          fontSize: FontSize.xxLarge,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  ),
-                  Align(
-                    //alingemt of the titel
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Maintenance in ${drone.hours_till_maintenace} hours',
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.medium,
-                        fontWeight: FontWeight.w400,
+                    Align(
+                      //alingemt of the titel
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Maintenance in ${drone.hours_till_maintenace} flight hours',
+                        style: GoogleFonts.poppins(
+                          color: maintenanceTextColor,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
-                  ),
-                  Align(
-                    //alingemt of the titel
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Airtime is ${drone.flight_time} hours',
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.medium,
-                        fontWeight: FontWeight.w400,
+                    Align(
+                      //alingemt of the titel
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Airtime is ${drone.flight_time} hours',
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.textFieldHintColor,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
-                  ),
-                  Align(
-                    //alingemt of the titel
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Active issues ${drone.flight_time}',
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.medium,
-                        fontWeight: FontWeight.w400,
+                    Align(
+                      //alingemt of the titel
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Active issues ${drone.flight_time}',
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.textFieldHintColor,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
-                  ),
-          
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      )
-    );
+        ));
   }
 
 // dialog to add new drones to the group

@@ -12,6 +12,7 @@ import 'package:dronebag/pages/third_layer/issues/issues.dart';
 import 'package:dronebag/pages/third_layer/maintenance_history/maintenance_history.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:dronebag/widgets/main_button_3.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
@@ -101,8 +102,34 @@ class _DroneDetailsState extends State<DroneDetails> {
             richText_listingDroneDetails(
                 'Mainetenance Cycle', 'every ${drone.maintenance} hours'),
             SizedBox(height: 16),
-            richText_listingDroneDetails('Next Maintenance in',
-                '${drone.hours_till_maintenace} flight hours'),
+            Row(
+              children: [
+                richText_listingDroneDetails('Next Maintenance in',
+                    '${drone.hours_till_maintenace} flight hours'),
+                SizedBox(width: 10),
+                RichText(
+                  text: TextSpan(
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        FirebaseFirestore.instance
+                            .collection('groups')
+                            .doc(widget.groupID)
+                            .collection('drones')
+                            .doc(drone.id)
+                            .update({
+                              'hours_till_maintenace': drone.maintenance
+                            });
+                      },
+                    text: 'Reset',
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.primaryColor,
+                      fontSize: FontSize.medium,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                )
+              ],
+            ),
             SizedBox(height: 25),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -198,24 +225,19 @@ class _DroneDetailsState extends State<DroneDetails> {
             text: "$field:    ",
             style: GoogleFonts.poppins(
               color: ThemeColors.whiteTextColor,
-              fontSize: FontSize.large,
-              fontWeight: FontWeight.w600,
+              fontSize: FontSize.xMedium,
+              fontWeight: FontWeight.w500,
             ),
           ),
           TextSpan(
             text: '$droneDetail',
             style: GoogleFonts.poppins(
               color: ThemeColors.whiteTextColor,
-              fontSize: FontSize.large,
+              fontSize: FontSize.xMedium,
               fontWeight: FontWeight.w300,
             ),
           ),
         ],
-        style: GoogleFonts.poppins(
-          color: ThemeColors.whiteTextColor,
-          fontSize: FontSize.large,
-          fontWeight: FontWeight.w600,
-        ),
       ),
     );
   }
@@ -229,8 +251,8 @@ class _DroneDetailsState extends State<DroneDetails> {
             text: "$field:    ",
             style: GoogleFonts.poppins(
               color: ThemeColors.whiteTextColor,
-              fontSize: FontSize.large,
-              fontWeight: FontWeight.w600,
+              fontSize: FontSize.xMedium,
+              fontWeight: FontWeight.w500,
             ),
           ),
           TextSpan(
@@ -238,16 +260,11 @@ class _DroneDetailsState extends State<DroneDetails> {
                 '${droneDetailDate.year}-${droneDetailDate.month}-${droneDetailDate.day}',
             style: GoogleFonts.poppins(
               color: ThemeColors.whiteTextColor,
-              fontSize: FontSize.large,
+              fontSize: FontSize.xMedium,
               fontWeight: FontWeight.w300,
             ),
           ),
         ],
-        style: GoogleFonts.poppins(
-          color: ThemeColors.whiteTextColor,
-          fontSize: FontSize.large,
-          fontWeight: FontWeight.w600,
-        ),
       ),
     );
   }
@@ -424,11 +441,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                 Navigator.pop(context);
               },
               child: Text('Cancel')),
-          TextButton(
-              onPressed: () {
-                
-              },
-              child: Text('Update Drone')),
+          TextButton(onPressed: () {}, child: Text('Update Drone')),
         ],
       ),
     );
