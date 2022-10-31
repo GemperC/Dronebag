@@ -19,7 +19,7 @@ class PostCall {
 
   final postUrl = 'https://fcm.googleapis.com/fcm/send';
 
-  Future<bool> makeCall() async {
+  Future<void> makeCall() async {
     final headers = {
       'content-type': 'application/json',
       'Authorization':
@@ -38,18 +38,10 @@ class PostCall {
       },
       "to": "/topics/$topic"
     };
-
+    print('=========seding============');
     final response = await http.post(Uri.parse(postUrl),
         body: json.encode(data),
         encoding: Encoding.getByName('utf-8'),
         headers: headers);
-
-    if (response.statusCode == 200) {
-      // on success do sth
-      return true;
-    } else {
-      // on failure do sth
-      return false;
-    }
   }
 }

@@ -44,11 +44,14 @@ class _StartFlightPageState extends State<StartFlightPage> {
   // late List<Drone> droneList;
   String dropdownValue = list.first;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  // }
+
+  
+
 
   @override
   Widget build(BuildContext context) {
