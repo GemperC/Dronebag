@@ -215,7 +215,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                               purpose: dropdownValue,
                               pilot: loggedUser.fullName,
                               drones: droneList);
-                          notification.makeCall();
+                          notification.makeCallStartFlight();
 
                           Navigator.pushReplacement(
                             context,

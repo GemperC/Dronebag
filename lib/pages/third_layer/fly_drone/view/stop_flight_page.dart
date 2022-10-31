@@ -78,7 +78,6 @@ class _StopFlightPageState extends State<StopFlightPage> {
   @override
   @override
   void dispose() {
-    
     super.dispose();
   }
 
@@ -214,7 +213,25 @@ class _StopFlightPageState extends State<StopFlightPage> {
                         child: FloatingActionButton(
                           backgroundColor: Colors.red,
                           onPressed: () {
+                            List<Drone> tempDroneList = List.from(droneList);
                             droneList.clear();
+                            PostCall notification = PostCall(
+                                topic: widget.group.name,
+                                purpose: widget.flightPurpose,
+                                pilot: widget.pilot.fullName,
+                                drones: tempDroneList);
+                            notification.makeCallEndFlight();
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FlightSummery(
+                                    group: widget.group,
+                                    droneList: tempDroneList,
+                                    pilot: widget.pilot,
+                                    flightPurpose: widget.flightPurpose),
+                              ),
+                            );
                           },
                           child: Text(
                             'Stop Flight',
