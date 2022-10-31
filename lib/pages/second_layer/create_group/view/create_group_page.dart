@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
+import 'package:dronebag/domain/user_settings_repository/user_settings_repository.dart';
 import 'package:dronebag/pages/second_layer/my_groups/my_groups.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:dronebag/widgets/utils.dart';
@@ -88,8 +89,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                           ),
                           border: OutlineInputBorder(
                             borderSide: BorderSide.none,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(18)),
+                            borderRadius: BorderRadius.all(Radius.circular(18)),
                           ),
                         ),
                       ),
@@ -109,13 +109,21 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
         ));
   }
 
-
   //create group method
   Future createGroup() async {
     final isValid = formKey.currentState!.validate();
     if (!isValid) {
       return;
     } else {
+      final docuserSettings = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.email)
+          .collection('settings')
+          .doc();
+      final usersettings = UserSettings(id: docuserSettings.id, group: groupNameController.text.trim());
+      final json1 = usersettings.toJson();
+      await docuserSettings.set(json1);
+
       final docGroup = FirebaseFirestore.instance.collection('groups').doc();
       final group = Group(
           name: groupNameController.text.trim(),
