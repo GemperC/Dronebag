@@ -45,13 +45,18 @@ class _FlightSummeryState extends State<FlightSummery> {
   final double sizedBoxHight = 16;
   final user = FirebaseAuth.instance.currentUser!;
   String notificationMsg = 'Waiting for notifications';
-@override
-void initState() {
+
+  final TextEditingController flight_timeController = TextEditingController();
+  final TextEditingController hours_till_maintenaceController =
+      TextEditingController();
+  final TextEditingController maintenanceController = TextEditingController();
+  @override
+  void initState() {
     print(widget.droneList);
 
-  super.initState();
-  
-}
+    super.initState();
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -150,49 +155,138 @@ void initState() {
     );
   }
 
-Widget buildDroneTile(Drone drone) {
+  Widget buildDroneTile(Drone drone) {
     return ListTile(
-      // go to the drone page
-      onTap: () {
-        
-      },
-      // build the tile info and design
-      title: Center(
-        child: Padding(
-          // padding betwwent he cards
-          padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Color.fromARGB(255, 65, 61, 82),
-                borderRadius: BorderRadius.all(Radius.circular(12))),
-            child: Padding(
-              // padding of the text in the cards
-              padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
-              child: Column(
-                children: [
-                  Align(
-                    //alingemt of the titel
-                    alignment: Alignment.center,
-                    child: Text(
-                      drone.name,
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.whiteTextColor,
-                        fontSize: FontSize.xMedium,
-                        fontWeight: FontWeight.w500,
+        // go to the drone page
+        onTap: () {
+          editDroneDialog(drone);
+        },
+        // build the tile info and design
+        title: Center(
+          child: Padding(
+            // padding betwwent he cards
+            padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 65, 61, 82),
+                  borderRadius: BorderRadius.all(Radius.circular(12))),
+              child: Padding(
+                // padding of the text in the cards
+                padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
+                child: Column(
+                  children: [
+                    Align(
+                      //alingemt of the titel
+                      alignment: Alignment.center,
+                      child: Text(
+                        drone.name,
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                          fontSize: FontSize.xMedium,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                  
-                
-          
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      )
-    );
+        ));
   }
 
-
+  Future editDroneDialog(Drone drone) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: ThemeColors.scaffoldBgColor,
+        scrollable: true,
+        title: Text(
+          "Drone Details",
+          style: GoogleFonts.poppins(
+            color: ThemeColors.whiteTextColor,
+            fontSize: FontSize.large,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        content: Container(
+          width: 300,
+          child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  Text(
+                    drone.name,
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                  ),
+                  SizedBox(height: sizedBoxHight),
+                  Text(
+                    drone.serial_number,
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                  ),
+                  SizedBox(height: sizedBoxHight),
+                  TextFormField(
+                    initialValue: drone.flight_time.toString(),
+                    controller: flight_timeController,
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                    keyboardType: TextInputType.number,
+                    cursorColor: ThemeColors.primaryColor,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      hintText: "Flight Time",
+                      hintStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.small,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: sizedBoxHight),
+                  TextFormField(
+                    controller: maintenanceController,
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                    keyboardType: TextInputType.number,
+                    cursorColor: ThemeColors.primaryColor,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      hintText: "Maintnenace cycle in hours",
+                      hintStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.small,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel')),
+          TextButton(onPressed: () {}, child: Text('Update Drone')),
+        ],
+      ),
+    );
+  }
 }
