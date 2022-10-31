@@ -55,7 +55,8 @@ class _FlightSummeryState extends State<FlightSummery> {
   @override
   void initState() {
     print(widget.droneList);
-    flight_timeController = TextEditingController(text: widget.flightDuration.inSeconds.toString());
+    flight_timeController =
+        TextEditingController(text: widget.flightDuration.inSeconds.toString());
     super.initState();
   }
 
@@ -241,8 +242,7 @@ class _FlightSummeryState extends State<FlightSummery> {
                     decoration: InputDecoration(
                       fillColor: ThemeColors.textFieldBgColor,
                       filled: true,
-                      labelText:
-                          "Drone air time in hours",
+                      labelText: "Drone air time in hours",
                       labelStyle: GoogleFonts.poppins(
                         color: ThemeColors.textFieldHintColor,
                         // fontSize: FontSize.small,
@@ -286,7 +286,27 @@ class _FlightSummeryState extends State<FlightSummery> {
                 Navigator.pop(context);
               },
               child: Text('Cancel')),
-          TextButton(onPressed: () {}, child: Text('Update Drone')),
+          TextButton(
+              onPressed: () {
+                int totalFlightTime =
+                    int.parse(flight_timeController.text) + drone.flight_time;
+
+                int hours_till_maintenaceNEW = drone.hours_till_maintenace- 
+                    int.parse(flight_timeController.text);
+                    
+
+                FirebaseFirestore.instance
+                    .collection('groups')
+                    .doc(widget.group.id)
+                    .collection('drones')
+                    .doc(drone.id)
+                    .update({
+                      "flight_time": totalFlightTime,
+                      "hours_till_maintenace": hours_till_maintenaceNEW});
+
+                Navigator.pop(context);
+              },
+              child: Text('Update Drone')),
         ],
       ),
     );

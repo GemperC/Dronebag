@@ -184,8 +184,6 @@ class _DroneDetailsState extends State<DroneDetails> {
                 )
               ],
             ),
-            SizedBox(height: 50),
-            MainButton2(text: 'Fly This Drone', onPressed: () {})
           ],
         ),
       ),
