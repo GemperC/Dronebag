@@ -22,12 +22,14 @@ class StopFlightPage extends StatefulWidget {
   final List<Drone> droneList;
   final UserData pilot;
   final String flightPurpose;
-  const StopFlightPage({
+  final DateTime airTimeStart;
+  StopFlightPage({
     Key? key,
     required this.group,
     required this.droneList,
     required this.pilot,
     required this.flightPurpose,
+    required this.airTimeStart,
   }) : super(key: key);
 
   @override
@@ -43,6 +45,7 @@ class _StopFlightPageState extends State<StopFlightPage> {
   final TextEditingController date_boughtController = TextEditingController();
   final double sizedBoxHight = 16;
   final user = FirebaseAuth.instance.currentUser!;
+  late Duration flightDuration;
   String notificationMsg = 'Waiting for notifications';
 
   // void initState() {
@@ -213,6 +216,8 @@ class _StopFlightPageState extends State<StopFlightPage> {
                         child: FloatingActionButton(
                           backgroundColor: Colors.red,
                           onPressed: () {
+                            flightDuration =
+                                DateTime.now().difference(widget.airTimeStart);
                             List<Drone> tempDroneList = List.from(droneList);
                             droneList.clear();
                             PostCall notification = PostCall(
@@ -226,10 +231,12 @@ class _StopFlightPageState extends State<StopFlightPage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => FlightSummery(
-                                    group: widget.group,
-                                    droneList: tempDroneList,
-                                    pilot: widget.pilot,
-                                    flightPurpose: widget.flightPurpose),
+                                  group: widget.group,
+                                  droneList: tempDroneList,
+                                  pilot: widget.pilot,
+                                  flightPurpose: widget.flightPurpose,
+                                  flightDuration: flightDuration,
+                                ),
                               ),
                             );
                           },

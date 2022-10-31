@@ -23,12 +23,14 @@ class FlightSummery extends StatefulWidget {
   final List<Drone> droneList;
   final UserData pilot;
   final String flightPurpose;
+  final Duration flightDuration;
   const FlightSummery({
     Key? key,
     required this.group,
     required this.droneList,
     required this.pilot,
     required this.flightPurpose,
+    required this.flightDuration,
   }) : super(key: key);
 
   @override
@@ -46,14 +48,14 @@ class _FlightSummeryState extends State<FlightSummery> {
   final user = FirebaseAuth.instance.currentUser!;
   String notificationMsg = 'Waiting for notifications';
 
-  final TextEditingController flight_timeController = TextEditingController();
+  TextEditingController flight_timeController = TextEditingController();
   final TextEditingController hours_till_maintenaceController =
       TextEditingController();
   final TextEditingController maintenanceController = TextEditingController();
   @override
   void initState() {
     print(widget.droneList);
-
+    flight_timeController = TextEditingController(text: widget.flightDuration.inSeconds.toString());
     super.initState();
   }
 
@@ -230,7 +232,6 @@ class _FlightSummeryState extends State<FlightSummery> {
                   ),
                   SizedBox(height: sizedBoxHight),
                   TextFormField(
-                    initialValue: drone.flight_time.toString(),
                     controller: flight_timeController,
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
@@ -240,11 +241,12 @@ class _FlightSummeryState extends State<FlightSummery> {
                     decoration: InputDecoration(
                       fillColor: ThemeColors.textFieldBgColor,
                       filled: true,
-                      hintText: "Flight Time",
-                      hintStyle: GoogleFonts.poppins(
+                      labelText:
+                          "Drone air time in hours",
+                      labelStyle: GoogleFonts.poppins(
                         color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
+                        // fontSize: FontSize.small,
+                        // fontWeight: FontWeight.w400,
                       ),
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
@@ -252,29 +254,29 @@ class _FlightSummeryState extends State<FlightSummery> {
                       ),
                     ),
                   ),
-                  SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: maintenanceController,
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.number,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Maintnenace cycle in hours",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
+                  // SizedBox(height: sizedBoxHight),
+                  // TextFormField(
+                  //   controller: maintenanceController,
+                  //   style: GoogleFonts.poppins(
+                  //     color: ThemeColors.whiteTextColor,
+                  //   ),
+                  //   keyboardType: TextInputType.number,
+                  //   cursorColor: ThemeColors.primaryColor,
+                  //   decoration: InputDecoration(
+                  //     fillColor: ThemeColors.textFieldBgColor,
+                  //     filled: true,
+                  //     hintText: "Maintnenace cycle in hours",
+                  //     hintStyle: GoogleFonts.poppins(
+                  //       color: ThemeColors.textFieldHintColor,
+                  //       fontSize: FontSize.small,
+                  //       fontWeight: FontWeight.w400,
+                  //     ),
+                  //     border: OutlineInputBorder(
+                  //       borderSide: BorderSide.none,
+                  //       borderRadius: BorderRadius.all(Radius.circular(18)),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               )),
         ),

@@ -41,6 +41,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
   final double sizedBoxHight = 16;
   final user = FirebaseAuth.instance.currentUser!;
   late UserData loggedUser;
+  late DateTime airTimeStart;
   // late List<Drone> droneList;
   String dropdownValue = list.first;
 
@@ -49,9 +50,6 @@ class _StartFlightPageState extends State<StartFlightPage> {
   //   // TODO: implement initState
   //   super.initState();
   // }
-
-  
-
 
   @override
   Widget build(BuildContext context) {
@@ -208,19 +206,22 @@ class _StartFlightPageState extends State<StartFlightPage> {
                     child: FittedBox(
                       child: FloatingActionButton(
                         onPressed: () {
+                          airTimeStart = DateTime.now();
                           // sendNotificationToAdmins(widget.group.name,
                           //     loggedUser.fullName, droneList);
                           PostCall notification = PostCall(
                               topic: widget.group.name,
                               purpose: dropdownValue,
                               pilot: loggedUser.fullName,
-                              drones: droneList);
+                              drones: droneList,
+                              );
                           notification.makeCallStartFlight();
 
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (context) => StopFlightPage(
+                                  airTimeStart: airTimeStart,
                                   group: widget.group,
                                   droneList: droneList,
                                   pilot: loggedUser,
@@ -258,13 +259,13 @@ class _StartFlightPageState extends State<StartFlightPage> {
       },
       body: jsonEncode(
         {
-            "to": "/topics/$topic",
-            "notification": {
-              "title": "$pilot started a flight!",
-              "body":
-                  "In the group $topic \n$pilot is flying the drones:\n${drones.map((e) => e.name)}",
-            },
-            "priority": "high",
+          "to": "/topics/$topic",
+          "notification": {
+            "title": "$pilot started a flight!",
+            "body":
+                "In the group $topic \n$pilot is flying the drones:\n${drones.map((e) => e.name)}",
+          },
+          "priority": "high",
         },
       ),
     );

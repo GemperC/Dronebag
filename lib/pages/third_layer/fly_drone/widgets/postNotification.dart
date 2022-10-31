@@ -14,7 +14,7 @@ class PostCall {
     required this.topic,
     required this.purpose,
     required this.pilot,
-    required this.drones,
+    required this.drones, 
   });
 
   final postUrl = 'https://fcm.googleapis.com/fcm/send';
