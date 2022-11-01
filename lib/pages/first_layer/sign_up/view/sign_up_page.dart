@@ -48,10 +48,6 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: ThemeColors.scaffoldBgColor,
-      //   elevation: 0,
-      // ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(30),
@@ -83,12 +79,12 @@ class _SignUpPageState extends State<SignUpPage> {
                   key: formKey,
                   child: Column(
                     children: [
-                      ///Name Input Field
+                      //Name Input Field
                       TextFormField(
                         controller: nameController,
                         validator: (value) {
                           if (nameController.text.isEmpty) {
-                            return "This field can't be empty";
+                            return "Please fill in your full name";
                           }
                         },
                         style: GoogleFonts.poppins(
@@ -99,8 +95,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         decoration: InputDecoration(
                           fillColor: ThemeColors.textFieldBgColor,
                           filled: true,
-                          hintText: "Full name",
-                          hintStyle: GoogleFonts.poppins(
+                          labelText: "Full Name",
+                          labelStyle: GoogleFonts.poppins(
                             color: ThemeColors.textFieldHintColor,
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
@@ -113,7 +109,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       SizedBox(height: sizedBoxHight),
 
-                      ///E-mail Input Field
+                      //E-mail Input Field
                       TextFormField(
                         controller: emailController,
                         validator: (email) =>
@@ -128,8 +124,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         decoration: InputDecoration(
                           fillColor: ThemeColors.textFieldBgColor,
                           filled: true,
-                          hintText: "E-mail",
-                          hintStyle: GoogleFonts.poppins(
+                          labelText: "Email",
+                          labelStyle: GoogleFonts.poppins(
                             color: ThemeColors.textFieldHintColor,
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
@@ -142,7 +138,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       SizedBox(height: sizedBoxHight),
 
-                      ///confirm E-mail Input Field
+                      //confirm E-mail Input Field
                       TextFormField(
                         controller: confirmemailController,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -159,8 +155,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         decoration: InputDecoration(
                           fillColor: ThemeColors.textFieldBgColor,
                           filled: true,
-                          hintText: "Confirm E-mail",
-                          hintStyle: GoogleFonts.poppins(
+                          labelText: "Confirm Email",
+                          labelStyle: GoogleFonts.poppins(
                             color: ThemeColors.textFieldHintColor,
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
@@ -173,7 +169,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       SizedBox(height: sizedBoxHight),
 
-                      ///Phone Input Field
+                      //Phone Input Field
                       TextFormField(
                         controller: phoneController,
                         validator: (value) {
@@ -189,8 +185,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         decoration: InputDecoration(
                           fillColor: ThemeColors.textFieldBgColor,
                           filled: true,
-                          hintText: "Phone number",
-                          hintStyle: GoogleFonts.poppins(
+                          labelText: "Phone number",
+                          labelStyle: GoogleFonts.poppins(
                             color: ThemeColors.textFieldHintColor,
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
@@ -203,7 +199,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       SizedBox(height: sizedBoxHight),
 
-                      ///Password Input Field
+                      //Password Input Field
                       TextFormField(
                         controller: passwordController,
                         validator: (value) => value != null && value.length < 6
@@ -218,8 +214,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         decoration: InputDecoration(
                           fillColor: ThemeColors.textFieldBgColor,
                           filled: true,
-                          hintText: "Password",
-                          hintStyle: GoogleFonts.poppins(
+                          labelText: "Password",
+                          labelStyle: GoogleFonts.poppins(
                             color: ThemeColors.textFieldHintColor,
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
@@ -232,7 +228,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       SizedBox(height: sizedBoxHight),
 
-                      ///Confirm Password Input Field
+                      //Confirm Password Input Field
                       TextFormField(
                         controller: confirmpasswordController,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -250,8 +246,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         decoration: InputDecoration(
                           fillColor: ThemeColors.textFieldBgColor,
                           filled: true,
-                          hintText: "Confrim Password",
-                          hintStyle: GoogleFonts.poppins(
+                          labelText: "Confrim Password",
+                          labelStyle: GoogleFonts.poppins(
                             color: ThemeColors.textFieldHintColor,
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
@@ -263,6 +259,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                       SizedBox(height: 50),
+
+                      //Sign in button
                       MainButton2(
                         text: 'Sign Up',
                         onPressed: signUp,

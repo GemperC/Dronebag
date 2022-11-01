@@ -78,8 +78,8 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                           fillColor: ThemeColors.textFieldBgColor,
                           filled: true,
-                          hintText: "E-mail",
-                          hintStyle: GoogleFonts.poppins(
+                          labelText: "Email",
+                          labelStyle: GoogleFonts.poppins(
                             color: ThemeColors.textFieldHintColor,
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
@@ -104,8 +104,8 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                           fillColor: ThemeColors.textFieldBgColor,
                           filled: true,
-                          hintText: "Password",
-                          hintStyle: GoogleFonts.poppins(
+                          labelText: "Password",
+                          labelStyle: GoogleFonts.poppins(
                             color: ThemeColors.textFieldHintColor,
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,

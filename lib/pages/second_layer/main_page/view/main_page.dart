@@ -50,7 +50,7 @@ class MainPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 80),
+              SizedBox(height: 60),
               MainButton2(
                 text: 'My Groups',
                 onPressed: () {
@@ -80,7 +80,7 @@ class MainPage extends StatelessWidget {
                   );
                 },
               ),
-              SizedBox(height: 80),
+              Spacer(),
               MainButton2(
                 text: 'Sign Out',
                 onPressed: () => FirebaseAuth.instance.signOut(),

@@ -53,7 +53,7 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
       ),
     );
   }
-
+  //get the group that contain the user
   Stream<List<Group>> readMyGroups() {
     final user = FirebaseAuth.instance.currentUser!;
     return FirebaseFirestore.instance
@@ -64,7 +64,7 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
             snapshot.docs.map((doc) => Group.fromJson(doc.data())).toList());
   }
 
-//build the widget thast shows the groups
+//build the the group tile
   Widget buildGroupTile(Group group) => ListTile(
       // go to the group main page
       onTap: () => Navigator.push(
@@ -76,11 +76,11 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
       title: Center(
         child: Padding(
           // padding betwwent he cards
-          padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+          padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
           child: Container(
             decoration: BoxDecoration(
                 color: Color.fromARGB(255, 65, 61, 82),
-                borderRadius: BorderRadius.all(Radius.circular(12))),
+                borderRadius: BorderRadius.all(Radius.circular(8))),
             child: Padding(
               // padding of the text in the cards
               padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
@@ -105,8 +105,8 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
                       '${group.users.length} Members',
                       style: GoogleFonts.poppins(
                         color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.large,
-                        fontWeight: FontWeight.w600,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
