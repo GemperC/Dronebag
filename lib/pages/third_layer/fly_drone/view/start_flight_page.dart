@@ -11,7 +11,6 @@ import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_repository/src/models/models.dart';
 import 'package:dronebag/pages/third_layer/fly_drone/fly_drone.dart';
 import 'package:flutter/gestures.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
@@ -115,7 +114,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                           onPressed: () {
                             pickDroneDialog();
                           },
-                          child: Icon(FontAwesomeIcons.plus),
+                          child: ImageIcon(AssetImage('assets/icons/plus.png')),
                         )))
                   ],
                 ),

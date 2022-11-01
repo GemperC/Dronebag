@@ -13,7 +13,6 @@ import 'package:dronebag/pages/third_layer/fly_drone/fly_drone.dart';
 import 'package:dronebag/services/local_notifications.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:flutter/gestures.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/widgets.dart';

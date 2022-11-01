@@ -20,6 +20,8 @@ class GroupMembers extends StatefulWidget {
 }
 
 class _GroupMembersState extends State<GroupMembers> {
+  final StreamController<List<UserData>> _membersController =
+      StreamController<List<UserData>>.broadcast();
   final loggedUser = FirebaseAuth.instance.currentUser!;
 
   @override
@@ -37,33 +39,20 @@ class _GroupMembersState extends State<GroupMembers> {
           backgroundColor: ThemeColors.scaffoldBgColor),
       body: SafeArea(
         child: Padding(
-            padding: const EdgeInsets.all(30),
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Group Admins',
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                      fontSize: FontSize.xLarge,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Group Users',
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                      fontSize: FontSize.xLarge,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            )),
+          padding: const EdgeInsets.all(30),
+          child:
+              // StreamBuilder<List<UserData>>(
+              //   stream: fetchGroupMembers(widget.group.users),
+              //   builder: ((context, snapshot) {
+              //     if (snapshot.hasData) {
+              //       final groupMembersList = snapshot.data!;
+              ListView.builder(
+            itemCount: widget.group.users.length,
+            itemBuilder: (context, index) {
+              return buildMemberTile(widget.group.users[index]);
+            },
+          ),
+        ),
       ),
     );
     // );
