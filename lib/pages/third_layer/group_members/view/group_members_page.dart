@@ -51,6 +51,10 @@ class _GroupMembersState extends State<GroupMembers> {
                     ),
                   ),
                 ),
+                SizedBox(height: 10),
+                ListView.builder(
+                  itemCount: ,
+                  itemBuilder: itemBuilder),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -62,6 +66,7 @@ class _GroupMembersState extends State<GroupMembers> {
                     ),
                   ),
                 ),
+                SizedBox(height: 10),
               ],
             )),
       ),
