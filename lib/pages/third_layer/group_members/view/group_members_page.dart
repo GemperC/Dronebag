@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
+import 'package:dronebag/domain/group_members_repository/group_members_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
-import 'package:dronebag/domain/user_repository/src/models/models.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,51 +37,124 @@ class _GroupMembersState extends State<GroupMembers> {
           backgroundColor: ThemeColors.scaffoldBgColor),
       body: SafeArea(
         child: Padding(
-            padding: const EdgeInsets.all(30),
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Group Admins',
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                      fontSize: FontSize.xLarge,
-                      fontWeight: FontWeight.w600,
+          padding: const EdgeInsets.all(30),
+          child: StreamBuilder<List<GroupMember>>(
+            stream: fetchGroupMembers(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final groupUsers = snapshot.data!;
+                List<GroupMember> groupAdminsList = [];
+                List<GroupMember> groupMembersList = [];
+                groupUsers.forEach(
+                  (user) {
+                    if (user.role == 'admin') {
+                      groupAdminsList.add(user);
+                    } else {
+                      groupMembersList.add(user);
+                    }
+                  },
+                );
+                return Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Group Admins',
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                          fontSize: FontSize.xLarge,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                ListView.builder(
-                  itemCount: ,
-                  itemBuilder: itemBuilder),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Group Users',
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                      fontSize: FontSize.xLarge,
-                      fontWeight: FontWeight.w600,
+                    SizedBox(height: 10),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: groupAdminsList.length,
+                        itemBuilder: ((context, index) {
+                          return buildGroupMemberTile(groupAdminsList[index]);
+                        })),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Group Users',
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                          fontSize: FontSize.xLarge,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                SizedBox(height: 10),
-              ],
-            )),
+                    SizedBox(height: 10),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: groupMembersList.length,
+                        itemBuilder: ((context, index) {
+                          return buildGroupMemberTile(groupMembersList[index]);
+                        })),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return SingleChildScrollView(
+                  child: Text('Something went wrong! \n\n${snapshot}',
+                      style: TextStyle(color: Colors.white)),
+                );
+              } else {
+                return Container(
+                    child: Center(child: CircularProgressIndicator()));
+              }
+            },
+          ),
+        ),
       ),
     );
-    // );
-    // } else if (snapshot.hasError) {
-    //   return Text('Something went wrong! \n\n${snapshot}',
-    //       style: TextStyle(color: Colors.white));
-    // } else {
-    //   return Center(child: CircularProgressIndicator());
-    // }
-    // }),
-    // )),
-    // ),
-    // );
+  }
+
+  Stream<List<GroupMember>> fetchGroupMembers() {
+    return FirebaseFirestore.instance
+        .collection('groups/${widget.group.id}/members')
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => GroupMember.fromJson(doc.data()))
+            .toList());
+  }
+
+  Widget buildGroupMemberTile(GroupMember member) {
+    final memberDoc = FirebaseFirestore.instance
+        .collection('groups')
+        .doc(widget.group.id)
+        .collection("members")
+        .doc(member.email);
+    return ListTile(
+        onTap: (() {
+          if (member.role == 'admin') {
+            memberDoc.update({'role': 'member'});
+          } else if (member.role == 'member') {
+            memberDoc.update({'role': 'admin'});
+          }
+        }),
+        title: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              height: 80,
+              width: 450,
+              decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              child: Center(
+                child: Text(
+                  member.email,
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.whiteTextColor,
+                    fontSize: FontSize.xxLarge,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ));
   }
 
   // Stream<List<UserData>> fetchGroupMembers(List<dynamic> groupMembers) {
