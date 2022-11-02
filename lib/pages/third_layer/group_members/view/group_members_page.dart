@@ -145,7 +145,7 @@ class _GroupMembersState extends State<GroupMembers> {
     return ListTile(
         onTap: (() {
           if (loggedUserIsAdmin) {
-            if (member.role == 'admin') {
+            if (member.role == 'admin' && member.email != loggedUser.email) {
               memberDoc.update({'role': 'member'});
             } else if (member.role == 'member') {
               memberDoc.update({'role': 'admin'});
