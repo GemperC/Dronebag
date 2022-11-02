@@ -4,8 +4,10 @@ import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/group_members_repository/group_members_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
+import 'package:dronebag/domain/user_repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GroupMembers extends StatefulWidget {
@@ -42,12 +44,16 @@ class _GroupMembersState extends State<GroupMembers> {
             stream: fetchGroupMembers(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                bool loggedUserIsAdmin = false;
                 final groupUsers = snapshot.data!;
                 List<GroupMember> groupAdminsList = [];
                 List<GroupMember> groupMembersList = [];
                 groupUsers.forEach(
                   (user) {
                     if (user.role == 'admin') {
+                      if (loggedUser.email == user.email) {
+                        loggedUserIsAdmin = true;
+                      }
                       groupAdminsList.add(user);
                     } else {
                       groupMembersList.add(user);
@@ -67,13 +73,14 @@ class _GroupMembersState extends State<GroupMembers> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
                     ListView.builder(
                         shrinkWrap: true,
                         itemCount: groupAdminsList.length,
                         itemBuilder: ((context, index) {
-                          return buildGroupMemberTile(groupAdminsList[index]);
+                          return buildGroupMemberTile(
+                              groupAdminsList[index], loggedUserIsAdmin);
                         })),
+                    SizedBox(height: 20),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -85,12 +92,12 @@ class _GroupMembersState extends State<GroupMembers> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
                     ListView.builder(
                         shrinkWrap: true,
                         itemCount: groupMembersList.length,
                         itemBuilder: ((context, index) {
-                          return buildGroupMemberTile(groupMembersList[index]);
+                          return buildGroupMemberTile(
+                              groupMembersList[index], loggedUserIsAdmin);
                         })),
                   ],
                 );
@@ -119,42 +126,74 @@ class _GroupMembersState extends State<GroupMembers> {
             .toList());
   }
 
-  Widget buildGroupMemberTile(GroupMember member) {
+  Widget buildGroupMemberTile(GroupMember member, bool loggedUserIsAdmin) {
     final memberDoc = FirebaseFirestore.instance
         .collection('groups')
         .doc(widget.group.id)
         .collection("members")
         .doc(member.email);
+    print(getMemberName(member));
+    String memberName = '';
+    member.user.get().then(
+      (DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          memberName = documentSnapshot['Full_Name'];
+          print(memberName);
+        }
+      },
+    );
     return ListTile(
         onTap: (() {
-          if (member.role == 'admin') {
-            memberDoc.update({'role': 'member'});
-          } else if (member.role == 'member') {
-            memberDoc.update({'role': 'admin'});
+          if (loggedUserIsAdmin) {
+            if (member.role == 'admin') {
+              memberDoc.update({'role': 'member'});
+            } else if (member.role == 'member') {
+              memberDoc.update({'role': 'admin'});
+            }
           }
         }),
         title: Center(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
             child: Container(
-              height: 80,
               width: 450,
               decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              child: Center(
-                child: Text(
-                  member.email,
-                  style: GoogleFonts.poppins(
-                    color: ThemeColors.whiteTextColor,
-                    fontSize: FontSize.xxLarge,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                  color: Color.fromARGB(255, 65, 61, 82),
+                  borderRadius: BorderRadius.all(Radius.circular(12))),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
+                child: FutureBuilder<String?>(
+                    future: getMemberName(member),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final memberName = snapshot.data!;
+                        return Column(
+                          children: [
+                            Text(
+                              memberName,
+                              style: GoogleFonts.poppins(
+                                color: ThemeColors.whiteTextColor,
+                                fontSize: FontSize.large,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      return CircularProgressIndicator();
+                    }),
               ),
             ),
           ),
         ));
+  }
+
+  Future<String?> getMemberName(GroupMember member) async {
+    String memberName;
+    DocumentSnapshot documentSnapshot = await member.user.get();
+    if (documentSnapshot.exists) {
+      return (documentSnapshot.data() as Map<String, dynamic>)["Full_Name"];
+    }
   }
 
   // Stream<List<UserData>> fetchGroupMembers(List<dynamic> groupMembers) {
