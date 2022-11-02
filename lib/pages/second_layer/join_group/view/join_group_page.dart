@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
+import 'package:dronebag/domain/group_members_repository/group_members_repository.dart';
 import 'package:dronebag/domain/user_settings_repository/src/models/models.dart';
 import 'package:dronebag/pages/second_layer/my_groups/my_groups.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
@@ -111,6 +112,7 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
     if (!isValid) {
       return;
     } else {
+      // set the settings for the new user in the group
       final docuserSettings = FirebaseFirestore.instance
           .collection('users')
           .doc(user.email)
@@ -120,24 +122,32 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
       final json = usersettings.toJson();
       await docuserSettings.set(json);
 
+// add the user to the members collection of the group
       FirebaseFirestore.instance
           .collection('groups')
           .where("Group_Key", isEqualTo: groupKey)
           .get()
           .then((QuerySnapshot querySnapshot) {
-        querySnapshot.docs.forEach((doc) {
+        querySnapshot.docs.forEach((doc) async {
           final group =
               FirebaseFirestore.instance.collection('groups').doc(doc.id);
-          group.update({
-            'Group_Users': FieldValue.arrayUnion([user.email!])
-          });
-          print(doc.get('Group_Name'));
+          group.update({'users': FieldValue.arrayUnion([user.email!])});
+
           final usersetting = FirebaseFirestore.instance
               .collection('users')
               .doc(user.email)
               .collection('settings')
               .doc(docuserSettings.id)
               .update({'group': doc.get('Group_Name')});
+
+          final docGroupMember = FirebaseFirestore.instance
+              .collection('groups')
+              .doc(doc.id)
+              .collection('members')
+              .doc(user.email);
+          final member = GroupMember(role: 'member', email: user.email!);
+          final jsonMember = member.toJson();
+          await docGroupMember.set(jsonMember);
         });
       });
 

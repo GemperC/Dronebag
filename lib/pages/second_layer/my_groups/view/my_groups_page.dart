@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
+import 'package:dronebag/domain/group_members_repository/group_members_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/pages/third_layer/group_main/view/group_main_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -52,12 +53,13 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
       ),
     );
   }
+
   //get the group that contain the user
   Stream<List<Group>> readMyGroups() {
     final user = FirebaseAuth.instance.currentUser!;
     return FirebaseFirestore.instance
         .collection('groups')
-        .where('Group_Users', arrayContains: user.email!)
+        .where('users', arrayContains: user.email!)
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Group.fromJson(doc.data())).toList());
@@ -100,23 +102,38 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
                   Align(
                     //alingemt of the titel
                     alignment: Alignment.topLeft,
-                    child: Text(
-                      '${group.users.length} Members',
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.medium,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
+                    child: StreamBuilder<List<GroupMember>>(
+                        stream: FirebaseFirestore.instance
+                            .collection('groups')
+                            .doc(group.id)
+                            .collection('members')
+                            .snapshots()
+                            .map((snapshot) => snapshot.docs
+                                .map((doc) => GroupMember.fromJson(doc.data()))
+                                .toList()),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final groupMemberList = snapshot.data!;
+                            return Text(
+                              '${groupMemberList.length} Members',
+                              style: GoogleFonts.poppins(
+                                color: ThemeColors.textFieldHintColor,
+                                fontSize: FontSize.medium,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text('Something went wrong! \n\n${snapshot}',
+                                style: TextStyle(color: Colors.white));
+                          } else {
+                            return CircularProgressIndicator();
+                          }
+                        }),
                   ),
-          
                 ],
               ),
             ),
           ),
         ),
       ));
-
-
-      
 }

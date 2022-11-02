@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
+import 'package:dronebag/domain/group_members_repository/group_members_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_settings_repository/user_settings_repository.dart';
 import 'package:dronebag/pages/second_layer/my_groups/my_groups.dart';
@@ -115,25 +116,38 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
     if (!isValid) {
       return;
     } else {
+      //create the user settings for the group
       final docuserSettings = FirebaseFirestore.instance
           .collection('users')
           .doc(user.email)
           .collection('settings')
           .doc();
-      final usersettings = UserSettings(id: docuserSettings.id, group: groupNameController.text.trim());
-      final json1 = usersettings.toJson();
-      await docuserSettings.set(json1);
+      final usersettings = UserSettings(
+          id: docuserSettings.id, group: groupNameController.text.trim());
+      final jsonUser = usersettings.toJson();
+      await docuserSettings.set(jsonUser);
 
+//create the group
       final docGroup = FirebaseFirestore.instance.collection('groups').doc();
       final group = Group(
           name: groupNameController.text.trim(),
-          admins: [user.email!],
-          users: [user.email!],
           id: docGroup.id,
-          key: generateGroupKey());
+          key: generateGroupKey(),
+          users: [user.email!]);
 
-      final json = group.toJson();
-      await docGroup.set(json);
+      final jsonGroup = group.toJson();
+      await docGroup.set(jsonGroup);
+
+//add the user to the group members collection
+      final docGroupMember = FirebaseFirestore.instance
+          .collection('groups')
+          .doc(docGroup.id)
+          .collection('members')
+          .doc(user.email);
+      final member = GroupMember(role: 'admin', email: user.email!);
+      final jsonMember = member.toJson();
+      await docGroupMember.set(jsonMember);
+      //show snackbar
       Utils.showSnackBarWithColor('Group has been created', Colors.blue);
       Navigator.pop(context);
       Navigator.push(

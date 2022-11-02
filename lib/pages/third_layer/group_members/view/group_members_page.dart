@@ -133,15 +133,6 @@ class _GroupMembersState extends State<GroupMembers> {
         .collection("members")
         .doc(member.email);
     print(getMemberName(member));
-    String memberName = '';
-    member.user.get().then(
-      (DocumentSnapshot documentSnapshot) {
-        if (documentSnapshot.exists) {
-          memberName = documentSnapshot['Full_Name'];
-          print(memberName);
-        }
-      },
-    );
     return ListTile(
         onTap: (() {
           if (loggedUserIsAdmin) {
@@ -162,15 +153,15 @@ class _GroupMembersState extends State<GroupMembers> {
                   borderRadius: BorderRadius.all(Radius.circular(12))),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
-                child: FutureBuilder<String?>(
+                child: FutureBuilder<UserData?>(
                     future: getMemberName(member),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        final memberName = snapshot.data!;
+                        final user = snapshot.data!;
                         return Column(
                           children: [
                             Text(
-                              memberName,
+                              user.fullName,
                               style: GoogleFonts.poppins(
                                 color: ThemeColors.whiteTextColor,
                                 fontSize: FontSize.large,
@@ -188,11 +179,13 @@ class _GroupMembersState extends State<GroupMembers> {
         ));
   }
 
-  Future<String?> getMemberName(GroupMember member) async {
-    String memberName;
-    DocumentSnapshot documentSnapshot = await member.user.get();
-    if (documentSnapshot.exists) {
-      return (documentSnapshot.data() as Map<String, dynamic>)["Full_Name"];
+  Future<UserData?> getMemberName(GroupMember member) async {
+    final userDoc =
+        FirebaseFirestore.instance.collection('users').doc(member.email);
+    final snapshot = await userDoc.get();
+
+    if (snapshot.exists) {
+      return UserData.fromJson(snapshot.data()!);
     }
   }
 
