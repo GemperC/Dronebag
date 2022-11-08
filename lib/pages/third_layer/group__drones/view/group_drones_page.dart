@@ -90,6 +90,8 @@ class _GroupDronesState extends State<GroupDrones> {
     );
   }
 
+
+
 //fetch group's drones list
   Stream<List<Drone>> fetchGroupDrones() {
     return FirebaseFirestore.instance

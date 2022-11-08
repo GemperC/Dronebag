@@ -38,7 +38,6 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
               builder: ((context, snapshot) {
                 if (snapshot.hasData) {
                   final groups = snapshot.data!;
-
                   return ListView(
                     children: groups.map(buildGroupTile).toList(),
                   );

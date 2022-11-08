@@ -93,7 +93,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         physics: NeverScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          childAspectRatio: 2,
+                          childAspectRatio: 1.8,
                         ),
                         itemCount: batteries.length,
                         shrinkWrap: true,
@@ -110,13 +110,15 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                       return const Center(child: CircularProgressIndicator());
                     }
                   })),
-                  SizedBox(height: 20),
-                  Text('Station\'s issues',
-                  style: GoogleFonts.poppins(
+              SizedBox(height: 20),
+              Text(
+                'Station\'s issues',
+                style: GoogleFonts.poppins(
                   color: ThemeColors.textFieldHintColor,
                   fontSize: FontSize.large,
                   fontWeight: FontWeight.w600,
-                ),)
+                ),
+              )
             ]),
           ),
         ));
@@ -147,13 +149,13 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
       title: Center(
         child: Padding(
           // padding betwwent he cards
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(5),
           child: Container(
-            height: 80,
-            width: 120,
+            // height: 120,
+            width: 150,
             decoration: BoxDecoration(
                 color: batteryColor,
-                borderRadius: BorderRadius.all(Radius.circular(12))),
+                borderRadius: BorderRadius.all(Radius.circular(11))),
             child: Column(
               children: [
                 Text(
@@ -161,7 +163,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                   style: GoogleFonts.poppins(
                     color: Colors.black,
                     fontSize: FontSize.medium,
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
                 Text(
@@ -267,65 +269,67 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
               ),
               SizedBox(height: 30),
               Align(
-                  alignment: Alignment.topLeft,
-                  child: RichText(
-                      text: TextSpan(children: [
-                    TextSpan(
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.whiteTextColor,
-                        fontSize: FontSize.xMedium,
-                        fontWeight: FontWeight.w500,
+                alignment: Alignment.topLeft,
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                          fontSize: FontSize.xMedium,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        text: "Issue list ",
                       ),
-                      text: "Issue list ",
-                    ),
-                    WidgetSpan(
-                        child: Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                    )),
-                    TextSpan(
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          createBatteryIssue(battery);
-                        },
-                      text: 'Add Issue',
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.primaryColor,
-                        fontSize: FontSize.medium,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    )
-                  ]))),
-              Container(
-                child: StreamBuilder<List<BatteryIssue>>(
-                  stream: fetchBatteryIssue(battery),
-                  builder: ((context, snapshot) {
-                    if (snapshot.hasData) {
-                      final batteryIssues = snapshot.data!;
-                      //print(issues.length);
-                      return SizedBox(
-                          width: double.maxFinite,
-                          height: double.maxFinite,
-                          child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: batteryIssues.length,
-                            itemBuilder: (context, index) {
-                              return buildBatteryIssueTile(
-                                  batteryIssues[index], battery.id);
-                            },
-                            // children: batteryIssues
-                            //     .map(buildBatteryIssueTile)
-                            //     .toList()),
-                          ));
-                    } else if (snapshot.hasError) {
-                      return SingleChildScrollView(
-                        child: Text('Something went wrong! \n\n${snapshot}',
-                            style: TextStyle(color: Colors.white)),
-                      );
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  }),
+                      WidgetSpan(
+                          child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      )),
+                      TextSpan(
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            createBatteryIssue(battery);
+                          },
+                        text: 'Add Issue',
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.primaryColor,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
+              ),
+              StreamBuilder<List<BatteryIssue>>(
+                stream: fetchBatteryIssue(battery),
+                builder: ((context, snapshot) {
+                  if (snapshot.hasData) {
+                    final batteryIssues = snapshot.data!;
+                    //print(issues.length);
+                    return SizedBox(
+                        width: double.maxFinite,
+                        height: batteryIssues.length*120,
+                        child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: batteryIssues.length,
+                          itemBuilder: (context, index) {
+                            return buildBatteryIssueTile(
+                                batteryIssues[index], battery.id);
+                          },
+                          // children: batteryIssues
+                          //     .map(buildBatteryIssueTile)
+                          //     .toList()),
+                        ));
+                  } else if (snapshot.hasError) {
+                    return SingleChildScrollView(
+                      child: Text('Something went wrong! \n\n${snapshot}',
+                          style: TextStyle(color: Colors.white)),
+                    );
+                  } else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                }),
               ),
               SizedBox(height: 30)
             ],
@@ -346,6 +350,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
       ),
     );
   }
+
 
   Future createBatteryIssue(Battery battery) async {
     final docBatteryIssue = FirebaseFirestore.instance

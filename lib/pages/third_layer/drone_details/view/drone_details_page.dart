@@ -78,30 +78,31 @@ class _DroneDetailsState extends State<DroneDetails> {
             ),
           ],
         ),
-        body: buildDronePage(widget.drone));
-  }
-
-  Widget buildDronePage(Drone drone) {
-    return SingleChildScrollView(
+        body: StreamBuilder<List<Drone>>(
+            stream: fetchDrone(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final drone = snapshot.data!.first;
+                return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             richText_listingDroneDetails('Name', drone.name),
-            SizedBox(height: 16),
+            SizedBox(height: 12),
             richText_listingDroneDetails('Serial Number', drone.serial_number),
-            SizedBox(height: 16),
+            SizedBox(height: 12),
             richText_listingDroneDetailsDates('Date Added', drone.date_added),
-            SizedBox(height: 16),
+            SizedBox(height: 12),
             richText_listingDroneDetailsDates('Date Bought', drone.date_bought),
-            SizedBox(height: 16),
+            SizedBox(height: 12),
             richText_listingDroneDetails(
                 'Flight Time', '${drone.flight_time} hours'),
-            SizedBox(height: 16),
+            SizedBox(height: 12),
             richText_listingDroneDetails(
                 'Mainetenance Cycle', 'every ${drone.maintenance} hours'),
-            SizedBox(height: 16),
+            SizedBox(height: 12),
             Row(
               children: [
                 richText_listingDroneDetails('Next Maintenance in',
@@ -116,9 +117,8 @@ class _DroneDetailsState extends State<DroneDetails> {
                             .doc(widget.groupID)
                             .collection('drones')
                             .doc(drone.id)
-                            .update({
-                              'hours_till_maintenace': drone.maintenance
-                            });
+                            .update(
+                                {'hours_till_maintenace': drone.maintenance});
                       },
                     text: 'Reset',
                     style: GoogleFonts.poppins(
@@ -151,7 +151,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                   '10 Records',
                   style: GoogleFonts.poppins(
                     color: ThemeColors.whiteTextColor,
-                    fontSize: FontSize.large,
+                    fontSize: FontSize.medium,
                     fontWeight: FontWeight.w300,
                   ),
                 )
@@ -178,7 +178,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                   '0 Records',
                   style: GoogleFonts.poppins(
                     color: ThemeColors.whiteTextColor,
-                    fontSize: FontSize.large,
+                    fontSize: FontSize.medium,
                     fontWeight: FontWeight.w300,
                   ),
                 )
@@ -205,7 +205,162 @@ class _DroneDetailsState extends State<DroneDetails> {
                   '0 Records',
                   style: GoogleFonts.poppins(
                     color: ThemeColors.whiteTextColor,
-                    fontSize: FontSize.large,
+                    fontSize: FontSize.medium,
+                    fontWeight: FontWeight.w300,
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+              } else if (snapshot.hasError) {
+                return SingleChildScrollView(
+                  child: Text('Something went wrong! \n\n${snapshot}',
+                      style: TextStyle(color: Colors.white)),
+                );
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            }));
+  }
+
+  Stream<List<Drone>> fetchDrone() {
+    return FirebaseFirestore.instance
+        .collection('groups')
+        .doc(widget.groupID)
+        .collection('drones')
+        .where('id', isEqualTo: widget.drone.id)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Drone.fromJson(doc.data())).toList());
+  }
+
+  Widget buildDronePage(Drone drone) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            richText_listingDroneDetails('Name', drone.name),
+            SizedBox(height: 12),
+            richText_listingDroneDetails('Serial Number', drone.serial_number),
+            SizedBox(height: 12),
+            richText_listingDroneDetailsDates('Date Added', drone.date_added),
+            SizedBox(height: 12),
+            richText_listingDroneDetailsDates('Date Bought', drone.date_bought),
+            SizedBox(height: 12),
+            richText_listingDroneDetails(
+                'Flight Time', '${drone.flight_time} hours'),
+            SizedBox(height: 12),
+            richText_listingDroneDetails(
+                'Mainetenance Cycle', 'every ${drone.maintenance} hours'),
+            SizedBox(height: 12),
+            Row(
+              children: [
+                richText_listingDroneDetails('Next Maintenance in',
+                    '${drone.hours_till_maintenace} flight hours'),
+                SizedBox(width: 10),
+                RichText(
+                  text: TextSpan(
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        FirebaseFirestore.instance
+                            .collection('groups')
+                            .doc(widget.groupID)
+                            .collection('drones')
+                            .doc(drone.id)
+                            .update(
+                                {'hours_till_maintenace': drone.maintenance});
+                      },
+                    text: 'Reset',
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.primaryColor,
+                      fontSize: FontSize.medium,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            SizedBox(height: 25),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                MainButton3(
+                    text: 'Maintnance History',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MaintenanceRecords(
+                                  groupID: widget.groupID,
+                                  droneID: drone.id,
+                                )),
+                      );
+                    }),
+                SizedBox(width: 20),
+                Text(
+                  '10 Records',
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.whiteTextColor,
+                    fontSize: FontSize.medium,
+                    fontWeight: FontWeight.w300,
+                  ),
+                )
+              ],
+            ),
+            SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                MainButton3(
+                    text: 'Issues',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Issues(
+                                  groupID: widget.groupID,
+                                  droneID: drone.id,
+                                )),
+                      );
+                    }),
+                SizedBox(width: 20),
+                Text(
+                  '0 Records',
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.whiteTextColor,
+                    fontSize: FontSize.medium,
+                    fontWeight: FontWeight.w300,
+                  ),
+                )
+              ],
+            ),
+            SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                MainButton3(
+                    text: 'Flights Data',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FlightDataPage(
+                                  groupID: widget.groupID,
+                                  droneID: drone.id,
+                                )),
+                      );
+                    }),
+                SizedBox(width: 20),
+                Text(
+                  '0 Records',
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.whiteTextColor,
+                    fontSize: FontSize.medium,
                     fontWeight: FontWeight.w300,
                   ),
                 )
@@ -225,7 +380,7 @@ class _DroneDetailsState extends State<DroneDetails> {
             text: "$field:    ",
             style: GoogleFonts.poppins(
               color: ThemeColors.whiteTextColor,
-              fontSize: FontSize.xMedium,
+              fontSize: FontSize.medium,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -233,7 +388,7 @@ class _DroneDetailsState extends State<DroneDetails> {
             text: '$droneDetail',
             style: GoogleFonts.poppins(
               color: ThemeColors.whiteTextColor,
-              fontSize: FontSize.xMedium,
+              fontSize: FontSize.medium,
               fontWeight: FontWeight.w300,
             ),
           ),
@@ -257,7 +412,7 @@ class _DroneDetailsState extends State<DroneDetails> {
           ),
           TextSpan(
             text:
-                '${droneDetailDate.year}-${droneDetailDate.month}-${droneDetailDate.day}',
+                '${droneDetailDate.day}-${droneDetailDate.month}-${droneDetailDate.year}',
             style: GoogleFonts.poppins(
               color: ThemeColors.whiteTextColor,
               fontSize: FontSize.xMedium,
