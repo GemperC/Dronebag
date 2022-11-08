@@ -437,8 +437,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                         ),
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(18)),
+                          borderRadius: BorderRadius.all(Radius.circular(18)),
                         ),
                       ),
                     ),
@@ -447,6 +446,24 @@ class _DroneDetailsState extends State<DroneDetails> {
               )),
         ),
         actions: [
+          TextButton(
+              onPressed: () {
+                FirebaseFirestore.instance
+                    .collection('groups')
+                    .doc(widget.groupID)
+                    .collection('drones')
+                    .doc(widget.drone.id)
+                    .delete();
+                int count = 0;
+                Navigator.popUntil(context, (route) {
+                  return count++ == 2;
+                });
+                Utils.showSnackBarWithColor('Drone ${widget.drone.name} has been deleted from the group', Colors.blue);
+              },
+              child: Text(
+                'Delete Drone',
+                style: TextStyle(color: Colors.red),
+              )),
           TextButton(
               onPressed: () {
                 Navigator.pop(context);
