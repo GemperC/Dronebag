@@ -84,137 +84,142 @@ class _DroneDetailsState extends State<DroneDetails> {
               if (snapshot.hasData) {
                 final drone = snapshot.data!.first;
                 return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            richText_listingDroneDetails('Name', drone.name),
-            SizedBox(height: 12),
-            richText_listingDroneDetails('Serial Number', drone.serial_number),
-            SizedBox(height: 12),
-            richText_listingDroneDetailsDates('Date Added', drone.date_added),
-            SizedBox(height: 12),
-            richText_listingDroneDetailsDates('Date Bought', drone.date_bought),
-            SizedBox(height: 12),
-            richText_listingDroneDetails(
-                'Flight Time', '${drone.flight_time} hours'),
-            SizedBox(height: 12),
-            richText_listingDroneDetails(
-                'Mainetenance Cycle', 'every ${drone.maintenance} hours'),
-            SizedBox(height: 12),
-            Row(
-              children: [
-                richText_listingDroneDetails('Next Maintenance in',
-                    '${drone.hours_till_maintenace} flight hours'),
-                SizedBox(width: 10),
-                RichText(
-                  text: TextSpan(
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        FirebaseFirestore.instance
-                            .collection('groups')
-                            .doc(widget.groupID)
-                            .collection('drones')
-                            .doc(drone.id)
-                            .update(
-                                {'hours_till_maintenace': drone.maintenance});
-                      },
-                    text: 'Reset',
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.primaryColor,
-                      fontSize: FontSize.medium,
-                      fontWeight: FontWeight.w600,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        richText_listingDroneDetails('Name', drone.name),
+                        SizedBox(height: 12),
+                        richText_listingDroneDetails(
+                            'Serial Number', drone.serial_number),
+                        SizedBox(height: 12),
+                        richText_listingDroneDetailsDates(
+                            'Date Added', drone.date_added),
+                        SizedBox(height: 12),
+                        richText_listingDroneDetailsDates(
+                            'Date Bought', drone.date_bought),
+                        SizedBox(height: 12),
+                        richText_listingDroneDetails(
+                            'Flight Time', '${drone.flight_time} hours'),
+                        SizedBox(height: 12),
+                        richText_listingDroneDetails('Mainetenance Cycle',
+                            'every ${drone.maintenance} hours'),
+                        SizedBox(height: 12),
+                        Row(
+                          children: [
+                            richText_listingDroneDetails('Next Maintenance in',
+                                '${drone.hours_till_maintenace} flight hours'),
+                            SizedBox(width: 10),
+                            RichText(
+                              text: TextSpan(
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    FirebaseFirestore.instance
+                                        .collection('groups')
+                                        .doc(widget.groupID)
+                                        .collection('drones')
+                                        .doc(drone.id)
+                                        .update({
+                                      'hours_till_maintenace': drone.maintenance
+                                    });
+                                  },
+                                text: 'Reset',
+                                style: GoogleFonts.poppins(
+                                  color: ThemeColors.primaryColor,
+                                  fontSize: FontSize.medium,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 25),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            MainButton3(
+                                text: 'Maintnance History',
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            MaintenanceRecords(
+                                              groupID: widget.groupID,
+                                              droneID: drone.id,
+                                            )),
+                                  );
+                                }),
+                            SizedBox(width: 20),
+                            Text(
+                              '10 Records',
+                              style: GoogleFonts.poppins(
+                                color: ThemeColors.whiteTextColor,
+                                fontSize: FontSize.medium,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            MainButton3(
+                                text: 'Issues',
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Issues(
+                                              groupID: widget.groupID,
+                                              droneID: drone.id,
+                                            )),
+                                  );
+                                }),
+                            SizedBox(width: 20),
+                            Text(
+                              '0 Records',
+                              style: GoogleFonts.poppins(
+                                color: ThemeColors.whiteTextColor,
+                                fontSize: FontSize.medium,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            MainButton3(
+                                text: 'Flights Data',
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => FlightDataPage(
+                                              groupID: widget.groupID,
+                                              droneID: drone.id,
+                                            )),
+                                  );
+                                }),
+                            SizedBox(width: 20),
+                            Text(
+                              '0 Records',
+                              style: GoogleFonts.poppins(
+                                color: ThemeColors.whiteTextColor,
+                                fontSize: FontSize.medium,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                )
-              ],
-            ),
-            SizedBox(height: 25),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                MainButton3(
-                    text: 'Maintnance History',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MaintenanceRecords(
-                                  groupID: widget.groupID,
-                                  droneID: drone.id,
-                                )),
-                      );
-                    }),
-                SizedBox(width: 20),
-                Text(
-                  '10 Records',
-                  style: GoogleFonts.poppins(
-                    color: ThemeColors.whiteTextColor,
-                    fontSize: FontSize.medium,
-                    fontWeight: FontWeight.w300,
-                  ),
-                )
-              ],
-            ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                MainButton3(
-                    text: 'Issues',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Issues(
-                                  groupID: widget.groupID,
-                                  droneID: drone.id,
-                                )),
-                      );
-                    }),
-                SizedBox(width: 20),
-                Text(
-                  '0 Records',
-                  style: GoogleFonts.poppins(
-                    color: ThemeColors.whiteTextColor,
-                    fontSize: FontSize.medium,
-                    fontWeight: FontWeight.w300,
-                  ),
-                )
-              ],
-            ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                MainButton3(
-                    text: 'Flights Data',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => FlightDataPage(
-                                  groupID: widget.groupID,
-                                  droneID: drone.id,
-                                )),
-                      );
-                    }),
-                SizedBox(width: 20),
-                Text(
-                  '0 Records',
-                  style: GoogleFonts.poppins(
-                    color: ThemeColors.whiteTextColor,
-                    fontSize: FontSize.medium,
-                    fontWeight: FontWeight.w300,
-                  ),
-                )
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+                );
               } else if (snapshot.hasError) {
                 return SingleChildScrollView(
                   child: Text('Something went wrong! \n\n${snapshot}',
@@ -235,141 +240,6 @@ class _DroneDetailsState extends State<DroneDetails> {
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Drone.fromJson(doc.data())).toList());
-  }
-
-  Widget buildDronePage(Drone drone) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            richText_listingDroneDetails('Name', drone.name),
-            SizedBox(height: 12),
-            richText_listingDroneDetails('Serial Number', drone.serial_number),
-            SizedBox(height: 12),
-            richText_listingDroneDetailsDates('Date Added', drone.date_added),
-            SizedBox(height: 12),
-            richText_listingDroneDetailsDates('Date Bought', drone.date_bought),
-            SizedBox(height: 12),
-            richText_listingDroneDetails(
-                'Flight Time', '${drone.flight_time} hours'),
-            SizedBox(height: 12),
-            richText_listingDroneDetails(
-                'Mainetenance Cycle', 'every ${drone.maintenance} hours'),
-            SizedBox(height: 12),
-            Row(
-              children: [
-                richText_listingDroneDetails('Next Maintenance in',
-                    '${drone.hours_till_maintenace} flight hours'),
-                SizedBox(width: 10),
-                RichText(
-                  text: TextSpan(
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        FirebaseFirestore.instance
-                            .collection('groups')
-                            .doc(widget.groupID)
-                            .collection('drones')
-                            .doc(drone.id)
-                            .update(
-                                {'hours_till_maintenace': drone.maintenance});
-                      },
-                    text: 'Reset',
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.primaryColor,
-                      fontSize: FontSize.medium,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                )
-              ],
-            ),
-            SizedBox(height: 25),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                MainButton3(
-                    text: 'Maintnance History',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MaintenanceRecords(
-                                  groupID: widget.groupID,
-                                  droneID: drone.id,
-                                )),
-                      );
-                    }),
-                SizedBox(width: 20),
-                Text(
-                  '10 Records',
-                  style: GoogleFonts.poppins(
-                    color: ThemeColors.whiteTextColor,
-                    fontSize: FontSize.medium,
-                    fontWeight: FontWeight.w300,
-                  ),
-                )
-              ],
-            ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                MainButton3(
-                    text: 'Issues',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Issues(
-                                  groupID: widget.groupID,
-                                  droneID: drone.id,
-                                )),
-                      );
-                    }),
-                SizedBox(width: 20),
-                Text(
-                  '0 Records',
-                  style: GoogleFonts.poppins(
-                    color: ThemeColors.whiteTextColor,
-                    fontSize: FontSize.medium,
-                    fontWeight: FontWeight.w300,
-                  ),
-                )
-              ],
-            ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                MainButton3(
-                    text: 'Flights Data',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => FlightDataPage(
-                                  groupID: widget.groupID,
-                                  droneID: drone.id,
-                                )),
-                      );
-                    }),
-                SizedBox(width: 20),
-                Text(
-                  '0 Records',
-                  style: GoogleFonts.poppins(
-                    color: ThemeColors.whiteTextColor,
-                    fontSize: FontSize.medium,
-                    fontWeight: FontWeight.w300,
-                  ),
-                )
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget richText_listingDroneDetails(String field, dynamic droneDetail) {
@@ -430,12 +300,14 @@ class _DroneDetailsState extends State<DroneDetails> {
       builder: (context) => AlertDialog(
         backgroundColor: ThemeColors.scaffoldBgColor,
         scrollable: true,
-        title: Text(
-          "Edit Drone",
-          style: GoogleFonts.poppins(
-            color: ThemeColors.whiteTextColor,
-            fontSize: FontSize.large,
-            fontWeight: FontWeight.w600,
+        title: Center(
+          child: Text(
+            "Edit Drone",
+            style: GoogleFonts.poppins(
+              color: ThemeColors.whiteTextColor,
+              fontSize: FontSize.large,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         content: Container(
@@ -458,8 +330,8 @@ class _DroneDetailsState extends State<DroneDetails> {
                     decoration: InputDecoration(
                       fillColor: ThemeColors.textFieldBgColor,
                       filled: true,
-                      hintText: "Drone Name",
-                      hintStyle: GoogleFonts.poppins(
+                      labelText: "Drone Name",
+                      labelStyle: GoogleFonts.poppins(
                         color: ThemeColors.textFieldHintColor,
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
@@ -471,119 +343,103 @@ class _DroneDetailsState extends State<DroneDetails> {
                     ),
                   ),
                   SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: serial_numberController
-                      ..text = widget.drone.serial_number,
-                    validator: (value) {
-                      if (nameController.text.isEmpty)
-                        return "This field can't be empty";
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.name,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Serial number",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
+                  Row(
+                    children: [
+                      Container(
+                        width: 100,
+                        child: TextFormField(
+                          controller: serial_numberController
+                            ..text = widget.drone.serial_number,
+                          validator: (value) {
+                            if (nameController.text.isEmpty)
+                              return "This field can't be empty";
+                          },
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.whiteTextColor,
+                          ),
+                          keyboardType: TextInputType.name,
+                          cursorColor: ThemeColors.primaryColor,
+                          decoration: InputDecoration(
+                            fillColor: ThemeColors.textFieldBgColor,
+                            filled: true,
+                            labelText: "Serial number",
+                            labelStyle: GoogleFonts.poppins(
+                              color: ThemeColors.textFieldHintColor,
+                              fontSize: FontSize.small,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(18)),
+                            ),
+                          ),
+                        ),
                       ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      SizedBox(width: 10),
+                      Container(
+                        width: 120,
+                        child: TextFormField(
+                          controller: flight_timeController
+                            ..text = widget.drone.flight_time.toString(),
+                          validator: (value) {
+                            if (nameController.text.isEmpty)
+                              return "This field can't be empty";
+                          },
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.whiteTextColor,
+                          ),
+                          keyboardType: TextInputType.number,
+                          cursorColor: ThemeColors.primaryColor,
+                          decoration: InputDecoration(
+                            fillColor: ThemeColors.textFieldBgColor,
+                            filled: true,
+                            labelText: "Flight Time",
+                            labelStyle: GoogleFonts.poppins(
+                              color: ThemeColors.textFieldHintColor,
+                              fontSize: FontSize.small,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(18)),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                   SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: flight_timeController,
-                    validator: (value) {
-                      if (nameController.text.isEmpty)
-                        return "This field can't be empty";
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.number,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Flight Time",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
+                  SizedBox(width: 10),
+                  Container(
+                    width: 140,
+                    child: TextFormField(
+                      controller: maintenanceController
+                        ..text = widget.drone.maintenance.toString(),
+                      validator: (value) {
+                        if (nameController.text.isEmpty)
+                          return "This field can't be empty";
+                      },
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.whiteTextColor,
                       ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: maintenanceController,
-                    validator: (value) {
-                      if (nameController.text.isEmpty)
-                        return "This field can't be empty";
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.number,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Maintnenace cycle in hours",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: sizedBoxHight),
-                  DateTimeField(
-                    format: DateFormat('yyyy-MM-dd'),
-                    controller: date_boughtController,
-                    onShowPicker: ((context, currentValue) {
-                      return showDatePicker(
-                          context: context,
-                          firstDate: DateTime(1900),
-                          initialDate: currentValue ?? DateTime.now(),
-                          lastDate: DateTime(2100));
-                    }),
-                    validator: (value) {
-                      if (nameController.text.isEmpty)
-                        return "This field can't be empty";
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.datetime,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Date bought",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      keyboardType: TextInputType.number,
+                      cursorColor: ThemeColors.primaryColor,
+                      decoration: InputDecoration(
+                        fillColor: ThemeColors.textFieldBgColor,
+                        filled: true,
+                        labelText: "Maintnenace cycle in hours",
+                        labelStyle: GoogleFonts.poppins(
+                          color: ThemeColors.textFieldHintColor,
+                          fontSize: FontSize.small,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(18)),
+                        ),
                       ),
                     ),
                   ),
@@ -596,7 +452,23 @@ class _DroneDetailsState extends State<DroneDetails> {
                 Navigator.pop(context);
               },
               child: Text('Cancel')),
-          TextButton(onPressed: () {}, child: Text('Update Drone')),
+          TextButton(
+            onPressed: () {
+              FirebaseFirestore.instance
+                  .collection('groups')
+                  .doc(widget.groupID)
+                  .collection('drones')
+                  .doc(widget.drone.id)
+                  .update({
+                'name': nameController.text,
+                'serial_number': serial_numberController.text,
+                'maintenance': int.parse(maintenanceController.text),
+                'flight_time': int.parse(flight_timeController.text),
+              });
+              Navigator.pop(context);
+            },
+            child: Text('Update Drone'),
+          ),
         ],
       ),
     );
