@@ -93,7 +93,51 @@ class _GroupSettingsState extends State<GroupSettings> {
                               },
                             ),
                           ),
-                        ])
+                        ]),
+                        SizedBox(height: 50),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: MaterialButton(
+                            child: Text(
+                              "Leave this Drone Bag",
+                              style: GoogleFonts.poppins(
+                                color: ThemeColors.whiteTextColor,
+                                fontSize: FontSize.medium,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            onPressed: () {
+                              FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(loggedUser.email)
+                                  .collection('settings')
+                                  .doc(widget.group.id)
+                                  .delete();
+
+                              final groupDoc = FirebaseFirestore.instance
+                                  .collection('groups')
+                                  .doc(widget.group.id);
+
+                              groupDoc
+                                  .collection('members')
+                                  .doc(loggedUser.email)
+                                  .delete();
+
+                              groupDoc.update({
+                                'users':
+                                    FieldValue.arrayRemove([loggedUser.email]),
+                              });
+                              Navigator.popUntil(
+                                  context, (route) => route.isFirst);
+                              Utils.showSnackBarWithColor(
+                                  'You left the Drone Bag', Colors.red);
+                            },
+                            color: Colors.red,
+                            textColor: Colors.yellow,
+                            padding: EdgeInsets.all(10.0),
+                            splashColor: Colors.grey,
+                          ),
+                        )
                       ],
                     );
                   } else {
