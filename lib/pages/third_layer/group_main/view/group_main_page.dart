@@ -11,10 +11,10 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyGroupPage extends StatefulWidget {
-  final String groupID;
+  final Group group;
   const MyGroupPage({
     Key? key,
-    required this.groupID,
+    required this.group,
   }) : super(key: key);
 
   @override
@@ -24,101 +24,85 @@ class MyGroupPage extends StatefulWidget {
 class _MyGroupPageState extends State<MyGroupPage> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Group?>(
-        future: fetchGroup(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final group = snapshot.data;
-
-            return group == null
-                ? CircularProgressIndicator()
-                : Scaffold(
-                    appBar: AppBar(
-                      backgroundColor: ThemeColors.scaffoldBgColor,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: ThemeColors.scaffoldBgColor,
+      ),
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  // displays the groups name as a title
+                  child: Text(
+                    widget.group.name,
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                      fontSize: FontSize.xxLarge,
+                      fontWeight: FontWeight.w600,
                     ),
-                    body: SingleChildScrollView(
-                      child: SafeArea(
-                        child: Padding(
-                          padding: const EdgeInsets.all(30),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Center(
-                                // displays the groups name as a title
-                                child: Text(
-                                  group.name,
-                                  style: GoogleFonts.poppins(
-                                    color: ThemeColors.whiteTextColor,
-                                    fontSize: FontSize.xxLarge,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 80),
-                              Center(
-                                child: Text(
-                                  "Actions",
-                                  style: GoogleFonts.poppins(
-                                    color: ThemeColors.greyTextColor,
-                                    fontSize: FontSize.large,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  groupKeyButton(
-                                    AssetImage('assets/icons/key.png'),
-                                    'Group Key',
-                                    group,
-                                  ),
-                                  groupMenuButton(
-                                    AssetImage('assets/icons/group-users.png'),
-                                    'Members',
-                                    GroupMembers(group: group),
-                                  ),
-                                  groupMenuButton(
-                                    AssetImage('assets/icons/settings.png'),
-                                    'Settings',
-                                    GroupSettings(group: group),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  groupMenuButton(
-                                    AssetImage('assets/icons/car-battery.png'),
-                                    'Batteries',
-                                    GroupBatteryStations(
-                                        groupID: widget.groupID),
-                                  ),
-                                  groupMenuButton(
-                                    AssetImage('assets/icons/drone.png'),
-                                    'Drones',
-                                    GroupDrones(groupID: widget.groupID),
-                                  ),
-                                  groupMenuButton(
-                                    AssetImage('assets/icons/remote.png'),
-                                    'Fly a Drone',
-                                    StartFlightPage(group: group),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                  ),
+                ),
+                SizedBox(height: 80),
+                Center(
+                  child: Text(
+                    "Actions",
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.greyTextColor,
+                      fontSize: FontSize.large,
+                      fontWeight: FontWeight.w600,
                     ),
-                  );
-          } else {
-            return Scaffold();
-          }
-        });
+                  ),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    groupKeyButton(
+                      AssetImage('assets/icons/key.png'),
+                      'Key',
+                    ),
+                    groupMenuButton(
+                      AssetImage('assets/icons/group-users.png'),
+                      'Members',
+                      GroupMembers(group: widget.group),
+                    ),
+                    groupMenuButton(
+                      AssetImage('assets/icons/settings.png'),
+                      'Settings',
+                      GroupSettings(group: widget.group),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    groupMenuButton(
+                      AssetImage('assets/icons/car-battery.png'),
+                      'Batteries',
+                      GroupBatteryStations(group: widget.group),
+                    ),
+                    groupMenuButton(
+                      AssetImage('assets/icons/drone.png'),
+                      'Drones',
+                      GroupDrones(group: widget.group),
+                    ),
+                    groupMenuButton(
+                      AssetImage('assets/icons/remote.png'),
+                      'Fly a Drone',
+                      StartFlightPage(group: widget.group),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget groupMenuButton(icon, String text, goTowidget) {
@@ -153,7 +137,7 @@ class _MyGroupPageState extends State<MyGroupPage> {
     );
   }
 
-  Widget groupKeyButton(icon, String text, Group group) {
+  Widget groupKeyButton(icon, String text) {
     return Container(
       height: 140,
       width: 80,
@@ -167,7 +151,7 @@ class _MyGroupPageState extends State<MyGroupPage> {
                   backgroundColor: ThemeColors.scaffoldBgColor,
                   title: Center(
                     child: Text(
-                      'Group Key',
+                      'Drone bag\'s Key',
                       style: GoogleFonts.poppins(
                         color: ThemeColors.whiteTextColor,
                         fontSize: FontSize.large,
@@ -178,11 +162,10 @@ class _MyGroupPageState extends State<MyGroupPage> {
                   content: Container(
                     height: 120,
                     child: Column(
-                      
                       children: [
                         SizedBox(height: 20),
                         Text(
-                          group.key,
+                          widget.group.key,
                           style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: FontSize.large,
@@ -209,15 +192,14 @@ class _MyGroupPageState extends State<MyGroupPage> {
                     TextButton(
                         onPressed: () => {
                               Clipboard.setData(ClipboardData(
-                                      text: group.key.toString()))
+                                      text: widget.group.key.toString()))
                                   .then((value) {
                                 Utils.showSnackBarWithColor(
-                                    'Key has been copied', Colors.blue);
+                                    'The Key has been copied', Colors.blue);
                               }),
                               Navigator.pop(context)
                             },
                         child: Text('Copy')),
-                    
                   ],
                 ),
               );
@@ -238,15 +220,5 @@ class _MyGroupPageState extends State<MyGroupPage> {
         ],
       ),
     );
-  }
-
-  Future<Group?> fetchGroup() async {
-    final groupDoc =
-        FirebaseFirestore.instance.collection('groups').doc(widget.groupID);
-    final snapshot = await groupDoc.get();
-
-    if (snapshot.exists) {
-      return Group.fromJson(snapshot.data()!);
-    }
   }
 }

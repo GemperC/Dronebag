@@ -14,10 +14,10 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 
 class GroupDrones extends StatefulWidget {
-  final String groupID;
+  final Group group;
   const GroupDrones({
     Key? key,
-    required this.groupID,
+    required this.group,
   }) : super(key: key);
 
   @override
@@ -95,7 +95,7 @@ class _GroupDronesState extends State<GroupDrones> {
 //fetch group's drones list
   Stream<List<Drone>> fetchGroupDrones() {
     return FirebaseFirestore.instance
-        .collection('groups/${widget.groupID}/drones')
+        .collection('groups/${widget.group.id}/drones')
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Drone.fromJson(doc.data())).toList());
@@ -114,7 +114,7 @@ class _GroupDronesState extends State<GroupDrones> {
             context,
             MaterialPageRoute(
                 builder: (context) => DroneDetails(
-                      groupID: widget.groupID,
+                      groupID: widget.group.id,
                       drone: drone,
                     )),
           );
@@ -379,7 +379,7 @@ class _GroupDronesState extends State<GroupDrones> {
     } else {
       final docDrone = FirebaseFirestore.instance
           .collection('groups')
-          .doc(widget.groupID)
+          .doc(widget.group.id)
           .collection('drones')
           .doc();
       final drone = Drone(

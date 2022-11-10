@@ -4,6 +4,7 @@ import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/battery_repository/src/models/models.dart';
 import 'package:dronebag/domain/battery_station_repository/src/models/models.dart';
+import 'package:dronebag/domain/group_repository/group_repository.dart';
 
 import 'package:dronebag/pages/third_layer/battery_case_details/battery_case_details.dart';
 
@@ -12,10 +13,10 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 
 class GroupBatteryStations extends StatefulWidget {
-  final String groupID;
+  final Group group;
   const GroupBatteryStations({
     Key? key,
-    required this.groupID,
+    required this.group,
   }) : super(key: key);
 
   @override
@@ -90,7 +91,7 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
 //fetch group's drones list
   Stream<List<BatteryStation>> fetchGroupBatteriesStations() {
     return FirebaseFirestore.instance
-        .collection('groups/${widget.groupID}/battery_stations')
+        .collection('groups/${widget.group.id}/battery_stations')
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => BatteryStation.fromJson(doc.data()))
@@ -106,7 +107,7 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
             context,
             MaterialPageRoute(
                 builder: (context) => BatteryStationDetails(
-                      groupID: widget.groupID,
+                      groupID: widget.group.id,
                       batteryStation: batteryStation,
                     )),
           );
@@ -295,7 +296,7 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
       //create battery station
       final docBatteryStation = FirebaseFirestore.instance
           .collection('groups')
-          .doc(widget.groupID)
+          .doc(widget.group.id)
           .collection('battery_stations')
           .doc();
       final batteryStation = BatteryStation(
@@ -313,7 +314,7 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
         for (int j = 0; j < 2; j++) {
           final docBattery = FirebaseFirestore.instance
               .collection('groups')
-              .doc(widget.groupID)
+              .doc(widget.group.id)
               .collection('battery_stations')
               .doc(docBatteryStation.id)
               .collection('batteries')

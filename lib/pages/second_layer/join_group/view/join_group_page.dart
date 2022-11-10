@@ -94,8 +94,8 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
                                 decoration: InputDecoration(
                                   fillColor: ThemeColors.textFieldBgColor,
                                   filled: true,
-                                  hintText: "Group Key",
-                                  hintStyle: GoogleFonts.poppins(
+                                  labelText: "Drone bag's Key",
+                                  labelStyle: GoogleFonts.poppins(
                                     color: ThemeColors.textFieldHintColor,
                                     fontSize: FontSize.medium,
                                     fontWeight: FontWeight.w400,
@@ -122,7 +122,7 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
                           }),
                       SizedBox(height: 50),
                       MainButton2(
-                        text: 'Join Group',
+                        text: 'Join Drone bag',
                         onPressed: () {
                           addUserToGroup(groupKeyController.text);
                         },
@@ -189,7 +189,7 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
         });
       });
 
-      Utils.showSnackBarWithColor('You have joined the Group', Colors.blue);
+      Utils.showSnackBarWithColor('You have joined the Drone bag!', Colors.blue);
       Navigator.pop(context);
       Navigator.push(
         context,

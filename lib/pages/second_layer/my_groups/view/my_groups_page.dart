@@ -70,7 +70,7 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
       onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => MyGroupPage(groupID: group.id)),
+                builder: (context) => MyGroupPage(group: group)),
           ),
       //build the tile info and design
       title: Center(
