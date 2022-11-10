@@ -5,6 +5,7 @@ import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_repository/src/models/models.dart';
 import 'package:dronebag/domain/user_settings_repository/src/models/models.dart';
+import 'package:dronebag/widgets/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -65,28 +66,30 @@ class _GroupSettingsState extends State<GroupSettings> {
                             child: Checkbox(
                               value: userSettings.notifications,
                               onChanged: (value) {
-                                print(value);
-                                FirebaseFirestore.instance
-                                    .collection('users')
-                                    .doc(loggedUser.email)
-                                    .collection('settings')
-                                    .doc(userSettings.id)
-                                    .update({
-                                      'notifications': value
-                                      });
-                                if (value!) {
-                                  print('sucsribed to ${widget.group.name}');
+                                if (userSettings.role == "admin") {
+                                  FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(loggedUser.email)
+                                      .collection('settings')
+                                      .doc(userSettings.id)
+                                      .update({'notifications': value});
+                                  if (value!) {
+                                    print('sucsribed to ${widget.group.name}');
 
-                                  FirebaseMessaging.instance
-                                      .subscribeToTopic(widget.group.id);
-                                } else if (!value) {
-                                  print(
-                                      'unsucsribed from ${widget.group.name}');
+                                    FirebaseMessaging.instance
+                                        .subscribeToTopic(widget.group.id);
+                                  } else if (!value) {
+                                    print(
+                                        'unsucsribed from ${widget.group.name}');
 
-                                  FirebaseMessaging.instance
-                                      .unsubscribeFromTopic(widget.group.id);
+                                    FirebaseMessaging.instance
+                                        .unsubscribeFromTopic(widget.group.id);
+                                  }
+                                } else {
+                                  Utils.showSnackBarWithColor(
+                                      'Only Admins allowed to user this feature',
+                                      Colors.red);
                                 }
-                                
                               },
                             ),
                           ),

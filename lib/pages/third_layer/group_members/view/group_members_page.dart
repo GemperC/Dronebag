@@ -137,8 +137,20 @@ class _GroupMembersState extends State<GroupMembers> {
           if (loggedUserIsAdmin) {
             if (member.role == 'admin' && member.email != loggedUser.email) {
               memberDoc.update({'role': 'member'});
+              FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(member.email)
+                  .collection("settings")
+                  .doc(widget.group.id)
+                  .update({"role": "member"});
             } else if (member.role == 'member') {
               memberDoc.update({'role': 'admin'});
+              FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(member.email)
+                  .collection("settings")
+                  .doc(widget.group.id)
+                  .update({"role": "admin"});
             }
           }
         }),
@@ -188,12 +200,9 @@ class _GroupMembersState extends State<GroupMembers> {
     }
   }
 
-
   Widget buildMemberTile(String user) {
     return ListTile(
-        onTap: (() {
-
-        }),
+        onTap: (() {}),
         title: Center(
           child: Padding(
             padding: const EdgeInsets.all(8.0),

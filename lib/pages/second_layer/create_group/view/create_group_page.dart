@@ -115,17 +115,6 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
     if (!isValid) {
       return;
     } else {
-      //create the user settings for the group
-      final docuserSettings = FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.email)
-          .collection('settings')
-          .doc();
-      final usersettings = UserSettings(
-          id: docuserSettings.id, group: groupNameController.text.trim());
-      final jsonUser = usersettings.toJson();
-      await docuserSettings.set(jsonUser);
-
 //create the group
       final docGroup = FirebaseFirestore.instance.collection('groups').doc();
       final group = Group(
@@ -137,6 +126,20 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       final jsonGroup = group.toJson();
       await docGroup.set(jsonGroup);
 
+      //create the user settings for the group
+      final docuserSettings = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.email)
+          .collection('settings')
+          .doc(docGroup.id);
+      final usersettings = UserSettings(
+        role: 'admin',
+        id: docGroup.id,
+        group: groupNameController.text.trim(),
+      );
+      final jsonUser = usersettings.toJson();
+      await docuserSettings.set(jsonUser);
+
 //add the user to the group members collection
       final docGroupMember = FirebaseFirestore.instance
           .collection('groups')
@@ -147,7 +150,9 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       final jsonMember = member.toJson();
       await docGroupMember.set(jsonMember);
       //show snackbar
-      Utils.showSnackBarWithColor('Drone bag "${groupNameController.text.trim()}" has been created', Colors.blue);
+      Utils.showSnackBarWithColor(
+          'Drone bag "${groupNameController.text.trim()}" has been created',
+          Colors.blue);
       Navigator.pop(context);
       Navigator.push(
         context,

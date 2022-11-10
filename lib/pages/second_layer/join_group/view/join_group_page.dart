@@ -149,14 +149,6 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
       return;
     } else {
       // set the settings for the new user in the group
-      final docuserSettings = FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.email)
-          .collection('settings')
-          .doc();
-      final usersettings = UserSettings(id: docuserSettings.id);
-      final json = usersettings.toJson();
-      await docuserSettings.set(json);
 
 // add the user to the members collection of the group
       FirebaseFirestore.instance
@@ -170,6 +162,16 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
           group.update({
             'users': FieldValue.arrayUnion([user.email!])
           });
+
+          final docuserSettings = FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.email)
+              .collection('settings')
+              .doc(doc.get('id'));
+          final usersettings =
+              UserSettings(id: docuserSettings.id, role: 'member');
+          final json = usersettings.toJson();
+          await docuserSettings.set(json);
 
           final usersetting = FirebaseFirestore.instance
               .collection('users')
@@ -189,7 +191,8 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
         });
       });
 
-      Utils.showSnackBarWithColor('You have joined the Drone bag!', Colors.blue);
+      Utils.showSnackBarWithColor(
+          'You have joined the Drone bag!', Colors.blue);
       Navigator.pop(context);
       Navigator.push(
         context,
