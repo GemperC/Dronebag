@@ -209,7 +209,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                           // sendNotificationToAdmins(widget.group.name,
                           //     loggedUser.fullName, droneList);
                           PostCall notification = PostCall(
-                              topic: widget.group.name,
+                              topic: widget.group.id,
                               purpose: dropdownValue,
                               pilot: loggedUser.fullName,
                               drones: droneList,

@@ -220,7 +220,7 @@ class _StopFlightPageState extends State<StopFlightPage> {
                             List<Drone> tempDroneList = List.from(droneList);
                             droneList.clear();
                             PostCall notification = PostCall(
-                                topic: widget.group.name,
+                                topic: widget.group.id,
                                 purpose: widget.flightPurpose,
                                 pilot: widget.pilot.fullName,
                                 drones: tempDroneList);
