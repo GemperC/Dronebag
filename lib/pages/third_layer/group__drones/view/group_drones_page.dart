@@ -41,7 +41,7 @@ class _GroupDronesState extends State<GroupDrones> {
       appBar: AppBar(
         backgroundColor: ThemeColors.scaffoldBgColor,
         title: Text(
-          "Group Drones List",
+          "Drone List",
           style: GoogleFonts.poppins(
             color: ThemeColors.whiteTextColor,
             fontSize: FontSize.xxLarge,
