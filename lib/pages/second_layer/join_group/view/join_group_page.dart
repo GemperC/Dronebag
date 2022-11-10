@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/group_members_repository/group_members_repository.dart';
+import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_settings_repository/src/models/models.dart';
 import 'package:dronebag/pages/second_layer/my_groups/my_groups.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
@@ -41,7 +42,7 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Join a group",
+                  "Join a Drone Bag",
                   style: GoogleFonts.poppins(
                     color: ThemeColors.whiteTextColor,
                     fontSize: FontSize.xxLarge,
@@ -51,7 +52,7 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 7),
                   child: Text(
-                    "Please fill in the group's key to continue",
+                    "Please fill in the Drone Bag's key to continue",
                     style: GoogleFonts.poppins(
                       color: ThemeColors.greyTextColor,
                       fontSize: FontSize.medium,
@@ -64,33 +65,61 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
                   key: formKey,
                   child: Column(
                     children: [
-                      TextFormField(
-                        controller: groupKeyController,
-                        validator: (value) {
-                          if (groupKeyController.text.isEmpty) {
-                            return "This field can't be empty";
-                          }
-                        },
-                        style: GoogleFonts.poppins(
-                          color: ThemeColors.whiteTextColor,
-                        ),
-                        keyboardType: TextInputType.name,
-                        cursorColor: ThemeColors.primaryColor,
-                        decoration: InputDecoration(
-                          fillColor: ThemeColors.textFieldBgColor,
-                          filled: true,
-                          hintText: "Group Key",
-                          hintStyle: GoogleFonts.poppins(
-                            color: ThemeColors.textFieldHintColor,
-                            fontSize: FontSize.medium,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.all(Radius.circular(18)),
-                          ),
-                        ),
-                      ),
+                      StreamBuilder<List<Group>>(
+                          stream: fetchGroups(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              final groups = snapshot.data!;
+                              List<String> groupKeysList = [];
+                              groups.forEach(
+                                (group) {
+                                  groupKeysList.add(group.key);
+                                },
+                              );
+                              return TextFormField(
+                                controller: groupKeyController,
+                                validator: (value) {
+                                  if (groupKeyController.text.isEmpty) {
+                                    return "This field can't be empty";
+                                  } else if (!groupKeysList
+                                      .contains(groupKeyController.text)) {
+                                    return "Invalid key, No such Drone bag";
+                                  }
+                                },
+                                style: GoogleFonts.poppins(
+                                  color: ThemeColors.whiteTextColor,
+                                ),
+                                keyboardType: TextInputType.name,
+                                cursorColor: ThemeColors.primaryColor,
+                                decoration: InputDecoration(
+                                  fillColor: ThemeColors.textFieldBgColor,
+                                  filled: true,
+                                  hintText: "Group Key",
+                                  hintStyle: GoogleFonts.poppins(
+                                    color: ThemeColors.textFieldHintColor,
+                                    fontSize: FontSize.medium,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(18)),
+                                  ),
+                                ),
+                              );
+                            } else if (snapshot.hasError) {
+                              print(snapshot.error);
+                              return Text(
+                                'Something went wrong!',
+                                style: TextStyle(color: Colors.white),
+                              );
+                            } else {
+                              return Text(
+                                'Something went wrong!',
+                                style: TextStyle(color: Colors.white),
+                              );
+                            }
+                          }),
                       SizedBox(height: 50),
                       MainButton2(
                         text: 'Join Group',
@@ -107,8 +136,15 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
         ));
   }
 
+  Stream<List<Group>> fetchGroups() {
+    return FirebaseFirestore.instance.collection('groups').snapshots().map(
+        (snapshot) =>
+            snapshot.docs.map((doc) => Group.fromJson(doc.data())).toList());
+  }
+
   Future addUserToGroup(String groupKey) async {
     final isValid = formKey.currentState!.validate();
+
     if (!isValid) {
       return;
     } else {
@@ -125,20 +161,22 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
 // add the user to the members collection of the group
       FirebaseFirestore.instance
           .collection('groups')
-          .where("Group_Key", isEqualTo: groupKey)
+          .where("key", isEqualTo: groupKey)
           .get()
           .then((QuerySnapshot querySnapshot) {
         querySnapshot.docs.forEach((doc) async {
           final group =
               FirebaseFirestore.instance.collection('groups').doc(doc.id);
-          group.update({'users': FieldValue.arrayUnion([user.email!])});
+          group.update({
+            'users': FieldValue.arrayUnion([user.email!])
+          });
 
           final usersetting = FirebaseFirestore.instance
               .collection('users')
               .doc(user.email)
               .collection('settings')
               .doc(docuserSettings.id)
-              .update({'group': doc.get('Group_Name')});
+              .update({'group': doc.get('name')});
 
           final docGroupMember = FirebaseFirestore.instance
               .collection('groups')

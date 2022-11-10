@@ -16,41 +16,41 @@ class GetUserName extends StatefulWidget {
 }
 
 class _GetUserNameState extends State<GetUserName> {
-  final user = FirebaseAuth.instance.currentUser!;
+  final loggedUser = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<UserData?>(
-      future: readUser(user.email!),
+      future: readUser(),
       builder: ((context, snapshot) {
         if (snapshot.hasData) {
           final user = snapshot.data;
 
-          return user == null ? Text('No User') : buildUser(user);
+          return user == null
+              ? Text('No User Name')
+              : Text(
+                  user.fullName,
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.whiteTextColor,
+                    fontSize: FontSize.xxLarge,
+                    fontWeight: FontWeight.w600,
+                  ),
+                );
+          ;
         }
         return Text('data');
       }),
     );
   }
-
-//het all the groups from firestore and convert them to group objects
-  Future<UserData?> readUser(String userEmail) async {
+  
+  Future<UserData?> readUser() async {
     final userDoc =
-        FirebaseFirestore.instance.collection('users').doc(userEmail);
+        FirebaseFirestore.instance.collection('users').doc(loggedUser.email);
     final snapshot = await userDoc.get();
 
     if (snapshot.exists) {
       return UserData.fromJson(snapshot.data()!);
     }
+    return null;
   }
-
-//build the widget thast shows the groups
-  Widget buildUser(UserData user) => Text(
-        user.fullName,
-        style: GoogleFonts.poppins(
-          color: ThemeColors.whiteTextColor,
-          fontSize: FontSize.xxLarge,
-          fontWeight: FontWeight.w600,
-        ),
-      );
 }

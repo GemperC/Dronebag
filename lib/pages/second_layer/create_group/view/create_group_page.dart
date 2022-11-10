@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
@@ -44,7 +43,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Lets create a group",
+                  "Lets create a new Bag",
                   style: GoogleFonts.poppins(
                     color: ThemeColors.whiteTextColor,
                     fontSize: FontSize.xxLarge,
@@ -54,7 +53,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 7),
                   child: Text(
-                    "Please fill the form to continue",
+                    "Enter below the drone bag's name, \nWe will set up everything else",
                     style: GoogleFonts.poppins(
                       color: ThemeColors.greyTextColor,
                       fontSize: FontSize.medium,
@@ -71,7 +70,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                         controller: groupNameController,
                         validator: (value) {
                           if (groupNameController.text.isEmpty) {
-                            return "This field can't be empty";
+                            return "The drone bag's name cant be empty";
                           }
                         },
                         style: GoogleFonts.poppins(
@@ -82,8 +81,8 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                         decoration: InputDecoration(
                           fillColor: ThemeColors.textFieldBgColor,
                           filled: true,
-                          hintText: "Group Name",
-                          hintStyle: GoogleFonts.poppins(
+                          labelText: "Drone bag Name",
+                          labelStyle: GoogleFonts.poppins(
                             color: ThemeColors.textFieldHintColor,
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
@@ -96,7 +95,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                       ),
                       SizedBox(height: 50),
                       MainButton2(
-                        text: 'Create Group',
+                        text: 'Create New Bag',
                         onPressed: () {
                           createGroup();
                         },
@@ -148,7 +147,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       final jsonMember = member.toJson();
       await docGroupMember.set(jsonMember);
       //show snackbar
-      Utils.showSnackBarWithColor('Group has been created', Colors.blue);
+      Utils.showSnackBarWithColor('Drone bag "${groupNameController.text.trim()}" has been created', Colors.blue);
       Navigator.pop(context);
       Navigator.push(
         context,

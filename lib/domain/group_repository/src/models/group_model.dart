@@ -13,15 +13,15 @@ class Group {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'Group_Name': name,
-        'Group_Key': key,
+        'name': name,
+        'key': key,
         'users': users,
       };
 
   static Group fromJson(Map<String, dynamic> json) => Group(
         id: json['id'],
-        name: json['Group_Name'],
-        key: json['Group_Key'],
+        name: json['name'],
+        key: json['key'],
         users: json['users'] as List<dynamic>,
       );
 

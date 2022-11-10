@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
-import 'package:dronebag/domain/user_repository/src/models/models.dart';
 import 'package:dronebag/pages/second_layer/create_group/create_group.dart';
 import 'package:dronebag/pages/second_layer/join_group/join_group.dart';
 import 'package:dronebag/pages/second_layer/main_page/widgets/getUserName.dart';
@@ -16,10 +15,6 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
-    final userDoc =
-        FirebaseFirestore.instance.collection("users").doc(user.email!).get();
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ThemeColors.scaffoldBgColor,
@@ -52,7 +47,7 @@ class MainPage extends StatelessWidget {
               ),
               SizedBox(height: 60),
               MainButton2(
-                text: 'My Groups',
+                text: 'My Drone bags',
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -62,7 +57,7 @@ class MainPage extends StatelessWidget {
               ),
               SizedBox(height: 20),
               MainButton2(
-                text: 'Create Group',
+                text: 'Create a Drone bag',
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -72,7 +67,7 @@ class MainPage extends StatelessWidget {
               ),
               SizedBox(height: 20),
               MainButton2(
-                text: 'Join Group',
+                text: 'Join a Drone bag',
                 onPressed: () {
                   Navigator.push(
                     context,
