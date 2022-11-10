@@ -23,7 +23,7 @@ class GroupSettings extends StatefulWidget {
 
 class _GroupSettingsState extends State<GroupSettings> {
   final loggedUser = FirebaseAuth.instance.currentUser!;
-  bool? getNotificationsCheckBox = false;
+  bool? getNotificationsCheckBox;
 
   @override
   Widget build(BuildContext context) {
@@ -46,83 +46,53 @@ class _GroupSettingsState extends State<GroupSettings> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     final userSettings = snapshot.data!.first;
-                    return userSettings == null
-                        ? CircularProgressIndicator()
-                        : Column(
-                            children: [
-                              // Align(
-                              //   alignment: Alignment.topLeft,
-                              //   child: Text(
-                              //     "Lets start a Flight",
-                              //     style: GoogleFonts.poppins(
-                              //       color: ThemeColors.whiteTextColor,
-                              //       fontSize: FontSize.xxLarge,
-                              //       fontWeight: FontWeight.w600,
-                              //     ),
-                              //   ),
-                              // ),
-                              // Align(
-                              //   alignment: Alignment.topLeft,
-                              //   child: Padding(
-                              //     padding: const EdgeInsets.only(top: 7),
-                              //     child: Text(
-                              //       "But first fill the details below",
-                              //       style: GoogleFonts.poppins(
-                              //         color: ThemeColors.greyTextColor,
-                              //         fontSize: FontSize.medium,
-                              //         fontWeight: FontWeight.w600,
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
-                              SizedBox(height: 50),
-                              Row(children: [
-                                Text(
-                                  'Get notifications from this group',
-                                  style: GoogleFonts.poppins(
-                                    color: ThemeColors.whiteTextColor,
-                                    fontSize: FontSize.medium,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Theme(
-                                  data: Theme.of(context).copyWith(
-                                      unselectedWidgetColor: Colors.grey),
-                                  child: Checkbox(
-                                    value: userSettings.notifications,
-                                    onChanged: (value) {
-                                      if (value!) {
-                                        print(
-                                            'sucsribed to ${widget.group.name}');
-
-                                        FirebaseMessaging.instance
-                                            .subscribeToTopic(
-                                                widget.group.name);
-                                      } else if (!value) {
-                                        print(
-                                            'unsucsribed from ${widget.group.name}');
-                                        FirebaseMessaging.instance
-                                            .unsubscribeFromTopic(
-                                                widget.group.name);
-                                      }
-                                      setState(() {
-                                        getNotificationsCheckBox = value;
+                    return Column(
+                      children: [
+                        SizedBox(height: 50),
+                        Row(children: [
+                          Text(
+                            'Get notifications',
+                            style: GoogleFonts.poppins(
+                              color: ThemeColors.whiteTextColor,
+                              fontSize: FontSize.medium,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Theme(
+                            data: Theme.of(context)
+                                .copyWith(unselectedWidgetColor: Colors.grey),
+                            child: Checkbox(
+                              value: userSettings.notifications,
+                              onChanged: (value) {
+                                print(value);
+                                FirebaseFirestore.instance
+                                    .collection('users')
+                                    .doc(loggedUser.email)
+                                    .collection('settings')
+                                    .doc(userSettings.id)
+                                    .update({
+                                      'notifications': value
                                       });
-                                      final docSetting = FirebaseFirestore
-                                          .instance
-                                          .collection('users')
-                                          .doc(loggedUser.email)
-                                          .collection('settings')
-                                          .doc(userSettings.id);
-                                      docSetting
-                                          .update({'notifications': value});
-                                    },
-                                  ),
-                                ),
-                              ])
-                            ],
-                          );
+                                if (value!) {
+                                  print('sucsribed to ${widget.group.name}');
+
+                                  FirebaseMessaging.instance
+                                      .subscribeToTopic(widget.group.id);
+                                } else if (!value) {
+                                  print(
+                                      'unsucsribed from ${widget.group.name}');
+
+                                  FirebaseMessaging.instance
+                                      .unsubscribeFromTopic(widget.group.id);
+                                }
+                                
+                              },
+                            ),
+                          ),
+                        ])
+                      ],
+                    );
                   } else {
                     return Scaffold();
                   }
@@ -141,12 +111,5 @@ class _GroupSettingsState extends State<GroupSettings> {
         .map((snapshot) => snapshot.docs
             .map((doc) => UserSettings.fromJson(doc.data()))
             .toList());
-
-    // final userSettingsDoc =
-    //     FirebaseFirestore.instance.collection('users').doc(loggedUser.email).collection("settings").where("group", isEqualTo: widget.group.name);
-    // final snapshot = await userSettingsDoc.get();
-    // if (snapshot.exists) {
-    //   return UserData.fromJson(snapshot.data()!);
-    // }
   }
 }

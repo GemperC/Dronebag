@@ -28,7 +28,7 @@ class _GroupMembersState extends State<GroupMembers> {
     return Scaffold(
       appBar: AppBar(
           title: Text(
-            "Group Members List",
+            "Members List",
             style: GoogleFonts.poppins(
               color: ThemeColors.whiteTextColor,
               fontSize: FontSize.xxLarge,
@@ -64,7 +64,7 @@ class _GroupMembersState extends State<GroupMembers> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Group Admins',
+                        'Admins:',
                         style: GoogleFonts.poppins(
                           color: ThemeColors.whiteTextColor,
                           fontSize: FontSize.xLarge,
@@ -83,7 +83,7 @@ class _GroupMembersState extends State<GroupMembers> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Group Users',
+                        'Users:',
                         style: GoogleFonts.poppins(
                           color: ThemeColors.whiteTextColor,
                           fontSize: FontSize.xLarge,
