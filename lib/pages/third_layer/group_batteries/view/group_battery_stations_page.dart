@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
-import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/battery_repository/src/models/models.dart';
 import 'package:dronebag/domain/battery_station_repository/src/models/models.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
-
 import 'package:dronebag/pages/third_layer/battery_case_details/battery_case_details.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
@@ -193,8 +190,8 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
                     decoration: InputDecoration(
                       fillColor: ThemeColors.textFieldBgColor,
                       filled: true,
-                      hintText: "Serial number",
-                      hintStyle: GoogleFonts.poppins(
+                      labelText: "Serial number",
+                      labelStyle: GoogleFonts.poppins(
                         color: ThemeColors.textFieldHintColor,
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
