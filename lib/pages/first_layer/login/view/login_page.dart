@@ -146,17 +146,17 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Center(
-                        child: RichText(
-                            text: TextSpan(
-                                style: GoogleFonts.poppins(
-                                  color: ThemeColors.whiteTextColor,
-                                  fontSize: FontSize.medium,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                text: "Don't have an account? ",
-                                children: [
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Center(
+                    child: RichText(
+                      text: TextSpan(
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        text: "Don't have an account? ",
+                        children: [
                           TextSpan(
                             recognizer: TapGestureRecognizer()
                               ..onTap = widget.onClickedSignUp,
@@ -166,8 +166,12 @@ class _LoginPageState extends State<LoginPage> {
                               fontSize: FontSize.medium,
                               fontWeight: FontWeight.w600,
                             ),
-                          )
-                        ]))))
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
