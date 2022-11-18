@@ -26,13 +26,13 @@ dependencies:
   google_fonts: ^3.0.1
   datetime_picker_formfield: ^2.0.1
 
-  firebase_core: ^2.0.0
-  cloud_firestore: ^4.0.1
-  firebase_auth: ^4.0.1
-  firebase_analytics: ^10.0.1
-  firebase_crashlytics: ^3.0.1
-  firebase_performance: ^0.9.0+1
-  firebase_messaging: ^14.0.1
+  firebase_core: ^2.3.0
+  cloud_firestore: ^4.1.0
+  firebase_auth: ^4.1.3
+  firebase_analytics: ^10.0.6
+  firebase_crashlytics: ^3.0.6
+  firebase_performance: ^0.9.0+6
+  firebase_messaging: ^14.1.1
   flutter_local_notifications: ^12.0.2
 
 dev_dependencies:
