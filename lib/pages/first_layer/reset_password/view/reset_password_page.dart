@@ -1,11 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
-import 'package:dronebag/main.dart';
-
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:dronebag/widgets/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -108,7 +107,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: emailController.text.trim());
     } on FirebaseAuthException catch (e) {
-      print(e);
+      // print(e);
       Utils.showSnackBar(e.message);
     }
 

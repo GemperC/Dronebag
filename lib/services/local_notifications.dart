@@ -6,7 +6,7 @@ class LocalNotificationsService {
       FlutterLocalNotificationsPlugin();
 
   static void initState() {
-    final InitializationSettings initializationSettings =
+    const InitializationSettings initializationSettings =
         InitializationSettings(
             android: AndroidInitializationSettings("@mipmap/ic_launcher"));
     _notificationsPlugin.initialize(initializationSettings);
@@ -17,7 +17,7 @@ class LocalNotificationsService {
         DateTime.now().microsecond,
         message.notification!.title,
         message.notification!.body,
-        NotificationDetails(
+        const NotificationDetails(
             android: AndroidNotificationDetails('channelid', 'channelname',
                 importance: Importance.max, priority: Priority.high)));
   }

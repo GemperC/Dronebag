@@ -1,8 +1,8 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/pages/first_layer/auth/auth.dart';
-import 'package:dronebag/pages/first_layer/login/login.dart';
-import 'package:dronebag/widgets/main_button.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +29,7 @@ class _StartPageState extends State<StartPage> {
           // ),
           Container(
             height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -47,22 +47,22 @@ class _StartPageState extends State<StartPage> {
               child: Column(
                 children: [
                   Container(
-                    child: Icon(
+                    margin: const EdgeInsets.only(top: 35, bottom: 10),
+                    width: 200.0,
+                    height: 200.0,
+                    decoration: const BoxDecoration(color:Colors.blue, shape:BoxShape.circle),
+                    child: const Icon(
                       Icons.backpack,
                       color: Color.fromARGB(255, 255, 255, 255),
                       size: 160.0,
                     ),
-                    margin: const EdgeInsets.only(top: 35, bottom: 10),
-                    width: 200.0,
-                    height: 200.0,
-                    decoration: BoxDecoration(color:Colors.blue, shape:BoxShape.circle),
                   ),
                   Align(
                     alignment: Alignment.center,
                     child: Text(
                       'Dronebag',
                       style: GoogleFonts.poppins(
-                        color: Color.fromARGB(255, 255, 255, 255),
+                        color: const Color.fromARGB(255, 255, 255, 255),
                         fontSize: FontSize.large48,
                         fontWeight: FontWeight.w600,
                       ),
@@ -76,14 +76,14 @@ class _StartPageState extends State<StartPage> {
                       fontSize: FontSize.medium,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Padding(
                     padding: const EdgeInsets.only(top: 25, bottom: 30),
                     child: MainButton2(
                       onPressed: () => Navigator.pushReplacement(
                         context,
                         CupertinoPageRoute(
-                          builder: (context) => AuthPage(),
+                          builder: (context) => const AuthPage(),
                         ),
                         result: false,
                       ),

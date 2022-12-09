@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dronebag/domain/user_repository/user_repository.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 
 class GroupMember {
   final String role;
@@ -16,7 +14,7 @@ class GroupMember {
         'email': email,
       };
 
-  GroupMember.fromMap(Map<String, dynamic> map())
+  GroupMember.fromMap(Map<String, dynamic> Function() map)
       : assert(map()['role'] != null),
         assert(map()['email'] != null),
         role = map()['role'],

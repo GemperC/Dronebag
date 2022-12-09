@@ -1,14 +1,11 @@
+// ignore_for_file: depend_on_referenced_packages, non_constant_identifier_names, sized_box_for_whitespace, use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
-import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
-import 'package:dronebag/domain/user_repository/user_repository.dart';
 import 'package:dronebag/pages/third_layer/drone_details/view/view.dart';
-import 'package:dronebag/pages/third_layer/group_members/view/view.dart';
-import 'package:dronebag/widgets/main_button_2.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
@@ -77,12 +74,11 @@ class _GroupDronesState extends State<GroupDrones> {
                       children: drones.map(buildDroneTile).toList());
                 } else if (snapshot.hasError) {
                   return SingleChildScrollView(
-                    child: Text('Something went wrong! \n\n${snapshot}',
-                        style: TextStyle(color: Colors.white)),
+                    child: Text('Something went wrong! \n\n$snapshot',
+                        style: const TextStyle(color: Colors.white)),
                   );
                 } else {
-                  return Container(
-                      child: Center(child: CircularProgressIndicator()));
+                  return const Center(child: CircularProgressIndicator());
                 }
               }),
             )),
@@ -123,9 +119,9 @@ class _GroupDronesState extends State<GroupDrones> {
         title: Center(
           child: Padding(
             // padding betwwent he cards
-            padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+            padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 65, 61, 82),
                   borderRadius: BorderRadius.all(Radius.circular(12))),
               child: Padding(
@@ -213,8 +209,10 @@ class _GroupDronesState extends State<GroupDrones> {
                   TextFormField(
                     controller: nameController,
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (nameController.text.isEmpty) {
                         return "This field can't be empty";
+                      }
+                      return null;
                     },
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
@@ -230,7 +228,7 @@ class _GroupDronesState extends State<GroupDrones> {
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
@@ -240,8 +238,10 @@ class _GroupDronesState extends State<GroupDrones> {
                   TextFormField(
                     controller: serial_numberController,
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (nameController.text.isEmpty) {
                         return "This field can't be empty";
+                      }
+                      return null;
                     },
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
@@ -257,7 +257,7 @@ class _GroupDronesState extends State<GroupDrones> {
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
@@ -267,8 +267,10 @@ class _GroupDronesState extends State<GroupDrones> {
                   TextFormField(
                     controller: flight_timeController,
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (nameController.text.isEmpty) {
                         return "This field can't be empty";
+                      }
+                      return null;
                     },
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
@@ -284,7 +286,7 @@ class _GroupDronesState extends State<GroupDrones> {
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
@@ -294,8 +296,10 @@ class _GroupDronesState extends State<GroupDrones> {
                   TextFormField(
                     controller: maintenanceController,
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (nameController.text.isEmpty) {
                         return "This field can't be empty";
+                      }
+                      return null;
                     },
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
@@ -311,7 +315,7 @@ class _GroupDronesState extends State<GroupDrones> {
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
@@ -329,8 +333,10 @@ class _GroupDronesState extends State<GroupDrones> {
                           lastDate: DateTime(2100));
                     }),
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (nameController.text.isEmpty) {
                         return "This field can't be empty";
+                      }
+                      return null;
                     },
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
@@ -346,7 +352,7 @@ class _GroupDronesState extends State<GroupDrones> {
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
@@ -360,12 +366,12 @@ class _GroupDronesState extends State<GroupDrones> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel')),
+              child: const Text('Cancel')),
           TextButton(
               onPressed: () {
                 createDrone();
               },
-              child: Text('Add Drone')),
+              child: const Text('Add Drone')),
         ],
       ),
     );

@@ -1,16 +1,9 @@
+// ignore_for_file: depend_on_referenced_packages, sized_box_for_whitespace, use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
-import 'package:dronebag/config/theme_colors.dart';
-import 'package:dronebag/domain/drone_repository/drone_repository.dart';
-import 'package:dronebag/domain/group_repository/group_repository.dart';
-import 'package:dronebag/domain/issue_repository/issue_repository.dart';
 import 'package:dronebag/domain/maintnance_history_repository/maintnance_history_repository.dart';
-import 'package:dronebag/domain/user_repository/user_repository.dart';
-import 'package:dronebag/pages/third_layer/drone_details/view/view.dart';
-import 'package:dronebag/pages/third_layer/group_members/view/view.dart';
-import 'package:dronebag/widgets/main_button_2.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
@@ -87,12 +80,11 @@ class _MaintenanceRecordsState extends State<MaintenanceRecords> {
                       children: records.map(buildRecordTile).toList());
                 } else if (snapshot.hasError) {
                   return SingleChildScrollView(
-                    child: Text('Something went wrong! \n\n${snapshot}',
-                        style: TextStyle(color: Colors.white)),
+                    child: Text('Something went wrong! \n\n$snapshot',
+                        style: const TextStyle(color: Colors.white)),
                   );
                 } else {
-                  return Container(
-                      child: Center(child: CircularProgressIndicator()));
+                  return const Center(child: CircularProgressIndicator());
                 }
               }),
             )),
@@ -123,14 +115,14 @@ class _MaintenanceRecordsState extends State<MaintenanceRecords> {
         child: Container(
           height: 80,
           width: 250,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: Colors.blue,
               borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Center(
             child: Column(
               children: [
                 Text(
-                  '${record.detail}',
+                  record.detail,
                   style: GoogleFonts.poppins(
                     color: ThemeColors.whiteTextColor,
                     fontSize: FontSize.large,
@@ -177,8 +169,10 @@ class _MaintenanceRecordsState extends State<MaintenanceRecords> {
                   TextFormField(
                     controller: maintenanceDetailController,
                     validator: (value) {
-                      if (maintenanceDetailController.text.isEmpty)
+                      if (maintenanceDetailController.text.isEmpty) {
                         return "This field can't be empty";
+                      }
+                      return null;
                     },
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
@@ -194,7 +188,7 @@ class _MaintenanceRecordsState extends State<MaintenanceRecords> {
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
@@ -212,8 +206,10 @@ class _MaintenanceRecordsState extends State<MaintenanceRecords> {
                           lastDate: DateTime(2100));
                     }),
                     validator: (value) {
-                      if (maintenanceDateController.text.isEmpty)
+                      if (maintenanceDateController.text.isEmpty) {
                         return "This field can't be empty";
+                      }
+                      return null;
                     },
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
@@ -229,7 +225,7 @@ class _MaintenanceRecordsState extends State<MaintenanceRecords> {
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
@@ -243,12 +239,12 @@ class _MaintenanceRecordsState extends State<MaintenanceRecords> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel')),
+              child: const Text('Cancel')),
           TextButton(
               onPressed: () {
                 createMaintenanceHistoryRecord();
               },
-              child: Text('Add Record')),
+              child: const Text('Add Record')),
         ],
       ),
     );

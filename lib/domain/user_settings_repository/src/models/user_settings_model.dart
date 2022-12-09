@@ -1,6 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 class UserSettings {
   bool notifications;
   String id;
@@ -20,7 +17,7 @@ class UserSettings {
         "role": role,
       };
 
-  UserSettings.fromMap(Map<String, dynamic> map())
+  UserSettings.fromMap(Map<String, dynamic> Function() map)
       : assert(map()['notifications'] != null),
         assert(map()['id'] != null),
         assert(map()['group'] != null),

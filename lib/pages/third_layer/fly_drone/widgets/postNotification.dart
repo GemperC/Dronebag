@@ -1,7 +1,8 @@
+// ignore_for_file: file_names, depend_on_referenced_packages, unused_local_variable
+
 import 'dart:async';
 import 'dart:convert' show Encoding, json;
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
-import 'package:dronebag/pages/third_layer/fly_drone/fly_drone.dart';
 import 'package:http/http.dart' as http;
 
 class PostCall {
@@ -38,7 +39,7 @@ class PostCall {
       },
       "to": "/topics/$topic"
     };
-    print('=========seding============');
+    // print('=========seding============');
     final response = await http.post(Uri.parse(postUrl),
         body: json.encode(data),
         encoding: Encoding.getByName('utf-8'),
@@ -65,7 +66,7 @@ class PostCall {
       },
       "to": "/topics/$topic"
     };
-    print('=========seding============');
+    // print('=========seding============');
     final response = await http.post(Uri.parse(postUrl),
         body: json.encode(data),
         encoding: Encoding.getByName('utf-8'),

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
@@ -49,7 +51,7 @@ class _GroupSettingsState extends State<GroupSettings> {
                     final userSettings = snapshot.data!.first;
                     return Column(
                       children: [
-                        SizedBox(height: 50),
+                        const SizedBox(height: 50),
                         Row(children: [
                           Text(
                             'Get notifications',
@@ -59,7 +61,7 @@ class _GroupSettingsState extends State<GroupSettings> {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Theme(
                             data: Theme.of(context)
                                 .copyWith(unselectedWidgetColor: Colors.grey),
@@ -74,13 +76,13 @@ class _GroupSettingsState extends State<GroupSettings> {
                                       .doc(userSettings.id)
                                       .update({'notifications': value});
                                   if (value!) {
-                                    print('sucsribed to ${widget.group.name}');
+                                    // print('sucsribed to ${widget.group.name}');
 
                                     FirebaseMessaging.instance
                                         .subscribeToTopic(widget.group.id);
                                   } else if (!value) {
-                                    print(
-                                        'unsucsribed from ${widget.group.name}');
+                                    // print(
+                                    //     'unsucsribed from ${widget.group.name}');
 
                                     FirebaseMessaging.instance
                                         .unsubscribeFromTopic(widget.group.id);
@@ -94,18 +96,10 @@ class _GroupSettingsState extends State<GroupSettings> {
                             ),
                           ),
                         ]),
-                        SizedBox(height: 50),
+                        const SizedBox(height: 50),
                         Align(
                           alignment: Alignment.topLeft,
                           child: MaterialButton(
-                            child: Text(
-                              "Leave this Drone Bag",
-                              style: GoogleFonts.poppins(
-                                color: ThemeColors.whiteTextColor,
-                                fontSize: FontSize.medium,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
                             onPressed: () {
                               FirebaseFirestore.instance
                                   .collection('users')
@@ -134,14 +128,22 @@ class _GroupSettingsState extends State<GroupSettings> {
                             },
                             color: Colors.red,
                             textColor: Colors.yellow,
-                            padding: EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(10.0),
                             splashColor: Colors.grey,
+                            child: Text(
+                              "Leave this Drone Bag",
+                              style: GoogleFonts.poppins(
+                                color: ThemeColors.whiteTextColor,
+                                fontSize: FontSize.medium,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
                         )
                       ],
                     );
                   } else {
-                    return Scaffold();
+                    return const Scaffold();
                   }
                 }),
           ),

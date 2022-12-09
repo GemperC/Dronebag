@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class UserData {
   final String fullName;
@@ -18,7 +17,7 @@ class UserData {
         'Phone_Number': phone,
       };
 
- UserData.fromMap(Map<String, dynamic> map())
+ UserData.fromMap(Map<String, dynamic> Function() map)
       : assert(map()['Full_Name'] != null),
         assert(map()['Email'] != null),
         assert(map()['Phone_Number'] != null),
@@ -34,7 +33,7 @@ class UserData {
       );
 
   Future createUser(UserData user) async {
-    final docUser = FirebaseFirestore.instance.collection('users').doc('$email');
+    final docUser = FirebaseFirestore.instance.collection('users').doc(email);
     final json = user.toJson();
     await docUser.set(json);
   }

@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/user_repository/user_repository.dart';
@@ -74,7 +76,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 Form(
                   key: formKey,
                   child: Column(
@@ -86,6 +88,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           if (nameController.text.isEmpty) {
                             return "Please fill in your full name";
                           }
+                          return null;
                         },
                         style: GoogleFonts.poppins(
                           color: ThemeColors.whiteTextColor,
@@ -101,7 +104,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
                           ),
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderSide: BorderSide.none,
                             borderRadius: BorderRadius.all(Radius.circular(18)),
                           ),
@@ -130,7 +133,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
                           ),
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderSide: BorderSide.none,
                             borderRadius: BorderRadius.all(Radius.circular(18)),
                           ),
@@ -161,7 +164,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
                           ),
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderSide: BorderSide.none,
                             borderRadius: BorderRadius.all(Radius.circular(18)),
                           ),
@@ -176,6 +179,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           if (phoneController.text.length != 10) {
                             return "please enter your phone number";
                           }
+                          return null;
                         },
                         style: GoogleFonts.poppins(
                           color: ThemeColors.whiteTextColor,
@@ -191,7 +195,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
                           ),
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderSide: BorderSide.none,
                             borderRadius: BorderRadius.all(Radius.circular(18)),
                           ),
@@ -220,7 +224,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
                           ),
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderSide: BorderSide.none,
                             borderRadius: BorderRadius.all(Radius.circular(18)),
                           ),
@@ -252,13 +256,13 @@ class _SignUpPageState extends State<SignUpPage> {
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
                           ),
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderSide: BorderSide.none,
                             borderRadius: BorderRadius.all(Radius.circular(18)),
                           ),
                         ),
                       ),
-                      SizedBox(height: 50),
+                      const SizedBox(height: 50),
 
                       //Sign in button
                       MainButton2(
@@ -310,7 +314,7 @@ class _SignUpPageState extends State<SignUpPage> {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => Center(child: CircularProgressIndicator()));
+        builder: (context) => const Center(child: CircularProgressIndicator()));
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
@@ -323,7 +327,7 @@ class _SignUpPageState extends State<SignUpPage> {
       );
       user.createUser(user);
     } on FirebaseAuthException catch (e) {
-      print(e);
+      // print(e);
 
       Utils.showSnackBar(e.message);
     }

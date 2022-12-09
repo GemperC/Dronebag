@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_function_literals_in_foreach_calls
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
@@ -60,7 +62,7 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 Form(
                   key: formKey,
                   child: Column(
@@ -71,11 +73,9 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
                             if (snapshot.hasData) {
                               final groups = snapshot.data!;
                               List<String> groupKeysList = [];
-                              groups.forEach(
-                                (group) {
+                              for (var group in groups) {
                                   groupKeysList.add(group.key);
-                                },
-                              );
+                                }
                               return TextFormField(
                                 controller: groupKeyController,
                                 validator: (value) {
@@ -85,6 +85,7 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
                                       .contains(groupKeyController.text)) {
                                     return "Invalid key, No such Drone bag";
                                   }
+                                  return null;
                                 },
                                 style: GoogleFonts.poppins(
                                   color: ThemeColors.whiteTextColor,
@@ -100,7 +101,7 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
                                     fontSize: FontSize.medium,
                                     fontWeight: FontWeight.w400,
                                   ),
-                                  border: OutlineInputBorder(
+                                  border: const OutlineInputBorder(
                                     borderSide: BorderSide.none,
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(18)),
@@ -108,19 +109,19 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
                                 ),
                               );
                             } else if (snapshot.hasError) {
-                              print(snapshot.error);
-                              return Text(
+                              // print(snapshot.error);
+                              return const Text(
                                 'Something went wrong!',
                                 style: TextStyle(color: Colors.white),
                               );
                             } else {
-                              return Text(
+                              return const Text(
                                 'Something went wrong!',
                                 style: TextStyle(color: Colors.white),
                               );
                             }
                           }),
-                      SizedBox(height: 50),
+                      const SizedBox(height: 50),
                       MainButton2(
                         text: 'Join Drone bag',
                         onPressed: () {
@@ -173,12 +174,6 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
           final json = usersettings.toJson();
           await docuserSettings.set(json);
 
-          final usersetting = FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.email)
-              .collection('settings')
-              .doc(docuserSettings.id)
-              .update({'group': doc.get('name')});
 
           final docGroupMember = FirebaseFirestore.instance
               .collection('groups')
@@ -196,7 +191,7 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
       Navigator.pop(context);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => MyGroupsPage()),
+        MaterialPageRoute(builder: (context) => const MyGroupsPage()),
       );
     }
   }

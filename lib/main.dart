@@ -1,7 +1,7 @@
 import 'app.dart';
 
 Future<void> backgroudHandler(RemoteMessage message) async {
-  print('this is message from backgroud');
+  // print('this is message from backgroud');
 }
 
 Future main() async {
@@ -9,7 +9,7 @@ Future main() async {
   await Firebase.initializeApp();
   await GetStorage.init();
   FirebaseMessaging.onBackgroundMessage(backgroudHandler);
-  runApp(Dronebag());
+  runApp(const Dronebag());
 }
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -41,7 +41,7 @@ class _DronebagState extends State<Dronebag> {
         debugShowCheckedModeBanner: false,
         navigatorKey: navigatorKey,
         scaffoldMessengerKey: Utils.messengerKey,
-        home: introdata.read('displayed') ? IsLoggedIn() : IntroPage());
+        home: introdata.read('displayed') ? const IsLoggedIn() : const IntroPage());
   }
 }
 
@@ -54,13 +54,13 @@ class IsLoggedIn extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Something went wrong!'));
+            return const Center(child: Text('Something went wrong!'));
           } else if (snapshot.hasData) {
-            return MainPage(); //change to MainPage
+            return const MainPage(); //change to MainPage
           } else {
-            return AuthPage();
+            return const AuthPage();
           }
         });
   }

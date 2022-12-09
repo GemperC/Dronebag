@@ -1,16 +1,12 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, depend_on_referenced_packages, sized_box_for_whitespace, avoid_unnecessary_containers
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
-import 'package:dronebag/domain/battery_issue_repository/battery_issue_repository.dart';
-import 'package:dronebag/domain/battery_repository/battery_repository.dart';
-import 'package:dronebag/domain/battery_station_repository/src/models/models.dart';
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_repository/src/models/models.dart';
 import 'package:dronebag/pages/third_layer/fly_drone/fly_drone.dart';
-import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
@@ -41,14 +37,9 @@ class _StartFlightPageState extends State<StartFlightPage> {
   final user = FirebaseAuth.instance.currentUser!;
   late UserData loggedUser;
   late DateTime airTimeStart;
-  // late List<Drone> droneList;
   String dropdownValue = list.first;
 
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +85,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 Row(
                   children: [
                     Text(
@@ -105,7 +96,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     SizedBox(
                         height: 30,
                         width: 30,
@@ -114,11 +105,11 @@ class _StartFlightPageState extends State<StartFlightPage> {
                           onPressed: () {
                             pickDroneDialog();
                           },
-                          child: ImageIcon(AssetImage('assets/icons/plus.png')),
+                          child: const ImageIcon(AssetImage('assets/icons/plus.png')),
                         )))
                   ],
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 Align(
                   alignment: Alignment.topLeft,
                   child: FutureBuilder<UserData?>(
@@ -148,15 +139,15 @@ class _StartFlightPageState extends State<StartFlightPage> {
                           ]),
                         );
                       } else if (snapshot.hasError) {
-                        return Text('Something went wrong! \n\n${snapshot}',
-                            style: TextStyle(color: Colors.white));
+                        return Text('Something went wrong! \n\n$snapshot',
+                            style: const TextStyle(color: Colors.white));
                       } else {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       }
                     },
                   ),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 Align(
                   alignment: Alignment.topLeft,
                   child: Row(
@@ -197,7 +188,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 150),
+                const SizedBox(height: 150),
                 Center(
                   child: SizedBox(
                     height: 160,
@@ -282,7 +273,6 @@ class _StartFlightPageState extends State<StartFlightPage> {
     return showDialog(
         context: context,
         builder: (context) {
-          Color tileColor = Colors.grey;
           return AlertDialog(
             backgroundColor: ThemeColors.scaffoldBgColor,
             scrollable: true,
@@ -315,12 +305,12 @@ class _StartFlightPageState extends State<StartFlightPage> {
                         );
                       } else if (snapshot.hasError) {
                         return SingleChildScrollView(
-                          child: Text('Something went wrong! \n\n${snapshot}',
-                              style: TextStyle(color: Colors.white)),
+                          child: Text('Something went wrong! \n\n$snapshot',
+                              style: const TextStyle(color: Colors.white)),
                         );
                       } else {
                         return Container(
-                            child: Center(child: CircularProgressIndicator()));
+                            child: const Center(child: CircularProgressIndicator()));
                       }
                     }),
                   ),
@@ -332,12 +322,12 @@ class _StartFlightPageState extends State<StartFlightPage> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel')),
+                  child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Done')),
+                  child: const Text('Done')),
             ],
           );
         });
@@ -359,6 +349,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
     if (snapshot.exists) {
       return UserData.fromJson(snapshot.data()!);
     }
+    return null;
   }
 }
 
@@ -394,14 +385,14 @@ class _BuildDroneTileState extends State<BuildDroneTile> {
         title: Center(
           child: Padding(
             // padding betwwent he cards
-            padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+            padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
             child: Container(
               decoration: BoxDecoration(
                   color:
-                      pressed ? Colors.blue : Color.fromARGB(255, 65, 61, 82),
+                      pressed ? Colors.blue : const Color.fromARGB(255, 65, 61, 82),
 
                   // color: Color.fromARGB(255, 65, 61, 82),
-                  borderRadius: BorderRadius.all(Radius.circular(12))),
+                  borderRadius: const BorderRadius.all(Radius.circular(12))),
               child: Padding(
                 // padding of the text in the cards
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),

@@ -1,22 +1,15 @@
+// ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
-import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
-import 'package:dronebag/domain/group_repository/group_repository.dart';
-import 'package:dronebag/domain/maintnance_history_repository/maintnance_history_repository.dart';
-import 'package:dronebag/domain/user_repository/user_repository.dart';
 import 'package:dronebag/pages/third_layer/flights_data/flights_data.dart';
-import 'package:dronebag/pages/third_layer/group_members/view/view.dart';
 import 'package:dronebag/pages/third_layer/issues/issues.dart';
 import 'package:dronebag/pages/third_layer/maintenance_history/maintenance_history.dart';
-import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:dronebag/widgets/main_button_3.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:intl/intl.dart';
 
 class DroneDetails extends StatefulWidget {
   final String groupID;
@@ -44,6 +37,7 @@ class _DroneDetailsState extends State<DroneDetails> {
 
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     super.initState();
   }
@@ -90,27 +84,27 @@ class _DroneDetailsState extends State<DroneDetails> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         richText_listingDroneDetails('Name', drone.name),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         richText_listingDroneDetails(
                             'Serial Number', drone.serial_number),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         richText_listingDroneDetailsDates(
                             'Date Added', drone.date_added),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         richText_listingDroneDetailsDates(
                             'Date Bought', drone.date_bought),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         richText_listingDroneDetails(
                             'Flight Time', '${drone.flight_time} hours'),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         richText_listingDroneDetails('Mainetenance Cycle',
                             'every ${drone.maintenance} hours'),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         Row(
                           children: [
                             richText_listingDroneDetails('Next Maintenance in',
                                 '${drone.hours_till_maintenace} flight hours'),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             RichText(
                               text: TextSpan(
                                 recognizer: TapGestureRecognizer()
@@ -134,7 +128,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                             )
                           ],
                         ),
-                        SizedBox(height: 25),
+                        const SizedBox(height: 25),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -151,7 +145,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                                             )),
                                   );
                                 }),
-                            SizedBox(width: 20),
+                            const SizedBox(width: 20),
                             Text(
                               '10 Records',
                               style: GoogleFonts.poppins(
@@ -162,7 +156,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                             )
                           ],
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -178,7 +172,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                                             )),
                                   );
                                 }),
-                            SizedBox(width: 20),
+                            const SizedBox(width: 20),
                             Text(
                               '0 Records',
                               style: GoogleFonts.poppins(
@@ -189,7 +183,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                             )
                           ],
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -205,7 +199,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                                             )),
                                   );
                                 }),
-                            SizedBox(width: 20),
+                            const SizedBox(width: 20),
                             Text(
                               '0 Records',
                               style: GoogleFonts.poppins(
@@ -222,11 +216,11 @@ class _DroneDetailsState extends State<DroneDetails> {
                 );
               } else if (snapshot.hasError) {
                 return SingleChildScrollView(
-                  child: Text('Something went wrong! \n\n${snapshot}',
-                      style: TextStyle(color: Colors.white)),
+                  child: Text('Something went wrong! \n\n$snapshot',
+                      style: const TextStyle(color: Colors.white)),
                 );
               } else {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               }
             }));
   }
@@ -319,8 +313,10 @@ class _DroneDetailsState extends State<DroneDetails> {
                   TextFormField(
                     controller: nameController..text = widget.drone.name,
                     validator: (value) {
-                      if (nameController.text.isEmpty)
+                      if (nameController.text.isEmpty) {
                         return "This field can't be empty";
+                      }
+                      return null;
                     },
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
@@ -336,7 +332,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
@@ -351,8 +347,10 @@ class _DroneDetailsState extends State<DroneDetails> {
                           controller: serial_numberController
                             ..text = widget.drone.serial_number,
                           validator: (value) {
-                            if (nameController.text.isEmpty)
+                            if (nameController.text.isEmpty) {
                               return "This field can't be empty";
+                            }
+                            return null;
                           },
                           style: GoogleFonts.poppins(
                             color: ThemeColors.whiteTextColor,
@@ -368,7 +366,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                               fontSize: FontSize.small,
                               fontWeight: FontWeight.w400,
                             ),
-                            border: OutlineInputBorder(
+                            border: const OutlineInputBorder(
                               borderSide: BorderSide.none,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(18)),
@@ -376,15 +374,17 @@ class _DroneDetailsState extends State<DroneDetails> {
                           ),
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Container(
                         width: 120,
                         child: TextFormField(
                           controller: flight_timeController
                             ..text = widget.drone.flight_time.toString(),
                           validator: (value) {
-                            if (nameController.text.isEmpty)
+                            if (nameController.text.isEmpty) {
                               return "This field can't be empty";
+                            }
+                            return null;
                           },
                           style: GoogleFonts.poppins(
                             color: ThemeColors.whiteTextColor,
@@ -400,7 +400,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                               fontSize: FontSize.small,
                               fontWeight: FontWeight.w400,
                             ),
-                            border: OutlineInputBorder(
+                            border: const OutlineInputBorder(
                               borderSide: BorderSide.none,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(18)),
@@ -411,15 +411,17 @@ class _DroneDetailsState extends State<DroneDetails> {
                     ],
                   ),
                   SizedBox(height: sizedBoxHight),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Container(
                     width: 140,
                     child: TextFormField(
                       controller: maintenanceController
                         ..text = widget.drone.maintenance.toString(),
                       validator: (value) {
-                        if (nameController.text.isEmpty)
+                        if (nameController.text.isEmpty) {
                           return "This field can't be empty";
+                        }
+                        return null;
                       },
                       style: GoogleFonts.poppins(
                         color: ThemeColors.whiteTextColor,
@@ -435,7 +437,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                           fontSize: FontSize.small,
                           fontWeight: FontWeight.w400,
                         ),
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.all(Radius.circular(18)),
                         ),
@@ -460,7 +462,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                 });
                 Utils.showSnackBarWithColor('Drone ${widget.drone.name} has been deleted from the group', Colors.blue);
               },
-              child: Text(
+              child: const Text(
                 'Delete Drone',
                 style: TextStyle(color: Colors.red),
               )),
@@ -468,7 +470,7 @@ class _DroneDetailsState extends State<DroneDetails> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel')),
+              child: const Text('Cancel')),
           TextButton(
             onPressed: () {
               FirebaseFirestore.instance
@@ -484,7 +486,7 @@ class _DroneDetailsState extends State<DroneDetails> {
               });
               Navigator.pop(context);
             },
-            child: Text('Update Drone'),
+            child: const Text('Update Drone'),
           ),
         ],
       ),

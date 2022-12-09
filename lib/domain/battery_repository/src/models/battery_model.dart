@@ -1,4 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+// ignore_for_file: non_constant_identifier_names
 
 class Battery {
   String id; //id of the battery case in the firestore database

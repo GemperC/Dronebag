@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/main.dart';
@@ -62,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 70),
+                const SizedBox(height: 70),
                 Form(
                   key: formKey,
                   child: Column(
@@ -84,13 +86,13 @@ class _LoginPageState extends State<LoginPage> {
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
                           ),
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderSide: BorderSide.none,
                             borderRadius: BorderRadius.all(Radius.circular(18)),
                           ),
                         ),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
                       ///Password Input Field
                       TextField(
@@ -110,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
                           ),
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderSide: BorderSide.none,
                             borderRadius: BorderRadius.all(Radius.circular(18)),
                           ),
@@ -132,12 +134,12 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             onTap: () =>
                                 Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ForgotPasswordPage(),
+                              builder: (context) => const ForgotPasswordPage(),
                             )),
                           ),
                         ),
                       ),
-                      SizedBox(height: 90),
+                      const SizedBox(height: 90),
                       MainButton2(
                         text: 'Login',
                         onPressed: signIn,
@@ -184,14 +186,14 @@ class _LoginPageState extends State<LoginPage> {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => Center(child: CircularProgressIndicator()));
+        builder: (context) => const Center(child: CircularProgressIndicator()));
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
     } on FirebaseAuthException catch (e) {
-      print(e);
+      //print(e);
 
       switch (e.code) {
         case 'user-not-found':

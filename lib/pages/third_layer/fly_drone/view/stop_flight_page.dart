@@ -3,15 +3,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
-import 'package:dronebag/domain/battery_issue_repository/battery_issue_repository.dart';
-import 'package:dronebag/domain/battery_repository/battery_repository.dart';
-import 'package:dronebag/domain/battery_station_repository/src/models/models.dart';
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_repository/src/models/models.dart';
 import 'package:dronebag/pages/third_layer/fly_drone/fly_drone.dart';
-import 'package:dronebag/services/local_notifications.dart';
-import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/widgets.dart';
@@ -22,7 +17,7 @@ class StopFlightPage extends StatefulWidget {
   final UserData pilot;
   final String flightPurpose;
   final DateTime airTimeStart;
-  StopFlightPage({
+  const StopFlightPage({
     Key? key,
     required this.group,
     required this.droneList,
@@ -123,7 +118,7 @@ class _StopFlightPageState extends State<StopFlightPage> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 7),
                       child: Text(
-                        '$notificationMsg', //"below are the flight details",
+                        notificationMsg, //"below are the flight details",
                         style: GoogleFonts.poppins(
                           color: ThemeColors.greyTextColor,
                           fontSize: FontSize.medium,
@@ -132,7 +127,7 @@ class _StopFlightPageState extends State<StopFlightPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   Text(
                     'You are piloting the drones:',
                     style: GoogleFonts.poppins(
@@ -141,7 +136,7 @@ class _StopFlightPageState extends State<StopFlightPage> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   ListView.builder(
                     shrinkWrap: true,
                     itemCount: droneList.length,
@@ -158,7 +153,7 @@ class _StopFlightPageState extends State<StopFlightPage> {
                       );
                     }),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Align(
                     alignment: Alignment.center,
                     child: RichText(
@@ -182,7 +177,7 @@ class _StopFlightPageState extends State<StopFlightPage> {
                       ]),
                     ),
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Align(
                     alignment: Alignment.center,
                     child: RichText(
@@ -206,7 +201,7 @@ class _StopFlightPageState extends State<StopFlightPage> {
                       ]),
                     ),
                   ),
-                  SizedBox(height: 150),
+                  const SizedBox(height: 150),
                   Center(
                     child: SizedBox(
                       height: 160,
@@ -275,6 +270,7 @@ class _StopFlightPageState extends State<StopFlightPage> {
     if (snapshot.exists) {
       return UserData.fromJson(snapshot.data()!);
     }
+    return null;
   }
 
   // Future<String?> saveDeviceToken() async {

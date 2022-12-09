@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/pages/second_layer/create_group/create_group.dart';
@@ -33,7 +32,7 @@ class MainPage extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              GetUserName(),
+              const GetUserName(),
               Padding(
                 padding: const EdgeInsets.only(top: 7),
                 child: Text(
@@ -45,37 +44,37 @@ class MainPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 60),
+              const SizedBox(height: 60),
               MainButton2(
                 text: 'My Drone bags',
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MyGroupsPage()),
+                    MaterialPageRoute(builder: (context) => const MyGroupsPage()),
                   );
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               MainButton2(
                 text: 'Create a Drone bag',
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CreateGroupPage()),
+                    MaterialPageRoute(builder: (context) => const CreateGroupPage()),
                   );
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               MainButton2(
                 text: 'Join a Drone bag',
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => JoinGroupPage()),
+                    MaterialPageRoute(builder: (context) => const JoinGroupPage()),
                   );
                 },
               ),
-              Spacer(),
+              const Spacer(),
               MainButton2(
                 text: 'Sign Out',
                 onPressed: () => FirebaseAuth.instance.signOut(),

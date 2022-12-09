@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
-import 'package:dronebag/domain/drone_repository/drone_repository.dart';
 import 'package:dronebag/domain/group_members_repository/group_members_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/pages/third_layer/group_main/view/group_main_page.dart';
@@ -42,10 +41,10 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
                     children: groups.map(buildGroupTile).toList(),
                   );
                 } else if (snapshot.hasError) {
-                  return Text('Something went wrong! \n\n${snapshot}',
-                      style: TextStyle(color: Colors.white));
+                  return Text('Something went wrong! \n\n$snapshot',
+                      style: const TextStyle(color: Colors.white));
                 } else {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
               }),
             )),
@@ -76,9 +75,9 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
       title: Center(
         child: Padding(
           // padding betwwent he cards
-          padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+          padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
           child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Color.fromARGB(255, 65, 61, 82),
                 borderRadius: BorderRadius.all(Radius.circular(8))),
             child: Padding(
@@ -122,10 +121,10 @@ class _MyGroupsPageState extends State<MyGroupsPage> {
                               ),
                             );
                           } else if (snapshot.hasError) {
-                            return Text('Something went wrong! \n\n${snapshot}',
-                                style: TextStyle(color: Colors.white));
+                            return Text('Something went wrong! \n\n$snapshot',
+                                style: const TextStyle(color: Colors.white));
                           } else {
-                            return CircularProgressIndicator();
+                            return const CircularProgressIndicator();
                           }
                         }),
                   ),

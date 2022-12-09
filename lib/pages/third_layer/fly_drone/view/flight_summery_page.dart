@@ -1,21 +1,14 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
-import 'package:dronebag/domain/battery_issue_repository/battery_issue_repository.dart';
-import 'package:dronebag/domain/battery_repository/battery_repository.dart';
-import 'package:dronebag/domain/battery_station_repository/src/models/models.dart';
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_repository/src/models/models.dart';
-import 'package:dronebag/pages/third_layer/fly_drone/fly_drone.dart';
-import 'package:dronebag/services/local_notifications.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
-import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../widgets/widgets.dart';
 
 class FlightSummery extends StatefulWidget {
   final Group group;
@@ -53,7 +46,7 @@ class _FlightSummeryState extends State<FlightSummery> {
   final TextEditingController maintenanceController = TextEditingController();
   @override
   void initState() {
-    print(widget.droneList);
+    // print(widget.droneList);
     flight_timeController =
         TextEditingController(text: widget.flightDuration.inSeconds.toString());
     super.initState();
@@ -113,7 +106,7 @@ class _FlightSummeryState extends State<FlightSummery> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   Text(
                     'You were piloting the drones:',
                     style: GoogleFonts.poppins(
@@ -122,7 +115,7 @@ class _FlightSummeryState extends State<FlightSummery> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   ListView.builder(
                     shrinkWrap: true,
                     itemCount: widget.droneList.length,
@@ -140,7 +133,7 @@ class _FlightSummeryState extends State<FlightSummery> {
                       // );
                     }),
                   ),
-                  SizedBox(height: 150),
+                  const SizedBox(height: 150),
                   Center(
                     child: MainButton2(
                       onPressed: () {
@@ -167,9 +160,9 @@ class _FlightSummeryState extends State<FlightSummery> {
         title: Center(
           child: Padding(
             // padding betwwent he cards
-            padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+            padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 65, 61, 82),
                   borderRadius: BorderRadius.all(Radius.circular(12))),
               child: Padding(
@@ -247,7 +240,7 @@ class _FlightSummeryState extends State<FlightSummery> {
                         // fontSize: FontSize.small,
                         // fontWeight: FontWeight.w400,
                       ),
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
@@ -284,7 +277,7 @@ class _FlightSummeryState extends State<FlightSummery> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel')),
+              child: const Text('Cancel')),
           TextButton(
               onPressed: () {
                 int totalFlightTime =
@@ -305,7 +298,7 @@ class _FlightSummeryState extends State<FlightSummery> {
 
                 Navigator.pop(context);
               },
-              child: Text('Update Drone')),
+              child: const Text('Update Drone')),
         ],
       ),
     );

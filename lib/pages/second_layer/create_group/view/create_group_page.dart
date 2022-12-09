@@ -1,3 +1,5 @@
+// ignore_for_file: body_might_complete_normally_nullable, use_build_context_synchronously
+
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
@@ -61,7 +63,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 Form(
                   key: formKey,
                   child: Column(
@@ -87,13 +89,13 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
                           ),
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderSide: BorderSide.none,
                             borderRadius: BorderRadius.all(Radius.circular(18)),
                           ),
                         ),
                       ),
-                      SizedBox(height: 50),
+                      const SizedBox(height: 50),
                       MainButton2(
                         text: 'Create New Bag',
                         onPressed: () {
@@ -156,16 +158,16 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
       Navigator.pop(context);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => MyGroupsPage()),
+        MaterialPageRoute(builder: (context) => const MyGroupsPage()),
       );
     }
   }
 
   // generates a random group key
   String generateGroupKey() {
-    final length = 10;
-    final letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    final numbers = '0123456789';
+    const length = 10;
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const numbers = '0123456789';
 
     String chars = '';
     chars += '$letters$numbers';

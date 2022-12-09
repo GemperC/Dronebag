@@ -2,15 +2,14 @@
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/main.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 class IntroPage extends StatefulWidget {
+  const IntroPage({super.key});
+
   @override
   State<IntroPage> createState() => _IntroPageState();
 }
@@ -22,7 +21,7 @@ class _IntroPageState extends State<IntroPage> {
   void endIntroductionScreen(context) {
     Navigator.pop(context);
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => IsLoggedIn()),
+      MaterialPageRoute(builder: (_) => const IsLoggedIn()),
     );
     introdate.write('displayed', true); //change to true in deployment
   }
@@ -31,20 +30,20 @@ class _IntroPageState extends State<IntroPage> {
     return [
       PageViewModel(
         image: Container(
-          child: Icon(
+          margin: const EdgeInsets.only(top: 35, bottom: 10),
+          width: 200.0,
+          height: 200.0,
+          decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+          child: const Icon(
             Icons.backpack,
             color: Color.fromARGB(255, 255, 255, 255),
             size: 160.0,
           ),
-          margin: const EdgeInsets.only(top: 35, bottom: 10),
-          width: 200.0,
-          height: 200.0,
-          decoration: BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
         ),
         titleWidget: Text(
           'Dronebag',
           style: GoogleFonts.poppins(
-            color: Color.fromARGB(255, 255, 255, 255),
+            color: const Color.fromARGB(255, 255, 255, 255),
             fontSize: FontSize.large48,
             fontWeight: FontWeight.w600,
           ),
@@ -63,18 +62,18 @@ class _IntroPageState extends State<IntroPage> {
       ),
       PageViewModel(
           image: Container(
-            child: Image.asset('assets/images/drone.png'),
             margin: const EdgeInsets.only(top: 35, bottom: 10),
             width: 200.0,
             height: 200.0,
+            child: Image.asset('assets/images/drone.png'),
           ),
           titleWidget: Column(
             children: [
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Text(
                 'Dronebag',
                 style: GoogleFonts.poppins(
-                  color: Color.fromARGB(255, 255, 255, 255),
+                  color: const Color.fromARGB(255, 255, 255, 255),
                   fontSize: FontSize.xxLarge,
                   fontWeight: FontWeight.w600,
                 ),

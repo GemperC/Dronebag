@@ -47,8 +47,7 @@ class _GroupMembersState extends State<GroupMembers> {
                 final groupUsers = snapshot.data!;
                 List<GroupMember> groupAdminsList = [];
                 List<GroupMember> groupMembersList = [];
-                groupUsers.forEach(
-                  (user) {
+                for (var user in groupUsers) {
                     if (user.role == 'admin') {
                       if (loggedUser.email == user.email) {
                         loggedUserIsAdmin = true;
@@ -57,8 +56,7 @@ class _GroupMembersState extends State<GroupMembers> {
                     } else {
                       groupMembersList.add(user);
                     }
-                  },
-                );
+                  }
                 return Column(
                   children: [
                     Align(
@@ -79,7 +77,7 @@ class _GroupMembersState extends State<GroupMembers> {
                           return buildGroupMemberTile(
                               groupAdminsList[index], loggedUserIsAdmin);
                         })),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -102,12 +100,11 @@ class _GroupMembersState extends State<GroupMembers> {
                 );
               } else if (snapshot.hasError) {
                 return SingleChildScrollView(
-                  child: Text('Something went wrong! \n\n${snapshot}',
-                      style: TextStyle(color: Colors.white)),
+                  child: Text('Something went wrong! \n\n$snapshot',
+                      style: const TextStyle(color: Colors.white)),
                 );
               } else {
-                return Container(
-                    child: Center(child: CircularProgressIndicator()));
+                return const Center(child: CircularProgressIndicator());
               }
             },
           ),
@@ -131,7 +128,7 @@ class _GroupMembersState extends State<GroupMembers> {
         .doc(widget.group.id)
         .collection("members")
         .doc(member.email);
-    print(getMemberName(member));
+    // print(getMemberName(member));
     return ListTile(
         onTap: (() {
           if (loggedUserIsAdmin) {
@@ -156,10 +153,10 @@ class _GroupMembersState extends State<GroupMembers> {
         }),
         title: Center(
           child: Padding(
-            padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+            padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
             child: Container(
               width: 450,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 65, 61, 82),
                   borderRadius: BorderRadius.all(Radius.circular(12))),
               child: Padding(
@@ -182,7 +179,7 @@ class _GroupMembersState extends State<GroupMembers> {
                           ],
                         );
                       }
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     }),
               ),
             ),
@@ -198,6 +195,7 @@ class _GroupMembersState extends State<GroupMembers> {
     if (snapshot.exists) {
       return UserData.fromJson(snapshot.data()!);
     }
+    return null;
   }
 
   Widget buildMemberTile(String user) {
@@ -209,12 +207,12 @@ class _GroupMembersState extends State<GroupMembers> {
             child: Container(
               height: 80,
               width: 450,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Colors.red,
                   borderRadius: BorderRadius.all(Radius.circular(20))),
               child: Center(
                 child: Text(
-                  "$user",
+                  user,
                   style: GoogleFonts.poppins(
                     color: ThemeColors.whiteTextColor,
                     fontSize: FontSize.xxLarge,

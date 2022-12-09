@@ -1,8 +1,9 @@
+// ignore_for_file: file_names
+
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
-import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class _GetUserNameState extends State<GetUserName> {
           final user = snapshot.data;
 
           return user == null
-              ? Text('No User Name')
+              ? const Text('No User Name')
               : Text(
                   user.fullName,
                   style: GoogleFonts.poppins(
@@ -36,9 +37,9 @@ class _GetUserNameState extends State<GetUserName> {
                     fontWeight: FontWeight.w600,
                   ),
                 );
-          ;
+          
         }
-        return Text('data');
+        return const Text('data');
       }),
     );
   }

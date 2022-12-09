@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
@@ -8,8 +8,7 @@ import 'package:dronebag/domain/battery_repository/battery_repository.dart';
 import 'package:dronebag/domain/battery_station_repository/src/models/models.dart';
 import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:intl/intl.dart';
+
 
 class BatteryStationDetails extends StatefulWidget {
   final String groupID;
@@ -35,6 +34,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
 
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     super.initState();
   }
@@ -90,8 +90,8 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         },
                       );
                       return GridView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           childAspectRatio: 1.8,
                         ),
@@ -110,7 +110,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                       return const Center(child: CircularProgressIndicator());
                     }
                   })),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 'Station\'s issues',
                 style: GoogleFonts.poppins(
@@ -155,7 +155,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
             width: 150,
             decoration: BoxDecoration(
                 color: batteryColor,
-                borderRadius: BorderRadius.all(Radius.circular(11))),
+                borderRadius: const BorderRadius.all(Radius.circular(11))),
             child: Column(
               children: [
                 Text(
@@ -222,7 +222,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   SizedBox(
                     width: 70,
                     height: 50,
@@ -249,14 +249,14 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                           fontSize: FontSize.small,
                           fontWeight: FontWeight.w400,
                         ),
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(width: 50),
+                  const SizedBox(width: 50),
                   Text(
                     'Issues: ',
                     style: GoogleFonts.poppins(
@@ -267,7 +267,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                   ),
                 ],
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Align(
                 alignment: Alignment.topLeft,
                 child: RichText(
@@ -281,7 +281,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         ),
                         text: "Issue list ",
                       ),
-                      WidgetSpan(
+                      const WidgetSpan(
                           child: Padding(
                         padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                       )),
@@ -311,7 +311,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         width: double.maxFinite,
                         height: batteryIssues.length*120,
                         child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: batteryIssues.length,
                           itemBuilder: (context, index) {
                             return buildBatteryIssueTile(
@@ -323,15 +323,15 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         ));
                   } else if (snapshot.hasError) {
                     return SingleChildScrollView(
-                      child: Text('Something went wrong! \n\n${snapshot}',
-                          style: TextStyle(color: Colors.white)),
+                      child: Text('Something went wrong! \n\n$snapshot',
+                          style: const TextStyle(color: Colors.white)),
                     );
                   } else {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
                 }),
               ),
-              SizedBox(height: 30)
+              const SizedBox(height: 30)
             ],
           ),
         ),
@@ -340,12 +340,12 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Close')),
+              child: const Text('Close')),
           TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Update Battery')),
+              child: const Text('Update Battery')),
         ],
       ),
     );
@@ -395,7 +395,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
       title: Padding(
         padding: const EdgeInsets.all(0),
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: Color.fromARGB(255, 32, 32, 32),
               borderRadius: BorderRadius.all(Radius.circular(5))),
           child: Center(

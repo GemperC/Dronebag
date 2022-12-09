@@ -28,12 +28,12 @@ class MainButton3 extends StatelessWidget {
         foregroundColor: ThemeColors.whiteTextColor,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        minimumSize: Size(230, 50),
+        minimumSize: const Size(230, 50),
       ),
       child: Text(
         text,
         style: GoogleFonts.poppins(
-          color: textColor == null ? ThemeColors.whiteTextColor : textColor,
+          color: textColor ?? ThemeColors.whiteTextColor,
           fontSize: FontSize.large,
           fontWeight: FontWeight.bold,
         ),

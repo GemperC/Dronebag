@@ -27,9 +27,7 @@ class MainButton extends StatelessWidget {
         height: 75,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: backgroundColor == null
-              ? ThemeColors.primaryColor
-              : backgroundColor,
+          color: backgroundColor ?? ThemeColors.primaryColor,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Center(
@@ -48,9 +46,7 @@ class MainButton extends StatelessWidget {
               Text(
                 text,
                 style: GoogleFonts.poppins(
-                  color: textColor == null
-                      ? ThemeColors.whiteTextColor
-                      : textColor,
+                  color: textColor ?? ThemeColors.whiteTextColor,
                   fontSize: FontSize.large,
                   fontWeight: FontWeight.bold,
                 ),

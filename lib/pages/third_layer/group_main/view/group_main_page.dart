@@ -1,4 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: sized_box_for_whitespace
+
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
@@ -46,7 +47,7 @@ class _MyGroupPageState extends State<MyGroupPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 80),
+                const SizedBox(height: 80),
                 Center(
                   child: Text(
                     "Actions",
@@ -57,21 +58,21 @@ class _MyGroupPageState extends State<MyGroupPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     groupKeyButton(
-                      AssetImage('assets/icons/key.png'),
+                      const AssetImage('assets/icons/key.png'),
                       'Key',
                     ),
                     groupMenuButton(
-                      AssetImage('assets/icons/group-users.png'),
+                      const AssetImage('assets/icons/group-users.png'),
                       'Members',
                       GroupMembers(group: widget.group),
                     ),
                     groupMenuButton(
-                      AssetImage('assets/icons/settings.png'),
+                      const AssetImage('assets/icons/settings.png'),
                       'Settings',
                       GroupSettings(group: widget.group),
                     ),
@@ -81,17 +82,17 @@ class _MyGroupPageState extends State<MyGroupPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     groupMenuButton(
-                      AssetImage('assets/icons/car-battery.png'),
+                      const AssetImage('assets/icons/car-battery.png'),
                       'Batteries',
                       GroupBatteryStations(group: widget.group),
                     ),
                     groupMenuButton(
-                      AssetImage('assets/icons/drone.png'),
+                      const AssetImage('assets/icons/drone.png'),
                       'Drones',
                       GroupDrones(group: widget.group),
                     ),
                     groupMenuButton(
-                      AssetImage('assets/icons/remote.png'),
+                      const AssetImage('assets/icons/remote.png'),
                       'Fly a Drone',
                       StartFlightPage(group: widget.group),
                     ),
@@ -163,7 +164,7 @@ class _MyGroupPageState extends State<MyGroupPage> {
                     height: 120,
                     child: Column(
                       children: [
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Text(
                           widget.group.key,
                           style: GoogleFonts.poppins(
@@ -172,7 +173,7 @@ class _MyGroupPageState extends State<MyGroupPage> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        SizedBox(height: 30),
+                        const SizedBox(height: 30),
                         Text(
                           'Dont share this with people you don\'t trust!',
                           textAlign: TextAlign.center,
@@ -188,7 +189,7 @@ class _MyGroupPageState extends State<MyGroupPage> {
                   actions: [
                     TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: Text('Back')),
+                        child: const Text('Back')),
                     TextButton(
                         onPressed: () => {
                               Clipboard.setData(ClipboardData(
@@ -199,7 +200,7 @@ class _MyGroupPageState extends State<MyGroupPage> {
                               }),
                               Navigator.pop(context)
                             },
-                        child: Text('Copy')),
+                        child: const Text('Copy')),
                   ],
                 ),
               );
