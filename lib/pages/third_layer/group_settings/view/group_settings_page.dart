@@ -41,112 +41,110 @@ class _GroupSettingsState extends State<GroupSettings> {
               ),
             ),
             backgroundColor: ThemeColors.scaffoldBgColor),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(38),
-            child: StreamBuilder<List<UserSettings>>(
-                stream: fetchUserSettings(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final userSettings = snapshot.data!.first;
-                    return Column(
-                      children: [
-                        const SizedBox(height: 50),
-                        Row(children: [
-                          Text(
-                            'Get notifications',
+        body: Padding(
+          padding: const EdgeInsets.all(38),
+          child: StreamBuilder<List<UserSettings>>(
+              stream: fetchUserSettings(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final userSettings = snapshot.data!.first;
+                  return Column(
+                    children: [
+                      const SizedBox(height: 50),
+                      Row(children: [
+                        Text(
+                          'Get notifications',
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.whiteTextColor,
+                            fontSize: FontSize.medium,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Theme(
+                          data: Theme.of(context)
+                              .copyWith(unselectedWidgetColor: Colors.grey),
+                          child: Checkbox(
+                            value: userSettings.notifications,
+                            onChanged: (value) {
+                              if (userSettings.role == "admin") {
+                                FirebaseFirestore.instance
+                                    .collection('users')
+                                    .doc(loggedUser.email)
+                                    .collection('settings')
+                                    .doc(userSettings.id)
+                                    .update({'notifications': value});
+                                if (value!) {
+                                  // print('sucsribed to ${widget.group.name}');
+
+                                  FirebaseMessaging.instance
+                                      .subscribeToTopic(widget.group.id);
+                                } else if (!value) {
+                                  // print(
+                                  //     'unsucsribed from ${widget.group.name}');
+
+                                  FirebaseMessaging.instance
+                                      .unsubscribeFromTopic(widget.group.id);
+                                }
+                              } else {
+                                Utils.showSnackBarWithColor(
+                                    'Only Admins allowed to user this feature',
+                                    Colors.red);
+                              }
+                            },
+                          ),
+                        ),
+                      ]),
+                      const SizedBox(height: 50),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: MaterialButton(
+                          onPressed: () {
+                            FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(loggedUser.email)
+                                .collection('settings')
+                                .doc(widget.group.id)
+                                .delete();
+
+                            final groupDoc = FirebaseFirestore.instance
+                                .collection('groups')
+                                .doc(widget.group.id);
+
+                            groupDoc
+                                .collection('members')
+                                .doc(loggedUser.email)
+                                .delete();
+
+                            groupDoc.update({
+                              'users':
+                                  FieldValue.arrayRemove([loggedUser.email]),
+                            });
+                            Navigator.popUntil(
+                                context, (route) => route.isFirst);
+                            Utils.showSnackBarWithColor(
+                                'You left the Drone Bag', Colors.red);
+                          },
+                          color: Colors.red,
+                          textColor: Colors.yellow,
+                          padding: const EdgeInsets.all(10.0),
+                          splashColor: Colors.grey,
+                          child: Text(
+                            "Leave this Drone Bag",
                             style: GoogleFonts.poppins(
                               color: ThemeColors.whiteTextColor,
                               fontSize: FontSize.medium,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                          const SizedBox(width: 10),
-                          Theme(
-                            data: Theme.of(context)
-                                .copyWith(unselectedWidgetColor: Colors.grey),
-                            child: Checkbox(
-                              value: userSettings.notifications,
-                              onChanged: (value) {
-                                if (userSettings.role == "admin") {
-                                  FirebaseFirestore.instance
-                                      .collection('users')
-                                      .doc(loggedUser.email)
-                                      .collection('settings')
-                                      .doc(userSettings.id)
-                                      .update({'notifications': value});
-                                  if (value!) {
-                                    // print('sucsribed to ${widget.group.name}');
-
-                                    FirebaseMessaging.instance
-                                        .subscribeToTopic(widget.group.id);
-                                  } else if (!value) {
-                                    // print(
-                                    //     'unsucsribed from ${widget.group.name}');
-
-                                    FirebaseMessaging.instance
-                                        .unsubscribeFromTopic(widget.group.id);
-                                  }
-                                } else {
-                                  Utils.showSnackBarWithColor(
-                                      'Only Admins allowed to user this feature',
-                                      Colors.red);
-                                }
-                              },
-                            ),
-                          ),
-                        ]),
-                        const SizedBox(height: 50),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: MaterialButton(
-                            onPressed: () {
-                              FirebaseFirestore.instance
-                                  .collection('users')
-                                  .doc(loggedUser.email)
-                                  .collection('settings')
-                                  .doc(widget.group.id)
-                                  .delete();
-
-                              final groupDoc = FirebaseFirestore.instance
-                                  .collection('groups')
-                                  .doc(widget.group.id);
-
-                              groupDoc
-                                  .collection('members')
-                                  .doc(loggedUser.email)
-                                  .delete();
-
-                              groupDoc.update({
-                                'users':
-                                    FieldValue.arrayRemove([loggedUser.email]),
-                              });
-                              Navigator.popUntil(
-                                  context, (route) => route.isFirst);
-                              Utils.showSnackBarWithColor(
-                                  'You left the Drone Bag', Colors.red);
-                            },
-                            color: Colors.red,
-                            textColor: Colors.yellow,
-                            padding: const EdgeInsets.all(10.0),
-                            splashColor: Colors.grey,
-                            child: Text(
-                              "Leave this Drone Bag",
-                              style: GoogleFonts.poppins(
-                                color: ThemeColors.whiteTextColor,
-                                fontSize: FontSize.medium,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    );
-                  } else {
-                    return const Scaffold();
-                  }
-                }),
-          ),
+                        ),
+                      )
+                    ],
+                  );
+                } else {
+                  return const Scaffold();
+                }
+              }),
         ));
   }
 
