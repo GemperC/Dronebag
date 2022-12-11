@@ -139,7 +139,10 @@ class _GroupMembersState extends State<GroupMembers> {
                   .doc(member.email)
                   .collection("settings")
                   .doc(widget.group.id)
-                  .update({"role": "member"});
+                  .update({
+                    "role": "member",
+                    "notifications": "false"
+                    });
             } else if (member.role == 'member') {
               memberDoc.update({'role': 'admin'});
               FirebaseFirestore.instance

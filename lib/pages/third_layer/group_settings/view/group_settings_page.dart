@@ -48,6 +48,9 @@ class _GroupSettingsState extends State<GroupSettings> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final userSettings = snapshot.data!.first;
+                  
+                  print(userSettings.group);
+                  print(userSettings.role);
                   return Column(
                     children: [
                       const SizedBox(height: 50),
@@ -87,6 +90,7 @@ class _GroupSettingsState extends State<GroupSettings> {
                                       .unsubscribeFromTopic(widget.group.id);
                                 }
                               } else {
+                                
                                 Utils.showSnackBarWithColor(
                                     'Only Admins allowed to user this feature',
                                     Colors.red);
