@@ -114,6 +114,7 @@ class _MyGroupPageState extends State<MyGroupPage> {
       child: Column(
         children: [
           FloatingActionButton.large(
+            heroTag: text,
             onPressed: () {
               Navigator.push(
                 context,
@@ -145,6 +146,7 @@ class _MyGroupPageState extends State<MyGroupPage> {
       child: Column(
         children: [
           FloatingActionButton.large(
+            heroTag: text,
             onPressed: () {
               showDialog(
                 context: context,
