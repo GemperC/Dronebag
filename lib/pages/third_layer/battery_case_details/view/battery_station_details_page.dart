@@ -1,7 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/domain/battery_issue_repository/battery_issue_repository.dart';
@@ -510,36 +509,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                       ),
                     ),
                   ),
-                  SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: battery_pairsController
-                      ..text = widget.batteryStation.battery_pairs.toString(),
-                    validator: (value) {
-                      if (battery_pairsController.text.isEmpty) {
-                        return "This field can't be empty";
-                      }
-                      return null;
-                    },
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                    ),
-                    keyboardType: TextInputType.number,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      labelText: "Serial number",
-                      labelStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: const OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
-                      ),
-                    ),
-                  ),
+                 
                 ],
               )),
         ),
@@ -577,8 +547,8 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                   .doc(widget.batteryStation.id)
                   .update({
                 'battery_pairs': int.parse(battery_pairsController.text),
-                'serial_number': serial_numberController.text,
-              });
+              })
+              ;
 
               final CollectionReference batteryCollection = FirebaseFirestore
                   .instance
