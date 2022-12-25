@@ -5,6 +5,7 @@ import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/domain/battery_issue_repository/battery_issue_repository.dart';
 import 'package:dronebag/domain/battery_repository/battery_repository.dart';
+import 'package:dronebag/domain/battery_station_issue_repository/battery_station_issue_repository.dart';
 import 'package:dronebag/domain/battery_station_repository/src/models/models.dart';
 import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -115,14 +116,37 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                     }
                   })),
               const SizedBox(height: 20),
-              Text(
-                'Station\'s issues',
-                style: GoogleFonts.poppins(
+              RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        style: GoogleFonts.poppins(
                   color: ThemeColors.textFieldHintColor,
                   fontSize: FontSize.large,
                   fontWeight: FontWeight.w600,
                 ),
-              )
+                        text: "Station\'s Issue list ",
+                      ),
+                      const WidgetSpan(
+                          child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      )),
+                      TextSpan(
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            createBatteryStationIssue(widget.batteryStation);
+                          },
+                        text: 'Add Issue',
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.primaryColor,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              
             ]),
           ),
         ));
@@ -378,6 +402,29 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
         'New issue has been added to the battery', Colors.blue);
   }
 
+   Future createBatteryStationIssue(BatteryStation batteryStation) async {
+    final docbatteryStationIssue = FirebaseFirestore.instance
+        .collection('groups')
+        .doc(widget.groupID)
+        .collection('battery_stations')
+        .doc(widget.batteryStation.id)
+        .collection('issues')
+        .doc();
+    final batteryStationIssue = BatteryStationIssue(
+      detail: "",
+      id: docbatteryStationIssue.id,
+      date: DateTime.now(),
+      resolved: 'no',
+    );
+
+    final json = batteryStationIssue.toJson();
+    await docbatteryStationIssue.set(json);
+    Utils.showSnackBarWithColor(
+        'New issue has been added to the station', Colors.blue);
+  }
+
+
+
   Stream<List<BatteryIssue>> fetchBatteryIssue(Battery battery) {
     return FirebaseFirestore.instance
         .collection('groups')
@@ -392,6 +439,22 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
             .map((doc) => BatteryIssue.fromJson(doc.data()))
             .toList());
   }
+
+
+  Stream<List<BatteryStationIssue>> fetchBatteryStationIssue(BatteryStation batteryStation) {
+    return FirebaseFirestore.instance
+        .collection('groups')
+        .doc(widget.groupID)
+        .collection('battery_stations')
+        .doc(widget.batteryStation.id)
+        .collection('issues')
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => BatteryStationIssue.fromJson(doc.data()))
+            .toList());
+  }
+
+
 
   Widget buildBatteryIssueTile(BatteryIssue batteryIssue, String batteryID) {
     return ListTile(
