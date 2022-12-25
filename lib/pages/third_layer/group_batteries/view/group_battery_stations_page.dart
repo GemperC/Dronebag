@@ -24,7 +24,6 @@ class GroupBatteryStations extends StatefulWidget {
 
 class _GroupBatteryStationsState extends State<GroupBatteryStations> {
   final formKey = GlobalKey<FormState>();
-  final TextEditingController nameController = TextEditingController();
   final TextEditingController serial_numberController = TextEditingController();
   final TextEditingController battery_pairsController = TextEditingController();
   final TextEditingController date_boughtController = TextEditingController();
@@ -140,7 +139,7 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
                       //alingemt of the titel
                       alignment: Alignment.topLeft,
                       child: Text(
-                        '${batteryStation.battrey_pairs} battery pairs',
+                        '${batteryStation.battery_pairs} battery pairs',
                         style: GoogleFonts.poppins(
                           color: ThemeColors.textFieldHintColor,
                           fontSize: FontSize.medium,
@@ -306,7 +305,7 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
       final batteryStation = BatteryStation(
         serial_number: serial_numberController.text,
         id: docBatteryStation.id,
-        battrey_pairs: int.parse(battery_pairsController.text),
+        battery_pairs: int.parse(battery_pairsController.text),
         date_bought: DateTime.parse(date_boughtController.text),
       );
 

@@ -26,6 +26,7 @@ class GroupSettings extends StatefulWidget {
 
 class _GroupSettingsState extends State<GroupSettings> {
   final loggedUser = FirebaseAuth.instance.currentUser!;
+  final _firebaseMessaging = FirebaseMessaging.instance;
   bool? getNotificationsCheckBox;
 
   @override
@@ -48,7 +49,7 @@ class _GroupSettingsState extends State<GroupSettings> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final userSettings = snapshot.data!.first;
-                  
+
                   return Column(
                     children: [
                       const SizedBox(height: 50),
@@ -78,17 +79,16 @@ class _GroupSettingsState extends State<GroupSettings> {
                                 if (value!) {
                                   // print('sucsribed to ${widget.group.name}');
 
-                                  FirebaseMessaging.instance
+                                  _firebaseMessaging
                                       .subscribeToTopic(widget.group.id);
                                 } else if (!value) {
                                   // print(
                                   //     'unsucsribed from ${widget.group.name}');
 
-                                  FirebaseMessaging.instance
+                                  _firebaseMessaging
                                       .unsubscribeFromTopic(widget.group.id);
                                 }
                               } else {
-                                
                                 Utils.showSnackBarWithColor(
                                     'Only Admins allowed to user this feature',
                                     Colors.red);

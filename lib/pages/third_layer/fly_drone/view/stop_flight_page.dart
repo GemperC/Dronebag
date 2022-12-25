@@ -42,36 +42,7 @@ class _StopFlightPageState extends State<StopFlightPage> {
   late Duration flightDuration;
   String notificationMsg = 'Waiting for notifications';
 
-  // void initState() {
-  //   super.initState();
-
-  //   // LocalNotificationsService.initState();
-
-  //   // FirebaseMessaging.instance.getInitialMessage().then((event) {
-  //   //   setState(() {
-  //   //     if (event != null) {
-  //   //       notificationMsg =
-  //   //           '${event.notification!.title} ${event.notification!.body} | terminated state';
-  //   //     }
-  //   //   });
-  //   // });
-
-  //   // FirebaseMessaging.onMessage.listen((event) {
-  //   //   LocalNotificationsService.showNotificationOnForeground(event);
-  //   //   setState(() {
-  //   //     notificationMsg =
-  //   //         '${event.notification!.title} ${event.notification!.body} | forground state';
-  //   //   });
-  //   // });
-
-  //   // FirebaseMessaging.onMessageOpenedApp.listen((event) {
-  //   //   setState(() {
-  //   //     notificationMsg =
-  //   //         '${event.notification!.title} ${event.notification!.body} | background state';
-  //   //   });
-  //   // });
-  // }
-
+  
   @override
   @override
   void dispose() {
@@ -273,18 +244,4 @@ class _StopFlightPageState extends State<StopFlightPage> {
     return null;
   }
 
-  // Future<String?> saveDeviceToken() async {
-  //   String? deviceToken = '@';
-  //   await FirebaseMessaging.instance.subscribeToTopic(widget.group.name);
-  //   try {
-  //     deviceToken = await FirebaseMessaging.instance.getToken();
-  //   } catch (e) {
-  //     print('could not get token');
-  //     print(e.toString());
-  //   }
-  //   if (deviceToken != null) {
-  //     print("--------------Device Token--------------" + deviceToken);
-  //   }
-  //   return deviceToken;
-  // }
 }
