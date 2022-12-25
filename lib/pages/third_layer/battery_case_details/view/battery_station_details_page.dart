@@ -146,7 +146,39 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                     ],
                   ),
                 ),
-              
+                SizedBox(height: 12),
+              StreamBuilder<List<BatteryStationIssue>>(
+                stream: fetchBatteryStationIssue(widget.batteryStation),
+                builder: ((context, snapshot) {
+                  if (snapshot.hasData) {
+                    final batteryStationIssues = snapshot.data!;
+                    //print(issues.length);
+                    return SizedBox(
+                      width: double.maxFinite,
+                        height: batteryStationIssues.length * 118,
+                      child: ListView.builder(
+
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: batteryStationIssues.length,
+                            itemBuilder: (context, index) {
+                              return buildBatteryStationIssueTile(
+                                  batteryStationIssues[index]);
+                            },
+                            // children: batteryIssues
+                            //     .map(buildBatteryIssueTile)
+                            //     .toList()),
+                          ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return SingleChildScrollView(
+                      child: Text('Something went wrong! \n\n$snapshot',
+                          style: const TextStyle(color: Colors.white)),
+                    );
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                }),
+              ),
             ]),
           ),
         ));
@@ -345,9 +377,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                             return buildBatteryIssueTile(
                                 batteryIssues[index], battery.id);
                           },
-                          // children: batteryIssues
-                          //     .map(buildBatteryIssueTile)
-                          //     .toList()),
+
                         ));
                   } else if (snapshot.hasError) {
                     return SingleChildScrollView(
@@ -505,6 +535,69 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Resolved?  ${batteryIssue.resolved}',
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.whiteTextColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildBatteryStationIssueTile(BatteryStationIssue batteryStationIssue) {
+    return ListTile(
+      title: Padding(
+        padding: const EdgeInsets.all(0),
+        child: Container(
+          decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 32, 32, 32),
+              borderRadius: BorderRadius.all(Radius.circular(5))),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      '${batteryStationIssue.date.day}-${batteryStationIssue.date.month}-${batteryStationIssue.date.year}',
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.whiteTextColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  TextFormField(
+                    maxLines: null,
+                    onChanged: (value) {
+                      final docBatteryStationIssue = FirebaseFirestore.instance
+                          .collection('groups')
+                          .doc(widget.groupID)
+                          .collection('battery_stations')
+                          .doc(widget.batteryStation.id)
+                          .collection('issues')
+                          .doc(batteryStationIssue.id);
+                      docBatteryStationIssue.update({'detail': value});
+                    },
+                    initialValue: batteryStationIssue.detail,
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                      fontSize: FontSize.medium,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Resolved?  ${batteryStationIssue.resolved}',
                       style: GoogleFonts.poppins(
                         color: ThemeColors.whiteTextColor,
                         fontSize: FontSize.medium,
