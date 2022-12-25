@@ -117,36 +117,36 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                   })),
               const SizedBox(height: 20),
               RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        style: GoogleFonts.poppins(
-                  color: ThemeColors.textFieldHintColor,
-                  fontSize: FontSize.large,
-                  fontWeight: FontWeight.w600,
-                ),
-                        text: "Station\'s Issue list ",
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.large,
+                        fontWeight: FontWeight.w600,
                       ),
-                      const WidgetSpan(
-                          child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                      )),
-                      TextSpan(
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            createBatteryStationIssue(widget.batteryStation);
-                          },
-                        text: 'Add Issue',
-                        style: GoogleFonts.poppins(
-                          color: ThemeColors.primaryColor,
-                          fontSize: FontSize.medium,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      )
-                    ],
-                  ),
+                      text: "Station\'s Issue list ",
+                    ),
+                    const WidgetSpan(
+                        child: Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                    )),
+                    TextSpan(
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          createBatteryStationIssue(widget.batteryStation);
+                        },
+                      text: 'Add Issue',
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.primaryColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    )
+                  ],
                 ),
-                SizedBox(height: 12),
+              ),
+              SizedBox(height: 12),
               StreamBuilder<List<BatteryStationIssue>>(
                 stream: fetchBatteryStationIssue(widget.batteryStation),
                 builder: ((context, snapshot) {
@@ -155,19 +155,18 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                     //print(issues.length);
                     return SizedBox(
                       width: double.maxFinite,
-                        height: batteryStationIssues.length * 118,
+                      height: batteryStationIssues.length * 150,
                       child: ListView.builder(
-
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: batteryStationIssues.length,
-                            itemBuilder: (context, index) {
-                              return buildBatteryStationIssueTile(
-                                  batteryStationIssues[index]);
-                            },
-                            // children: batteryIssues
-                            //     .map(buildBatteryIssueTile)
-                            //     .toList()),
-                          ),
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: batteryStationIssues.length,
+                        itemBuilder: (context, index) {
+                          return buildBatteryStationIssueTile(
+                              batteryStationIssues[index]);
+                        },
+                        // children: batteryIssues
+                        //     .map(buildBatteryIssueTile)
+                        //     .toList()),
+                      ),
                     );
                   } else if (snapshot.hasError) {
                     return SingleChildScrollView(
@@ -377,7 +376,6 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                             return buildBatteryIssueTile(
                                 batteryIssues[index], battery.id);
                           },
-
                         ));
                   } else if (snapshot.hasError) {
                     return SingleChildScrollView(
@@ -432,7 +430,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
         'New issue has been added to the battery', Colors.blue);
   }
 
-   Future createBatteryStationIssue(BatteryStation batteryStation) async {
+  Future createBatteryStationIssue(BatteryStation batteryStation) async {
     final docbatteryStationIssue = FirebaseFirestore.instance
         .collection('groups')
         .doc(widget.groupID)
@@ -453,8 +451,6 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
         'New issue has been added to the station', Colors.blue);
   }
 
-
-
   Stream<List<BatteryIssue>> fetchBatteryIssue(Battery battery) {
     return FirebaseFirestore.instance
         .collection('groups')
@@ -470,21 +466,19 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
             .toList());
   }
 
-
-  Stream<List<BatteryStationIssue>> fetchBatteryStationIssue(BatteryStation batteryStation) {
+  Stream<List<BatteryStationIssue>> fetchBatteryStationIssue(
+      BatteryStation batteryStation) {
     return FirebaseFirestore.instance
         .collection('groups')
         .doc(widget.groupID)
         .collection('battery_stations')
         .doc(widget.batteryStation.id)
-        .collection('issues')
+        .collection('issues').orderBy("date", descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => BatteryStationIssue.fromJson(doc.data()))
             .toList());
   }
-
-
 
   Widget buildBatteryIssueTile(BatteryIssue batteryIssue, String batteryID) {
     return ListTile(
@@ -577,7 +571,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                   ),
                   TextFormField(
                     maxLines: null,
-                    onChanged: (value) {
+                     onChanged: (value) {
                       final docBatteryStationIssue = FirebaseFirestore.instance
                           .collection('groups')
                           .doc(widget.groupID)
@@ -586,6 +580,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                           .collection('issues')
                           .doc(batteryStationIssue.id);
                       docBatteryStationIssue.update({'detail': value});
+                      
                     },
                     initialValue: batteryStationIssue.detail,
                     style: GoogleFonts.poppins(
@@ -594,16 +589,75 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Resolved?  ${batteryStationIssue.resolved}',
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.whiteTextColor,
-                        fontSize: FontSize.medium,
-                        fontWeight: FontWeight.w400,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Status:  ${batteryStationIssue.resolved}',
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.whiteTextColor,
+                            fontSize: FontSize.medium,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
                       ),
-                    ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: IconButton(
+                          iconSize: 24,
+                          splashColor: Colors.transparent,
+                          color: Colors.white,
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                  backgroundColor: ThemeColors.scaffoldBgColor,
+                                  title: Center(
+                                    child: Text(
+                                      "Delete this issue?",
+                                      style: GoogleFonts.poppins(
+                                        color: ThemeColors.whiteTextColor,
+                                        fontSize: FontSize.large,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          'Cancle',
+                                          style: TextStyle(color: Colors.blue),
+                                        )),
+                                    TextButton(
+                                        onPressed: () {
+                                          FirebaseFirestore.instance
+                                              .collection('groups')
+                                              .doc(widget.groupID)
+                                              .collection('battery_stations')
+                                              .doc(widget.batteryStation.id)
+                                              .collection("issues")
+                                              .doc(batteryStationIssue.id)
+                                              .delete();
+                                              Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          'Yes Delete',
+                                          style: TextStyle(color: Colors.red),
+                                        )),
+                                    
+                                  ]),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
