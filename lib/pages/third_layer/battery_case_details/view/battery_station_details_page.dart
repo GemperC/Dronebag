@@ -509,7 +509,6 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                       ),
                     ),
                   ),
-                 
                 ],
               )),
         ),
@@ -546,9 +545,8 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                   .collection('battery_stations')
                   .doc(widget.batteryStation.id)
                   .update({
-                'battery_pairs': int.parse(battery_pairsController.text),
-              })
-              ;
+                'serial_number': serial_numberController.text,
+              });
 
               final CollectionReference batteryCollection = FirebaseFirestore
                   .instance
@@ -566,12 +564,10 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                   doc.reference.update({'serial_number': new_Serial_number});
                 });
               });
-              //     .update({
-              //   'battery_pairs': int.parse(battery_pairsController.text),
-              //   'serial_number': serial_numberController.text,
-              // });
 
-              Navigator.pop(context);
+              for (int i = 0; i < 2; i++) {
+                Navigator.pop(context);
+              }
             },
             child: const Text('Update Station'),
           ),
