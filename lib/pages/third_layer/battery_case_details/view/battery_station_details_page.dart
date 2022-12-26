@@ -168,10 +168,10 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                   if (snapshot.hasData) {
                     final batteryStationIssues = snapshot.data!;
                     //print(issues.length);
-                    return SizedBox(
+                    return Container(
                       width: double.maxFinite,
-                      height: batteryStationIssues.length * 150,
                       child: ListView.builder(
+                        shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: batteryStationIssues.length,
                         itemBuilder: (context, index) {
