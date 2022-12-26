@@ -1,0 +1,103 @@
+import 'package:dronebag/domain/battery_issue_repository/battery_issue_repository.dart';
+import 'package:dronebag/domain/battery_repository/battery_repository.dart';
+import 'package:dronebag/domain/battery_station_issue_repository/battery_station_issue_repository.dart';
+import 'package:dronebag/domain/battery_station_repository/battery_station_repository.dart';
+import 'package:dronebag/pages/third_layer/battery_case_details/widgets/battery_detail_dialog.dart';
+import 'package:dronebag/widgets/utils.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dronebag/config/font_size.dart';
+import 'package:dronebag/config/theme_colors.dart';
+
+class BatteryTile extends StatefulWidget {  
+  final String groupID;
+  final BatteryStation batteryStation;
+  final Battery battery;
+  const BatteryTile({
+    Key? key,
+    required this.groupID,
+    required this.batteryStation,
+    required this.battery,
+  }) : super(key: key);
+
+  @override
+  State<BatteryTile> createState() => _BatteryTileState();
+}
+
+class _BatteryTileState extends State<BatteryTile> {
+    final formKey = GlobalKey<FormState>();
+  final TextEditingController serial_numberController = TextEditingController();
+  final TextEditingController batteryIssueDetailController =
+      TextEditingController();
+  final TextEditingController batteryCycleController = TextEditingController();
+  final TextEditingController date_boughtController = TextEditingController();
+  final double sizedBoxHight = 16;
+  final TextEditingController battery_pairsController = TextEditingController();
+
+
+  @override
+  Widget build(BuildContext context) { 
+    Color batteryColor = Colors.green;
+    if (widget.battery.cycle >= 100 && widget.battery.cycle < 150) {
+      batteryColor = Colors.orange;
+    } else if (widget.battery.cycle >= 150) {
+      batteryColor = Colors.red;
+    }
+    return ListTile(
+      // go to the battery case page
+
+      // build the tile info and design
+      title: Center(
+        child: Padding(
+          // padding betwwent he cards
+          padding: const EdgeInsets.all(5),
+          child: Container(
+            // height: 120,
+            width: 150,
+            decoration: BoxDecoration(
+                color: batteryColor,
+                borderRadius: const BorderRadius.all(Radius.circular(11))),
+            child: Column(
+              children: [
+                Text(
+                  widget.battery.serial_number,
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: FontSize.medium,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Text(
+                  "Cycle: ${widget.battery.cycle}",
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: FontSize.medium,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Text(
+                  'Issues:',
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: FontSize.medium,
+                    fontWeight: FontWeight.w400,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+      onTap: () {
+                showDialog(
+            context: context,
+            builder: (context) => BatteryDetailDialog(
+                  battery: widget.battery,
+                  batteryStation: widget.batteryStation,
+                  groupID: widget.groupID
+                ));
+      },
+    );
+  }
+}
