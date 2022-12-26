@@ -180,9 +180,6 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                               batteryStation: widget.batteryStation,
                               batteryStationIssue: batteryStationIssues[index]);
                         },
-                        // children: batteryIssues
-                        //     .map(buildBatteryIssueTile)
-                        //     .toList()),
                       ),
                     );
                   } else if (snapshot.hasError) {

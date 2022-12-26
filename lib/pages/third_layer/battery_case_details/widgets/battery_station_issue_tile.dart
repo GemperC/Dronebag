@@ -3,6 +3,7 @@ import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/battery_station_issue_repository/battery_station_issue_repository.dart';
 import 'package:dronebag/domain/battery_station_repository/battery_station_repository.dart';
+import 'package:dronebag/widgets/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -23,9 +24,88 @@ class BatteryStationIssueTile extends StatefulWidget {
 }
 
 class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
+    TextEditingController batteryStationIssueDetailController =
+      TextEditingController();
+ @override
+  void initState() {
+    batteryStationIssueDetailController =
+      TextEditingController(text: widget.batteryStationIssue.detail);
+    super.initState();
+  }
+      
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: (() {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: ThemeColors.scaffoldBgColor,
+            scrollable: true,
+            title: Center(
+              child: Text(
+                "Edit issue description",
+                style: GoogleFonts.poppins(
+                  color: ThemeColors.whiteTextColor,
+                  fontSize: FontSize.large,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            content: TextFormField(
+              controller: batteryStationIssueDetailController,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              
+              style: GoogleFonts.poppins(
+                color: ThemeColors.whiteTextColor,
+                fontSize: FontSize.medium,
+                fontWeight: FontWeight.w400,
+              ),
+              decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      hintText: "Issue description",
+                      hintStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.small,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    ),
+            ),
+            actions: [
+              
+              TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel')),
+              TextButton(
+              onPressed: () {
+                        final docBatteryStationIssue = FirebaseFirestore.instance
+                          .collection('groups')
+                          .doc(widget.groupID)
+                          .collection('battery_stations')
+                          .doc(widget.batteryStation.id)
+                          .collection('issues')
+                          .doc(widget.batteryStationIssue.id);
+                      docBatteryStationIssue.update({'detail': batteryStationIssueDetailController.text});
+                Navigator.pop(context);
+                Utils.showSnackBarWithColor(
+                    'Issue has been updated', Colors.blue);
+              },
+              child: const Text(
+                'Update issue',
+                style: TextStyle(color: Colors.blue),
+              )),
+            ],
+          ),
+        );
+      }),
       title: Padding(
         padding: const EdgeInsets.all(0),
         child: Container(
@@ -48,25 +128,36 @@ class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
                       ),
                     ),
                   ),
-                  TextFormField(
-                    maxLines: null,
-                    onChanged: (value) {
-                      final docBatteryStationIssue = FirebaseFirestore.instance
-                          .collection('groups')
-                          .doc(widget.groupID)
-                          .collection('battery_stations')
-                          .doc(widget.batteryStation.id)
-                          .collection('issues')
-                          .doc(widget.batteryStationIssue.id);
-                      docBatteryStationIssue.update({'detail': value});
-                    },
-                    initialValue: widget.batteryStationIssue.detail,
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                      fontSize: FontSize.medium,
-                      fontWeight: FontWeight.w400,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      widget.batteryStationIssue.detail,
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.whiteTextColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
+                  // TextFormField(
+                  //   maxLines: null,
+                  //   onChanged: (value) {
+                  //     final docBatteryStationIssue = FirebaseFirestore.instance
+                  //         .collection('groups')
+                  //         .doc(widget.groupID)
+                  //         .collection('battery_stations')
+                  //         .doc(widget.batteryStation.id)
+                  //         .collection('issues')
+                  //         .doc(widget.batteryStationIssue.id);
+                  //     docBatteryStationIssue.update({'detail': value});
+                  //   },
+                  //   initialValue: widget.batteryStationIssue.detail,
+                  //   style: GoogleFonts.poppins(
+                  //     color: ThemeColors.whiteTextColor,
+                  //     fontSize: FontSize.medium,
+                  //     fontWeight: FontWeight.w400,
+                  //   ),
+                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -86,7 +177,7 @@ class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
                         child: IconButton(
                           iconSize: 24,
                           splashColor: Colors.transparent,
-                          color: Colors.white,
+                          color: Colors.red,
                           icon: const Icon(Icons.delete),
                           onPressed: () {
                             showDialog(
@@ -120,7 +211,8 @@ class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
                                               .collection('battery_stations')
                                               .doc(widget.batteryStation.id)
                                               .collection("issues")
-                                              .doc(widget.batteryStationIssue.id)
+                                              .doc(
+                                                  widget.batteryStationIssue.id)
                                               .delete();
                                           Navigator.pop(context);
                                         },
