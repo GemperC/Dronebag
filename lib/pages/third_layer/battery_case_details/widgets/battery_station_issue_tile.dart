@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
@@ -11,11 +13,13 @@ class BatteryStationIssueTile extends StatefulWidget {
   final String groupID;
   final BatteryStation batteryStation;
   final BatteryStationIssue batteryStationIssue;
-  const BatteryStationIssueTile({
+  late TextEditingController batteryStationIssueDetailController;
+  BatteryStationIssueTile({
     Key? key,
     required this.groupID,
     required this.batteryStation,
     required this.batteryStationIssue,
+    required this.batteryStationIssueDetailController,
   }) : super(key: key);
 
   @override
@@ -24,25 +28,32 @@ class BatteryStationIssueTile extends StatefulWidget {
 }
 
 class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
-  TextEditingController batteryStationIssueDetailController =
-      TextEditingController();
+  // TextEditingController batteryStationIssueDetailController =
+  //     TextEditingController();
 
-      @override
-  void dispose() {
-    batteryStationIssueDetailController.dispose();
-    super.dispose();
-  }
   @override
   void initState() {
-    batteryStationIssueDetailController =
-        TextEditingController(text: widget.batteryStationIssue.detail);
+    // widget.batteryStationIssueDetailController =
+    //     TextEditingController(text: widget.batteryStationIssue.detail);
     super.initState();
   }
 
-  
+  @override
+  void dispose() {
+    widget.batteryStationIssueDetailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    String issueDescription = widget.batteryStationIssue.detail;
+    Color textDescriptionColor = ThemeColors.whiteTextColor;
+    if (widget.batteryStationIssue.detail == "") {
+      issueDescription = "Click me to add description";
+      textDescriptionColor = ThemeColors.greyTextColor;
+    }
+    print("Issue:");
+    print(widget.batteryStationIssue.detail);
     return ListTile(
       onTap: (() {
         showDialog(
@@ -61,7 +72,7 @@ class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
               ),
             ),
             content: TextFormField(
-              controller: batteryStationIssueDetailController,
+              controller: widget.batteryStationIssueDetailController,
               keyboardType: TextInputType.multiline,
               maxLines: null,
               style: GoogleFonts.poppins(
@@ -87,7 +98,6 @@ class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
             actions: [
               TextButton(
                   onPressed: () {
-                    batteryStationIssueDetailController.clear();
                     Navigator.pop(context);
                   },
                   child: const Text('Cancel')),
@@ -101,8 +111,7 @@ class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
                         .collection('issues')
                         .doc(widget.batteryStationIssue.id);
                     docBatteryStationIssue.update(
-                        {'detail': batteryStationIssueDetailController.text});
-                    batteryStationIssueDetailController.clear();
+                        {'detail': widget.batteryStationIssueDetailController.text});
                     Navigator.pop(context);
                     Utils.showSnackBarWithColor(
                         'Issue has been updated', Colors.blue);
@@ -140,9 +149,9 @@ class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      widget.batteryStationIssue.detail,
+                      issueDescription,
                       style: GoogleFonts.poppins(
-                        color: ThemeColors.whiteTextColor,
+                        color: textDescriptionColor,
                         fontSize: FontSize.medium,
                         fontWeight: FontWeight.w400,
                       ),

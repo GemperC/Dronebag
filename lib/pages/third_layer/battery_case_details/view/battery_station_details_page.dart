@@ -1,5 +1,4 @@
 // ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
@@ -29,8 +28,6 @@ class BatteryStationDetails extends StatefulWidget {
 class _BatteryStationDetailsState extends State<BatteryStationDetails> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController serial_numberController = TextEditingController();
-  final TextEditingController batteryIssueDetailController =
-      TextEditingController();
   final TextEditingController batteryCycleController = TextEditingController();
   final TextEditingController date_boughtController = TextEditingController();
   final double sizedBoxHight = 16;
@@ -43,6 +40,8 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
 
     super.initState();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -169,13 +168,15 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                     final batteryStationIssues = snapshot.data!;
                     //print(issues.length);
                     return Container(
-                      width: double.maxFinite,
                       child: ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: batteryStationIssues.length,
                         itemBuilder: (context, index) {
+                          TextEditingController batteryStationIssueDetailController = TextEditingController(text: batteryStationIssues[index].detail);
+                          print("==========");
                           return BatteryStationIssueTile(
+                            batteryStationIssueDetailController: batteryStationIssueDetailController,
                               groupID: widget.groupID,
                               batteryStation: widget.batteryStation,
                               batteryStationIssue: batteryStationIssues[index]);
