@@ -5,6 +5,7 @@ import 'package:dronebag/domain/battery_issue_repository/battery_issue_repositor
 import 'package:dronebag/domain/battery_repository/battery_repository.dart';
 import 'package:dronebag/domain/battery_station_issue_repository/battery_station_issue_repository.dart';
 import 'package:dronebag/domain/battery_station_repository/battery_station_repository.dart';
+import 'package:dronebag/widgets/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,14 +13,15 @@ class BatteryIssueTile extends StatefulWidget {
   final String groupID;
   final BatteryStation batteryStation;
   final BatteryIssue batteryIssue;
-    final Battery battery;
-
-  const BatteryIssueTile({
+  final Battery battery;
+    late TextEditingController batteryIssueDetailController;
+ BatteryIssueTile({
     Key? key,
     required this.groupID,
     required this.batteryStation,
     required this.batteryIssue,
         required this.battery,
+        required this.batteryIssueDetailController,
 
   }) : super(key: key);
 
@@ -31,7 +33,84 @@ class BatteryIssueTile extends StatefulWidget {
 class _BatteryIssueTileState extends State<BatteryIssueTile> {
   @override
   Widget build(BuildContext context) {
+    String issueDescription = widget.batteryIssue.detail;
+    Color textDescriptionColor = ThemeColors.whiteTextColor;
+    if (widget.batteryIssue.detail == "") {
+      issueDescription = "Click here to add description";
+      textDescriptionColor = ThemeColors.greyTextColor;
+    }
+
     return ListTile(
+      onTap: (() {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: ThemeColors.scaffoldBgColor,
+            scrollable: true,
+            title: Center(
+              child: Text(
+                "Edit issue description",
+                style: GoogleFonts.poppins(
+                  color: ThemeColors.whiteTextColor,
+                  fontSize: FontSize.large,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            content: TextFormField(
+              controller: widget.batteryIssueDetailController,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              style: GoogleFonts.poppins(
+                color: ThemeColors.whiteTextColor,
+                fontSize: FontSize.medium,
+                fontWeight: FontWeight.w400,
+              ),
+              decoration: InputDecoration(
+                fillColor: ThemeColors.textFieldBgColor,
+                filled: true,
+                hintText: "Issue description",
+                hintStyle: GoogleFonts.poppins(
+                  color: ThemeColors.textFieldHintColor,
+                  fontSize: FontSize.small,
+                  fontWeight: FontWeight.w400,
+                ),
+                border: const OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.all(Radius.circular(18)),
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Cancel')),
+              TextButton(
+                  onPressed: () {
+                     final docBatteryIssue = FirebaseFirestore.instance
+                          .collection('groups')
+                          .doc(widget.groupID)
+                          .collection('battery_stations')
+                          .doc(widget.batteryStation.id)
+                          .collection('batteries')
+                          .doc(widget.battery.id)
+                          .collection("battery_issues")
+                          .doc(widget.batteryIssue.id);
+                      docBatteryIssue.update({'detail': widget.batteryIssueDetailController.text});
+                    Navigator.pop(context);
+                    Utils.showSnackBarWithColor(
+                        'Issue has been updated', Colors.blue);
+                  },
+                  child: const Text(
+                    'Update issue',
+                    style: TextStyle(color: Colors.blue),
+                  )),
+            ],
+          ),
+        );
+      }),
       title: Padding(
         padding: const EdgeInsets.all(0),
         child: Container(
@@ -54,27 +133,18 @@ class _BatteryIssueTileState extends State<BatteryIssueTile> {
                       ),
                     ),
                   ),
-                  TextFormField(
-                    maxLines: null,
-                    onChanged: (value) {
-                      final docBatteryIssue = FirebaseFirestore.instance
-                          .collection('groups')
-                          .doc(widget.groupID)
-                          .collection('battery_stations')
-                          .doc(widget.batteryStation.id)
-                          .collection('batteries')
-                          .doc(widget.battery.id)
-                          .collection("battery_issues")
-                          .doc(widget.batteryIssue.id);
-                      docBatteryIssue.update({'detail': value});
-                    },
-                    initialValue: widget.batteryIssue.detail,
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.whiteTextColor,
-                      fontSize: FontSize.medium,
-                      fontWeight: FontWeight.w400,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      issueDescription,
+                      style: GoogleFonts.poppins(
+                        color: textDescriptionColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
+                  
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

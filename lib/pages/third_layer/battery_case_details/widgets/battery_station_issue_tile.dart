@@ -33,27 +33,20 @@ class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
 
   @override
   void initState() {
-    // widget.batteryStationIssueDetailController =
-    //     TextEditingController(text: widget.batteryStationIssue.detail);
     super.initState();
   }
 
-  @override
-  void dispose() {
-    widget.batteryStationIssueDetailController.dispose();
-    super.dispose();
-  }
+
 
   @override
   Widget build(BuildContext context) {
     String issueDescription = widget.batteryStationIssue.detail;
     Color textDescriptionColor = ThemeColors.whiteTextColor;
     if (widget.batteryStationIssue.detail == "") {
-      issueDescription = "Click me to add description";
+      issueDescription = "Click here to add description";
       textDescriptionColor = ThemeColors.greyTextColor;
     }
-    print("Issue:");
-    print(widget.batteryStationIssue.detail);
+
     return ListTile(
       onTap: (() {
         showDialog(
@@ -110,8 +103,9 @@ class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
                         .doc(widget.batteryStation.id)
                         .collection('issues')
                         .doc(widget.batteryStationIssue.id);
-                    docBatteryStationIssue.update(
-                        {'detail': widget.batteryStationIssueDetailController.text});
+                    docBatteryStationIssue.update({
+                      'detail': widget.batteryStationIssueDetailController.text
+                    });
                     Navigator.pop(context);
                     Utils.showSnackBarWithColor(
                         'Issue has been updated', Colors.blue);
@@ -157,6 +151,39 @@ class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
                       ),
                     ),
                   ),
+                  //     TextFormField(
+                  //       onChanged: ((value) {
+                  //         final docBatteryStationIssue = FirebaseFirestore.instance
+                  //             .collection('groups')
+                  //             .doc(widget.groupID)
+                  //             .collection('battery_stations')
+                  //             .doc(widget.batteryStation.id)
+                  //             .collection('issues')
+                  //             .doc(widget.batteryStationIssue.id);
+                  //         docBatteryStationIssue.update({'detail': value});
+                  //       }),
+                  //       maxLines: null,
+                  //       controller: widget.batteryStationIssueDetailController,
+                  //       style: GoogleFonts.poppins(
+                  //         color: ThemeColors.whiteTextColor,
+                  //         fontSize: FontSize.medium,
+                  //         fontWeight: FontWeight.w400,
+                  //       ),
+                  //                     decoration: InputDecoration(
+                  //   fillColor: ThemeColors.textFieldBgColor,
+                  //   filled: true,
+                  //   hintText: "Issue description",
+                  //   hintStyle: GoogleFonts.poppins(
+                  //     color: ThemeColors.textFieldHintColor,
+                  //     fontSize: FontSize.small,
+                  //     fontWeight: FontWeight.w400,
+                  //   ),
+                  //   border: const OutlineInputBorder(
+                  //     borderSide: BorderSide.none,
+                  //     borderRadius: BorderRadius.all(Radius.circular(18)),
+                  //   ),
+                  // ),
+                  //     ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

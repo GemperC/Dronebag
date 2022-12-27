@@ -32,6 +32,8 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
   final TextEditingController date_boughtController = TextEditingController();
   final double sizedBoxHight = 16;
   final TextEditingController battery_pairsController = TextEditingController();
+  TextEditingController batteryStationIssueDetailController =
+      new TextEditingController();
 
   @override
   void initState() {
@@ -41,7 +43,11 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
     super.initState();
   }
 
-
+  @override
+  void dispose() {
+    batteryStationIssueDetailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,21 +173,21 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                   if (snapshot.hasData) {
                     final batteryStationIssues = snapshot.data!;
                     //print(issues.length);
-                    return Container(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: batteryStationIssues.length,
-                        itemBuilder: (context, index) {
-                          TextEditingController batteryStationIssueDetailController = TextEditingController(text: batteryStationIssues[index].detail);
-                          print("==========");
-                          return BatteryStationIssueTile(
-                            batteryStationIssueDetailController: batteryStationIssueDetailController,
-                              groupID: widget.groupID,
-                              batteryStation: widget.batteryStation,
-                              batteryStationIssue: batteryStationIssues[index]);
-                        },
-                      ),
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: batteryStationIssues.length,
+                      itemBuilder: (context, index) {
+                        batteryStationIssueDetailController =
+                            TextEditingController(
+                                text: batteryStationIssues[index].detail);
+                        return BatteryStationIssueTile(
+                            batteryStationIssueDetailController:
+                                batteryStationIssueDetailController,
+                            groupID: widget.groupID,
+                            batteryStation: widget.batteryStation,
+                            batteryStationIssue: batteryStationIssues[index]);
+                      },
                     );
                   } else if (snapshot.hasError) {
                     return SingleChildScrollView(
