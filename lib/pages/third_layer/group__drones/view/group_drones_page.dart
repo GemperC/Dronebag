@@ -404,6 +404,14 @@ class _GroupDronesState extends State<GroupDrones> {
       Utils.showSnackBarWithColor(
           'Drone has been added to the group', Colors.blue);
       Navigator.pop(context);
+      Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DroneDetails(
+                      groupID: widget.group.id,
+                      drone: drone,
+                    )),
+          );
     }
   }
 

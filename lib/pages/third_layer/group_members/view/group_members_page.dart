@@ -37,6 +37,7 @@ class _GroupMembersState extends State<GroupMembers> {
           ),
           backgroundColor: ThemeColors.scaffoldBgColor),
       body: SafeArea(
+        
         child: Padding(
           padding: const EdgeInsets.all(30),
           child: StreamBuilder<List<GroupMember>>(
@@ -59,6 +60,15 @@ class _GroupMembersState extends State<GroupMembers> {
                   }
                 return Column(
                   children: [
+                    Text(
+                      "Tip: Click a member to change his privileges",
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.greyTextColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 15),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
