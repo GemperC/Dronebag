@@ -30,12 +30,9 @@ class BatteryDetailDialog extends StatefulWidget {
 
 class _BatteryDetailDialogState extends State<BatteryDetailDialog> {
   final formKey = GlobalKey<FormState>();
-  final TextEditingController serial_numberController = TextEditingController();
   late TextEditingController batteryIssueDetailController;
   final TextEditingController batteryCycleController = TextEditingController();
-  final TextEditingController date_boughtController = TextEditingController();
   final double sizedBoxHight = 16;
-  final TextEditingController battery_pairsController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -94,60 +91,46 @@ class _BatteryDetailDialogState extends State<BatteryDetailDialog> {
       // ),
       content: Column(
         children: [
-          Row(
-            children: [
-              Text(
-                'Cycle: ',
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: FontSize.xMedium,
+          Text(
+            'Cycle: ',
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: FontSize.xMedium,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 70,
+            height: 50,
+            child: TextField(
+              onChanged: (value) {
+                final docBattery = FirebaseFirestore.instance
+                    .collection('groups')
+                    .doc(widget.groupID)
+                    .collection('battery_stations')
+                    .doc(widget.batteryStation.id)
+                    .collection('batteries')
+                    .doc(widget.battery.id);
+                docBattery.update({'cycle': int.parse(value)});
+              },
+              style: GoogleFonts.poppins(color: ThemeColors.whiteTextColor),
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: ThemeColors.textFieldBgColor,
+                filled: true,
+                hintText: "0-200",
+                hintStyle: GoogleFonts.poppins(
+                  color: ThemeColors.textFieldHintColor,
+                  fontSize: FontSize.small,
                   fontWeight: FontWeight.w400,
                 ),
-              ),
-              const SizedBox(width: 8),
-              SizedBox(
-                width: 70,
-                height: 50,
-                child: TextField(
-                  onChanged: (value) {
-                    final docBattery = FirebaseFirestore.instance
-                        .collection('groups')
-                        .doc(widget.groupID)
-                        .collection('battery_stations')
-                        .doc(widget.batteryStation.id)
-                        .collection('batteries')
-                        .doc(widget.battery.id);
-                    docBattery.update({'cycle': int.parse(value)});
-                  },
-                  style:
-                      GoogleFonts.poppins(color: ThemeColors.whiteTextColor),
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    fillColor: ThemeColors.textFieldBgColor,
-                    filled: true,
-                    hintText: "0-200",
-                    hintStyle: GoogleFonts.poppins(
-                      color: ThemeColors.textFieldHintColor,
-                      fontSize: FontSize.small,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    border: const OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                    ),
-                  ),
+                border: const OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
                 ),
               ),
-              const SizedBox(width: 50),
-              Text(
-                'Issues: ',
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: FontSize.xMedium,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ],
+            ),
           ),
           const SizedBox(height: 30),
           Align(
