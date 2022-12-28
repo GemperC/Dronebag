@@ -20,6 +20,7 @@ dependencies:
   get: ^4.6.5
   get_storage: ^2.0.3
   email_validator: ^2.1.17
+  toggle_switch: ^2.0.1
 
   # font_awesome_flutter: ^10.1.0
   # cupertino_icons: ^1.0.2

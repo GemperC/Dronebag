@@ -4,12 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
-import 'package:dronebag/pages/third_layer/flights_data/flights_data.dart';
-import 'package:dronebag/pages/third_layer/issues/issues.dart';
-import 'package:dronebag/pages/third_layer/maintenance_history/maintenance_history.dart';
-import 'package:dronebag/widgets/main_button_3.dart';
+import 'package:dronebag/pages/third_layer/drone_details/widgets/issues.dart';
 import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+import '../widgets/widgest.dart';
 
 class DroneDetails extends StatefulWidget {
   final String groupID;
@@ -34,11 +33,10 @@ class _DroneDetailsState extends State<DroneDetails> {
   final TextEditingController maintenanceController = TextEditingController();
   final TextEditingController date_boughtController = TextEditingController();
   final double sizedBoxHight = 16;
+  int initialIndex = 1;
 
   @override
   void initState() {
-    // ignore: todo
-    // TODO: implement initState
     super.initState();
   }
 
@@ -129,87 +127,130 @@ class _DroneDetailsState extends State<DroneDetails> {
                           ],
                         ),
                         const SizedBox(height: 25),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            MainButton3(
-                                text: 'Maintnance History',
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            MaintenanceRecords(
-                                              groupID: widget.groupID,
-                                              droneID: drone.id,
-                                            )),
-                                  );
-                                }),
-                            const SizedBox(width: 20),
-                            Text(
-                              '10 Records',
-                              style: GoogleFonts.poppins(
+                        Align(
+                          alignment: Alignment.center,
+                          child: ToggleSwitch(
+                            initialLabelIndex: initialIndex,
+                            totalSwitches: 3,
+                            activeBgColor: [Colors.blue],
+                            activeFgColor: Colors.white,
+                            inactiveBgColor: ThemeColors.dialogBoxColor,
+                            inactiveFgColor: Colors.white,
+                            minWidth: 200,
+                            minHeight: 45,
+                            customTextStyles: [
+                              GoogleFonts.poppins(
                                 color: ThemeColors.whiteTextColor,
                                 fontSize: FontSize.medium,
-                                fontWeight: FontWeight.w300,
+                                fontWeight: FontWeight.w500,
                               ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            MainButton3(
-                                text: 'Issues',
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Issues(
-                                              groupID: widget.groupID,
-                                              droneID: drone.id,
-                                            )),
-                                  );
-                                }),
-                            const SizedBox(width: 20),
-                            Text(
-                              '0 Records',
-                              style: GoogleFonts.poppins(
+                              GoogleFonts.poppins(
                                 color: ThemeColors.whiteTextColor,
                                 fontSize: FontSize.medium,
-                                fontWeight: FontWeight.w300,
+                                fontWeight: FontWeight.w500,
                               ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            MainButton3(
-                                text: 'Flights Data',
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => FlightDataPage(
-                                              groupID: widget.groupID,
-                                              droneID: drone.id,
-                                            )),
-                                  );
-                                }),
-                            const SizedBox(width: 20),
-                            Text(
-                              '0 Records',
-                              style: GoogleFonts.poppins(
+                              GoogleFonts.poppins(
                                 color: ThemeColors.whiteTextColor,
                                 fontSize: FontSize.medium,
-                                fontWeight: FontWeight.w300,
+                                fontWeight: FontWeight.w500,
                               ),
-                            )
-                          ],
+                            ],
+                            labels: [
+                              'Maintnance\nRecords',
+                              'Issues',
+                              'Flight\nRecords'
+                            ],
+                            onToggle: (index) {
+                              setState(() {
+                                initialIndex = index!;
+                              });
+                            },
+                          ),
                         ),
+                        SwitchCaseStateManager(index: initialIndex, drone: drone, groupID: widget.groupID,),
+
+
+                        //   Row(
+                        //     mainAxisAlignment: MainAxisAlignment.start,
+                        //     children: [
+                        //       MainButton3(
+                        //           text: 'Maintnance History',
+                        //           onPressed: () {
+                        //             Navigator.push(
+                        //               context,
+                        //               MaterialPageRoute(
+                        //                   builder: (context) =>
+                        //                       MaintenanceRecords(
+                        //                         groupID: widget.groupID,
+                        //                         droneID: drone.id,
+                        //                       )),
+                        //             );
+                        //           }),
+                        //       const SizedBox(width: 20),
+                        //       Text(
+                        //         '10 Records',
+                        //         style: GoogleFonts.poppins(
+                        //           color: ThemeColors.whiteTextColor,
+                        //           fontSize: FontSize.medium,
+                        //           fontWeight: FontWeight.w300,
+                        //         ),
+                        //       )
+                        //     ],
+                        //   ),
+                        //   const SizedBox(height: 16),
+                        //   Row(
+                        //     mainAxisAlignment: MainAxisAlignment.start,
+                        //     children: [
+                        //       MainButton3(
+                        //           text: 'Issues',
+                        //           onPressed: () {
+                        //             Navigator.push(
+                        //               context,
+                        //               MaterialPageRoute(
+                        //                   builder: (context) => Issues(
+                        //                         groupID: widget.groupID,
+                        //                         droneID: drone.id,
+                        //                       )),
+                        //             );
+                        //           }),
+                        //       const SizedBox(width: 20),
+                        //       Text(
+                        //         '0 Records',
+                        //         style: GoogleFonts.poppins(
+                        //           color: ThemeColors.whiteTextColor,
+                        //           fontSize: FontSize.medium,
+                        //           fontWeight: FontWeight.w300,
+                        //         ),
+                        //       )
+                        //     ],
+                        //   ),
+                        //   const SizedBox(height: 16),
+                        //   Row(
+                        //     mainAxisAlignment: MainAxisAlignment.start,
+                        //     children: [
+                        //       MainButton3(
+                        //           text: 'Flights Data',
+                        //           onPressed: () {
+                        //             Navigator.push(
+                        //               context,
+                        //               MaterialPageRoute(
+                        //                   builder: (context) => FlightDataPage(
+                        //                         groupID: widget.groupID,
+                        //                         droneID: drone.id,
+                        //                       )),
+                        //             );
+                        //           }),
+                        //       const SizedBox(width: 20),
+                        //       Text(
+                        //         '0 Records',
+                        //         style: GoogleFonts.poppins(
+                        //           color: ThemeColors.whiteTextColor,
+                        //           fontSize: FontSize.medium,
+                        //           fontWeight: FontWeight.w300,
+                        //         ),
+                        //       )
+                        //     ],
+                        //   ),
                       ],
                     ),
                   ),
@@ -224,6 +265,7 @@ class _DroneDetailsState extends State<DroneDetails> {
               }
             }));
   }
+
 
   Stream<List<Drone>> fetchDrone() {
     return FirebaseFirestore.instance
@@ -309,6 +351,7 @@ class _DroneDetailsState extends State<DroneDetails> {
           child: Form(
               key: formKey,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextFormField(
                     controller: nameController..text = widget.drone.name,
@@ -329,8 +372,8 @@ class _DroneDetailsState extends State<DroneDetails> {
                       labelText: "Drone Name",
                       labelStyle: GoogleFonts.poppins(
                         color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w500,
                       ),
                       border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
@@ -363,8 +406,8 @@ class _DroneDetailsState extends State<DroneDetails> {
                             labelText: "Serial number",
                             labelStyle: GoogleFonts.poppins(
                               color: ThemeColors.textFieldHintColor,
-                              fontSize: FontSize.small,
-                              fontWeight: FontWeight.w400,
+                              fontSize: FontSize.medium,
+                              fontWeight: FontWeight.w500,
                             ),
                             border: const OutlineInputBorder(
                               borderSide: BorderSide.none,
@@ -397,8 +440,8 @@ class _DroneDetailsState extends State<DroneDetails> {
                             labelText: "Flight Time",
                             labelStyle: GoogleFonts.poppins(
                               color: ThemeColors.textFieldHintColor,
-                              fontSize: FontSize.small,
-                              fontWeight: FontWeight.w400,
+                              fontSize: FontSize.medium,
+                              fontWeight: FontWeight.w500,
                             ),
                             border: const OutlineInputBorder(
                               borderSide: BorderSide.none,
@@ -413,7 +456,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                   SizedBox(height: sizedBoxHight),
                   const SizedBox(width: 10),
                   Container(
-                    width: 140,
+                    width: 200,
                     child: TextFormField(
                       controller: maintenanceController
                         ..text = widget.drone.maintenance.toString(),
@@ -434,8 +477,8 @@ class _DroneDetailsState extends State<DroneDetails> {
                         labelText: "Maintnenace cycle in hours",
                         labelStyle: GoogleFonts.poppins(
                           color: ThemeColors.textFieldHintColor,
-                          fontSize: FontSize.small,
-                          fontWeight: FontWeight.w400,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w500,
                         ),
                         border: const OutlineInputBorder(
                           borderSide: BorderSide.none,
@@ -460,7 +503,9 @@ class _DroneDetailsState extends State<DroneDetails> {
                 Navigator.popUntil(context, (route) {
                   return count++ == 2;
                 });
-                Utils.showSnackBarWithColor('Drone ${widget.drone.name} has been deleted from the group', Colors.blue);
+                Utils.showSnackBarWithColor(
+                    'Drone ${widget.drone.name} has been deleted from the group',
+                    Colors.blue);
               },
               child: const Text(
                 'Delete Drone',
