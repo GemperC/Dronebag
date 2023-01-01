@@ -68,7 +68,7 @@ class _GroupMembersState extends State<GroupMembers> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(

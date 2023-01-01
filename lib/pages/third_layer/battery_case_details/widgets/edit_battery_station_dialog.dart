@@ -1,6 +1,6 @@
-import 'package:dronebag/domain/battery_issue_repository/battery_issue_repository.dart';
-import 'package:dronebag/domain/battery_repository/battery_repository.dart';
-import 'package:dronebag/domain/battery_station_issue_repository/battery_station_issue_repository.dart';
+
+// ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace, avoid_function_literals_in_foreach_calls
+
 import 'package:dronebag/domain/battery_station_repository/battery_station_repository.dart';
 import 'package:dronebag/widgets/utils.dart';
 import 'package:flutter/material.dart';

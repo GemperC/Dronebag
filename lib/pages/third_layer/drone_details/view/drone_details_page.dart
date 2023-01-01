@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
-import 'package:dronebag/pages/third_layer/drone_details/widgets/issues.dart';
 import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -133,7 +132,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                             child: ToggleSwitch(
                               initialLabelIndex: initialIndex,
                               totalSwitches: 3,
-                              activeBgColor: [Colors.blue],
+                              activeBgColor: const [Colors.blue],
                               activeFgColor: Colors.white,
                               inactiveBgColor: ThemeColors.dialogBoxColor,
                               inactiveFgColor: Colors.white,
@@ -156,7 +155,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                                   fontWeight: FontWeight.w500,
                                 ),
                               ],
-                              labels: [
+                              labels: const [
                                 'Maintnance\nRecords',
                                 'Issues',
                                 'Flight\nRecords'

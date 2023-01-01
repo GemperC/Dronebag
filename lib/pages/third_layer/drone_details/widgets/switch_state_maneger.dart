@@ -24,15 +24,12 @@ class _SwitchCaseStateManagerState extends State<SwitchCaseStateManager> {
 
     switch (widget.index) {
       case 0:
-      print('returnning maintnence records');
         return DroneMaintenance(drone: widget.drone, groupID: widget.groupID);
 
       case 1:
-        print('returnning issues');
         return DroneIssues(drone: widget.drone, groupID: widget.groupID);
 
       case 2:
-            print('returnning flight records');
 
         return DroneFlightRecords(drone: widget.drone, groupID: widget.groupID);
     }

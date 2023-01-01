@@ -1,15 +1,11 @@
-// ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace, unnecessary_new
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
-import 'package:dronebag/domain/battery_issue_repository/battery_issue_repository.dart';
 import 'package:dronebag/domain/battery_repository/battery_repository.dart';
 import 'package:dronebag/domain/battery_station_issue_repository/battery_station_issue_repository.dart';
 import 'package:dronebag/domain/battery_station_repository/src/models/models.dart';
 import 'package:flutter/gestures.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import '../widgets/widgest.dart';
 
 class BatteryStationDetails extends StatefulWidget {
@@ -145,7 +141,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         fontSize: FontSize.large,
                         fontWeight: FontWeight.w600,
                       ),
-                      text: "Station\'s Issue list ",
+                      text: "Station's Issue list ",
                     ),
                     const WidgetSpan(
                         child: Padding(
@@ -166,7 +162,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                   ],
                 ),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               StreamBuilder<List<BatteryStationIssue>>(
                 stream: fetch.fetchBatteryStationIssue(),
                 builder: ((context, snapshot) {

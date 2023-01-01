@@ -36,8 +36,6 @@ class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     String issueDescription = widget.batteryStationIssue.detail;
@@ -207,6 +205,9 @@ class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
                                               .doc(
                                                   widget.batteryStationIssue.id)
                                               .delete();
+                                          Utils.showSnackBarWithColor(
+                                              "Issue has been deleted",
+                                              Colors.blue);
                                           Navigator.pop(context);
                                         },
                                         child: const Text(

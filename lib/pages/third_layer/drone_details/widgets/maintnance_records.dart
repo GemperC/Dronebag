@@ -1,8 +1,9 @@
+// ignore_for_file: unnecessary_new, non_constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
-import 'package:dronebag/domain/issue_repository/issue_repository.dart';
 import 'package:dronebag/domain/maintnance_history_repository/maintnance_history_repository.dart';
 import 'package:dronebag/widgets/utils.dart';
 import 'package:flutter/material.dart';
@@ -31,46 +32,45 @@ class _DroneMaintenanceState extends State<DroneMaintenance> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(children: [
+    return Column(children: [
       TextButton(
-        child: Text(
-          'New Record',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.poppins(
-            color: Colors.blue,
-            fontSize: FontSize.medium,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        onPressed: () {
-          createRecord();
-        },
+    child: Text(
+      'New Record',
+      textAlign: TextAlign.center,
+      style: GoogleFonts.poppins(
+        color: Colors.blue,
+        fontSize: FontSize.medium,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+    onPressed: () {
+      createRecord();
+    },
       ),
       StreamBuilder<List<Maintenance>>(
-          stream: fetchRecords(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final records = snapshot.data!;
-              return ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: records.length,
-                  itemBuilder: (context, index) {
-                    detailController =
-                        TextEditingController(text: records[index].detail);
-                    return RecordTile(records[index], detailController);
-                  });
-            } else if (snapshot.hasError) {
-              return SingleChildScrollView(
-                child: Text('Something went wrong! \n\n$snapshot',
-                    style: const TextStyle(color: Colors.white)),
-              );
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          }),
-    ]));
+      stream: fetchRecords(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final records = snapshot.data!;
+          return ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: records.length,
+              itemBuilder: (context, index) {
+                detailController =
+                    TextEditingController(text: records[index].detail);
+                return RecordTile(records[index], detailController);
+              });
+        } else if (snapshot.hasError) {
+          return SingleChildScrollView(
+            child: Text('Something went wrong! \n\n$snapshot',
+                style: const TextStyle(color: Colors.white)),
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      }),
+    ]);
   }
 
   Future createRecord() async {

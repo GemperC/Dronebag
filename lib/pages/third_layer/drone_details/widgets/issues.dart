@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_new
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
@@ -30,46 +32,45 @@ class _DroneIssuesState extends State<DroneIssues> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(children: [
+    return Column(children: [
       TextButton(
-        child: Text(
-          'New Record',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.poppins(
-            color: Colors.blue,
-            fontSize: FontSize.medium,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        onPressed: () {
-          createIssue();
-        },
+    child: Text(
+      'New Record',
+      textAlign: TextAlign.center,
+      style: GoogleFonts.poppins(
+        color: Colors.blue,
+        fontSize: FontSize.medium,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+    onPressed: () {
+      createIssue();
+    },
       ),
       StreamBuilder<List<Issue>>(
-          stream: fetchGroupDroneIssues(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final droneIssues = snapshot.data!;
-              return ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: droneIssues.length,
-                  itemBuilder: (context, index) {
-                    issueDetailController =
-                        TextEditingController(text: droneIssues[index].detail);
-                    return issueTile(droneIssues[index], issueDetailController);
-                  });
-            } else if (snapshot.hasError) {
-              return SingleChildScrollView(
-                child: Text('Something went wrong! \n\n$snapshot',
-                    style: const TextStyle(color: Colors.white)),
-              );
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          }),
-    ]));
+      stream: fetchGroupDroneIssues(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final droneIssues = snapshot.data!;
+          return ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: droneIssues.length,
+              itemBuilder: (context, index) {
+                issueDetailController =
+                    TextEditingController(text: droneIssues[index].detail);
+                return issueTile(droneIssues[index], issueDetailController);
+              });
+        } else if (snapshot.hasError) {
+          return SingleChildScrollView(
+            child: Text('Something went wrong! \n\n$snapshot',
+                style: const TextStyle(color: Colors.white)),
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      }),
+    ]);
   }
 
   Future createIssue() async {
