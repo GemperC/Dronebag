@@ -120,7 +120,7 @@ class _IssuesState extends State<Issues> {
                   ),
                 ),
                 Text(
-                  'Resolved?  ${issue.resolved}',
+                  'Status:  ${issue.status}',
                   style: GoogleFonts.poppins(
                     color: ThemeColors.whiteTextColor,
                     fontSize: FontSize.large,
@@ -257,7 +257,7 @@ class _IssuesState extends State<Issues> {
         detail: issueDetailController.text.trim(),
         id: docIssue.id,
         date: DateTime.parse(issueDateController.text),
-        resolved: 'no',
+        status: 'open',
       );
 
       final json = issue.toJson();
