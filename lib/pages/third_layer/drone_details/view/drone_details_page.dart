@@ -27,8 +27,13 @@ class _DroneDetailsState extends State<DroneDetails> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController serial_numberController = TextEditingController();
   final TextEditingController flight_timeController = TextEditingController();
-  final TextEditingController hours_till_maintenaceController =
+
+  final TextEditingController flight_timeHoursController =
       TextEditingController();
+  final TextEditingController flight_timeMinutesController =
+      TextEditingController();
+
+
   final TextEditingController maintenanceController = TextEditingController();
   final TextEditingController date_boughtController = TextEditingController();
   final double sizedBoxHight = 16;
@@ -349,49 +354,57 @@ class _DroneDetailsState extends State<DroneDetails> {
                     ),
                   ),
                   SizedBox(height: sizedBoxHight),
-                  Row(
-                    children: [
-                      Container(
-                        width: 100,
-                        child: TextFormField(
-                          controller: serial_numberController
-                            ..text = widget.drone.serial_number,
-                          validator: (value) {
-                            if (nameController.text.isEmpty) {
-                              return "This field can't be empty";
-                            }
-                            return null;
-                          },
-                          style: GoogleFonts.poppins(
-                            color: ThemeColors.whiteTextColor,
+                      TextFormField(
+                        controller: serial_numberController
+                          ..text = widget.drone.serial_number,
+                        validator: (value) {
+                          if (nameController.text.isEmpty) {
+                            return "This field can't be empty";
+                          }
+                          return null;
+                        },
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                        ),
+                        keyboardType: TextInputType.name,
+                        cursorColor: ThemeColors.primaryColor,
+                        decoration: InputDecoration(
+                          fillColor: ThemeColors.textFieldBgColor,
+                          filled: true,
+                          labelText: "Serial number",
+                          labelStyle: GoogleFonts.poppins(
+                            color: ThemeColors.textFieldHintColor,
+                            fontSize: FontSize.medium,
+                            fontWeight: FontWeight.w500,
                           ),
-                          keyboardType: TextInputType.name,
-                          cursorColor: ThemeColors.primaryColor,
-                          decoration: InputDecoration(
-                            fillColor: ThemeColors.textFieldBgColor,
-                            filled: true,
-                            labelText: "Serial number",
-                            labelStyle: GoogleFonts.poppins(
-                              color: ThemeColors.textFieldHintColor,
-                              fontSize: FontSize.medium,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            border: const OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(18)),
-                            ),
+                          border: const OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(18)),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Container(
-                        width: 120,
+                      SizedBox(height: sizedBoxHight),
+                      Center(
+                        child: Text(
+                    "Flight Time:",
+                    style: GoogleFonts.poppins(
+                        color: ThemeColors.whiteTextColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                      ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 65,
+                        width: 80,
                         child: TextFormField(
-                          controller: flight_timeController
-                            ..text = widget.drone.flight_time.toString(),
+                          controller: flight_timeHoursController..text = (widget.drone.flight_time~/60).toString(),
                           validator: (value) {
-                            if (nameController.text.isEmpty) {
+                            if (flight_timeHoursController.text.isEmpty) {
                               return "This field can't be empty";
                             }
                             return null;
@@ -404,11 +417,51 @@ class _DroneDetailsState extends State<DroneDetails> {
                           decoration: InputDecoration(
                             fillColor: ThemeColors.textFieldBgColor,
                             filled: true,
-                            labelText: "Flight Time",
-                            labelStyle: GoogleFonts.poppins(
+                            hintText: "Hours",
+                            hintStyle: GoogleFonts.poppins(
                               color: ThemeColors.textFieldHintColor,
-                              fontSize: FontSize.medium,
-                              fontWeight: FontWeight.w500,
+                              fontSize: FontSize.small,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            border: const OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(18)),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      SizedBox(
+                        height: 65,
+                        width: 80,
+                        child: TextFormField(
+                          controller: flight_timeMinutesController..text = (widget.drone.flight_time%60).toString(),
+                          validator: (value) {
+                            if (flight_timeMinutesController.text.isEmpty) {
+                              return "This field can't be empty";
+                            }
+                            if (int.parse(flight_timeMinutesController.text) >=
+                                    60 ||
+                                int.parse(flight_timeMinutesController.text) <=
+                                    0) {
+                              return "1-59";
+                            }
+                            return null;
+                          },
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.whiteTextColor,
+                          ),
+                          keyboardType: TextInputType.number,
+                          cursorColor: ThemeColors.primaryColor,
+                          decoration: InputDecoration(
+                            fillColor: ThemeColors.textFieldBgColor,
+                            filled: true,
+                            hintText: "Minutes",
+                            hintStyle: GoogleFonts.poppins(
+                              color: ThemeColors.textFieldHintColor,
+                              fontSize: FontSize.small,
+                              fontWeight: FontWeight.w400,
                             ),
                             border: const OutlineInputBorder(
                               borderSide: BorderSide.none,
@@ -420,37 +473,35 @@ class _DroneDetailsState extends State<DroneDetails> {
                       ),
                     ],
                   ),
+
                   SizedBox(height: sizedBoxHight),
                   const SizedBox(width: 10),
-                  Container(
-                    width: 200,
-                    child: TextFormField(
-                      controller: maintenanceController
-                        ..text = widget.drone.maintenance.toString(),
-                      validator: (value) {
-                        if (nameController.text.isEmpty) {
-                          return "This field can't be empty";
-                        }
-                        return null;
-                      },
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.whiteTextColor,
+                  TextFormField(
+                    controller: maintenanceController
+                      ..text = (widget.drone.maintenance~/60).toString(),
+                    validator: (value) {
+                      if (nameController.text.isEmpty) {
+                        return "This field can't be empty";
+                      }
+                      return null;
+                    },
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                    keyboardType: TextInputType.number,
+                    cursorColor: ThemeColors.primaryColor,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      labelText: "Maintnenace cycle in hours",
+                      labelStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w500,
                       ),
-                      keyboardType: TextInputType.number,
-                      cursorColor: ThemeColors.primaryColor,
-                      decoration: InputDecoration(
-                        fillColor: ThemeColors.textFieldBgColor,
-                        filled: true,
-                        labelText: "Maintnenace cycle in hours",
-                        labelStyle: GoogleFonts.poppins(
-                          color: ThemeColors.textFieldHintColor,
-                          fontSize: FontSize.medium,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        border: const OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.all(Radius.circular(18)),
-                        ),
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
                     ),
                   ),
@@ -513,8 +564,9 @@ class _DroneDetailsState extends State<DroneDetails> {
                   .update({
                 'name': nameController.text,
                 'serial_number': serial_numberController.text,
-                'maintenance': int.parse(maintenanceController.text),
-                'flight_time': int.parse(flight_timeController.text),
+                'maintenance': int.parse(maintenanceController.text)*60,
+                'flight_time': int.parse(flight_timeHoursController.text) * 60 +
+            int.parse(flight_timeMinutesController.text),
               });
               Navigator.pop(context);
             },

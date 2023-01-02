@@ -30,8 +30,7 @@ class _GroupDronesState extends State<GroupDrones> {
   final TextEditingController flight_timeMinutesController =
       TextEditingController();
 
-  final TextEditingController hours_till_maintenaceController =
-      TextEditingController();
+
   final TextEditingController maintenanceController = TextEditingController();
   final TextEditingController date_boughtController = TextEditingController();
   final double sizedBoxHight = 16;
@@ -147,7 +146,7 @@ class _GroupDronesState extends State<GroupDrones> {
                       //alingemt of the titel
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Maintenance in ${drone.minutes_till_maintenace} flight hours',
+                        'Maintenance in ~${drone.minutes_till_maintenace~/60} hours',
                         style: GoogleFonts.poppins(
                           color: maintenanceTextColor,
                           fontSize: FontSize.medium,
@@ -159,7 +158,7 @@ class _GroupDronesState extends State<GroupDrones> {
                       //alingemt of the titel
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Airtime is ${drone.flight_time} hours',
+                        'Airtime: ~${drone.flight_time~/60} hours',
                         style: GoogleFonts.poppins(
                           color: ThemeColors.textFieldHintColor,
                           fontSize: FontSize.medium,
@@ -167,18 +166,7 @@ class _GroupDronesState extends State<GroupDrones> {
                         ),
                       ),
                     ),
-                    Align(
-                      //alingemt of the titel
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'Active issues ${drone.flight_time}',
-                        style: GoogleFonts.poppins(
-                          color: ThemeColors.textFieldHintColor,
-                          fontSize: FontSize.medium,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
+                
                   ],
                 ),
               ),
