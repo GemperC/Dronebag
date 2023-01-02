@@ -112,6 +112,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                                 height: 54,
                                 width: 100,
                                 child: GridView.count(
+                                  physics: const NeverScrollableScrollPhysics(),
                                   childAspectRatio: (50/27),
                                   crossAxisSpacing: 3,
                                   crossAxisCount: 2,

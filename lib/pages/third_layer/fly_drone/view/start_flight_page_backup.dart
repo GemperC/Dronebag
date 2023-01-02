@@ -13,8 +13,7 @@ import 'package:http/http.dart' as http;
 import '../widgets/widgets.dart';
 
 const List<String> list = <String>['Practice', 'Mission'];
-  List<Drone> droneList = <Drone>[];
-
+List<Drone> droneList = <Drone>[];
 
 class StartFlightPage extends StatefulWidget {
   final Group group;
@@ -40,8 +39,6 @@ class _StartFlightPageState extends State<StartFlightPage> {
   late DateTime airTimeStart;
   String textForDroneList = "You haven't picked any drones yet";
   String dropdownValue = list.first;
-  List<Drone> selectedDrones = <Drone>[];
-
 
   @override
   Widget build(BuildContext context) {
@@ -202,11 +199,11 @@ class _StartFlightPageState extends State<StartFlightPage> {
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: selectedDrones.length,
+                  itemCount: droneList.length,
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text(
-                        "- Name: ${selectedDrones[index].name} | Serial: ${selectedDrones[index].serial_number}",
+                        "- Name: ${droneList[index].name} | Serial: ${droneList[index].serial_number}",
                         style: GoogleFonts.poppins(
                           color: ThemeColors.greyTextColor,
                           fontSize: FontSize.medium,
@@ -231,7 +228,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                             topic: widget.group.id,
                             purpose: dropdownValue,
                             pilot: loggedUser.fullName,
-                            drones: selectedDrones,
+                            drones: droneList,
                           );
                           notification.makeCallStartFlight();
 
@@ -241,7 +238,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                               builder: (context) => StopFlightPage(
                                   airTimeStart: airTimeStart,
                                   group: widget.group,
-                                  droneList: selectedDrones,
+                                  droneList: droneList,
                                   pilot: loggedUser,
                                   flightPurpose: dropdownValue),
                             ),

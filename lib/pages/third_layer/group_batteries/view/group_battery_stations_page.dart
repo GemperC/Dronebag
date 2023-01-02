@@ -27,6 +27,7 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
   final TextEditingController serial_numberController = TextEditingController();
   final TextEditingController battery_pairsController = TextEditingController();
   final TextEditingController date_boughtController = TextEditingController();
+ final TextEditingController ownershipController = TextEditingController();
   final double sizedBoxHight = 16;
 
   @override
@@ -233,6 +234,37 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
                       ),
                     ),
                   ),
+                  
+                  SizedBox(height: sizedBoxHight),
+                  TextFormField(
+                    controller: ownershipController,
+                    validator: (value) {
+                      if (ownershipController.text.isEmpty) {
+                        return "This field can't be empty";
+                      }
+                      return null;
+                    },
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                    keyboardType: TextInputType.number,
+                    cursorColor: ThemeColors.primaryColor,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      hintText: "Ownership",
+                      hintStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.small,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    ),
+                  ),
+                  
                   SizedBox(height: sizedBoxHight),
                   DateTimeField(
                     format: DateFormat('yyyy-MM-dd'),
@@ -305,6 +337,7 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
       final batteryStation = BatteryStation(
         serial_number: serial_numberController.text,
         id: docBatteryStation.id,
+        ownership: ownershipController.text,
         battery_pairs: int.parse(battery_pairsController.text),
         date_bought: DateTime.parse(date_boughtController.text),
       );

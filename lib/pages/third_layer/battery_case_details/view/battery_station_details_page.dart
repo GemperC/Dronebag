@@ -86,8 +86,18 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
         ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(38),
-            child: Column(children: [
+            padding: const EdgeInsets.fromLTRB(38, 20, 38, 38),
+            child: Column(
+              children: [
+              Text(
+                'Ownership: ${widget.batteryStation.ownership}',
+                style: GoogleFonts.poppins(
+                  color: ThemeColors.textFieldHintColor,
+                  fontSize: FontSize.medium,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 10),
               Text(
                 'Batteries',
                 style: GoogleFonts.poppins(
