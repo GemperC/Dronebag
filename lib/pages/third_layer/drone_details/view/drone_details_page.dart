@@ -98,7 +98,6 @@ class _DroneDetailsState extends State<DroneDetails> {
                           richText_listingDroneDetails('Mainetenance Cycle',
                               'every ${drone.maintenance ~/ 60} hours'),
                           const SizedBox(height: 12),
-
                           Row(
                             children: [
                               Text("Next Maintenance in: ",
@@ -113,12 +112,14 @@ class _DroneDetailsState extends State<DroneDetails> {
                                 width: 100,
                                 child: GridView.count(
                                   physics: const NeverScrollableScrollPhysics(),
-                                  childAspectRatio: (50/27),
+                                  childAspectRatio: (50 / 27),
                                   crossAxisSpacing: 3,
                                   crossAxisCount: 2,
                                   children: [
-                                    gridTile('${drone.minutes_till_maintenace ~/ 60}'),
-                                    gridTile('${drone.minutes_till_maintenace % 60}'),
+                                    gridTile(
+                                        '${drone.minutes_till_maintenace ~/ 60}'),
+                                    gridTile(
+                                        '${drone.minutes_till_maintenace % 60}'),
                                     gridTile('Hours'),
                                     gridTile('Min'),
                                   ],
@@ -458,17 +459,37 @@ class _DroneDetailsState extends State<DroneDetails> {
         ),
         actions: [
           TextButton(
-              onPressed: () {
-                FirebaseFirestore.instance
-                    .collection('groups')
-                    .doc(widget.groupID)
-                    .collection('drones')
-                    .doc(widget.drone.id)
-                    .delete();
+              onPressed: () async {
                 int count = 0;
                 Navigator.popUntil(context, (route) {
                   return count++ == 2;
                 });
+                Utils.showSnackBarWithColor(
+                    'Drone is being deleted, please wait...', Colors.red);
+                var droneDoc = FirebaseFirestore.instance
+                    .collection('groups')
+                    .doc(widget.groupID)
+                    .collection('drones')
+                    .doc(widget.drone.id);
+
+                var droneIssueCollectionSnap =
+                    await droneDoc.collection('issues').get();
+                for (var issueDoc in droneIssueCollectionSnap.docs) {
+                  await issueDoc.reference.delete();
+                }
+                var droneMaintenanceRecordsCollectionSnap =
+                    await droneDoc.collection('maintenance_history').get();
+                for (var recordDoc
+                    in droneMaintenanceRecordsCollectionSnap.docs) {
+                  await recordDoc.reference.delete();
+                }
+                var droneFlightRecordsCollectionSnap =
+                    await droneDoc.collection('flight_data').get();
+                for (var recordDoc in droneFlightRecordsCollectionSnap.docs) {
+                  await recordDoc.reference.delete();
+                }
+                droneDoc.delete();
+
                 Utils.showSnackBarWithColor(
                     'Drone ${widget.drone.name} has been deleted from the group',
                     Colors.blue);
