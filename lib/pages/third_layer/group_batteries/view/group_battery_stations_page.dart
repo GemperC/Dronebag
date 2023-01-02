@@ -247,7 +247,7 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
                     ),
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.name,
                     cursorColor: ThemeColors.primaryColor,
                     decoration: InputDecoration(
                       fillColor: ThemeColors.textFieldBgColor,

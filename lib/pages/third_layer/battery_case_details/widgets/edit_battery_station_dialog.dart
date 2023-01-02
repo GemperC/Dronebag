@@ -118,17 +118,38 @@ class _EditBatteryStationDialogState extends State<EditBatteryStationDialog> {
       ),
       actions: [
         TextButton(
-            onPressed: () {
-              FirebaseFirestore.instance
-                  .collection('groups')
-                  .doc(widget.groupID)
-                  .collection('battery_stations')
-                  .doc(widget.batteryStation.id)
-                  .delete();
+            onPressed: () async {
               int count = 0;
               Navigator.popUntil(context, (route) {
                 return count++ == 2;
               });
+              Utils.showSnackBarWithColor(
+                  'Station is being deleted, please wait...', Colors.red);
+              var batteryStationDoc = FirebaseFirestore.instance
+                  .collection('groups')
+                  .doc(widget.groupID)
+                  .collection('battery_stations')
+                  .doc(widget.batteryStation.id);
+
+              var batteriesCollectionSnap =
+                  await batteryStationDoc.collection('batteries').get();
+              for (var batteryDoc in batteriesCollectionSnap.docs) {
+                var batteriesIssueCollectionSnap = await batteryDoc.reference
+                    .collection('battery_issues')
+                    .get();
+                for (var batteryIssueDoc in batteriesIssueCollectionSnap.docs) {
+                  await batteryIssueDoc.reference.delete();
+                }
+                await batteryDoc.reference.delete();
+              }
+
+              var IssueCollectionSnap =
+                  await batteryStationDoc.collection('issues').get();
+              for (var issueDoc in IssueCollectionSnap.docs) {
+                await issueDoc.reference.delete();
+              }
+              batteryStationDoc.delete();
+
               Utils.showSnackBarWithColor(
                   'Station has been deleted', Colors.blue);
             },
