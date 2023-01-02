@@ -92,16 +92,37 @@ class _DroneDetailsState extends State<DroneDetails> {
                           richText_listingDroneDetailsDates(
                               'Date Bought', drone.date_bought),
                           const SizedBox(height: 12),
-                          richText_listingDroneDetails(
-                              'Flight Time', '${drone.flight_time} hours'),
+                          richText_listingDroneDetails('Flight Time',
+                              '${drone.flight_time ~/ 60} hours and ${drone.flight_time % 60} minutes'),
                           const SizedBox(height: 12),
                           richText_listingDroneDetails('Mainetenance Cycle',
-                              'every ${drone.maintenance} hours'),
+                              'every ${drone.maintenance ~/ 60} hours'),
                           const SizedBox(height: 12),
+
                           Row(
                             children: [
-                              richText_listingDroneDetails('Next Maintenance in',
-                                  '${drone.hours_till_maintenace} flight hours'),
+                              Text("Next Maintenance in: ",
+                                  style: GoogleFonts.poppins(
+                                    color: ThemeColors.whiteTextColor,
+                                    fontSize: FontSize.medium,
+                                    fontWeight: FontWeight.w500,
+                                  )),
+                              const SizedBox(width: 10),
+                              Container(
+                                height: 54,
+                                width: 100,
+                                child: GridView.count(
+                                  childAspectRatio: (50/27),
+                                  crossAxisSpacing: 3,
+                                  crossAxisCount: 2,
+                                  children: [
+                                    gridTile('${drone.minutes_till_maintenace ~/ 60}'),
+                                    gridTile('${drone.minutes_till_maintenace % 60}'),
+                                    gridTile('Hours'),
+                                    gridTile('Min'),
+                                  ],
+                                ),
+                              ),
                               const SizedBox(width: 10),
                               RichText(
                                 text: TextSpan(
@@ -113,7 +134,8 @@ class _DroneDetailsState extends State<DroneDetails> {
                                           .collection('drones')
                                           .doc(drone.id)
                                           .update({
-                                        'hours_till_maintenace': drone.maintenance
+                                        'minutes_till_maintenace':
+                                            drone.maintenance
                                       });
                                     },
                                   text: 'Reset',
@@ -167,7 +189,11 @@ class _DroneDetailsState extends State<DroneDetails> {
                               },
                             ),
                           ),
-                          SwitchCaseStateManager(index: initialIndex, drone: drone, groupID: widget.groupID,),
+                          SwitchCaseStateManager(
+                            index: initialIndex,
+                            drone: drone,
+                            groupID: widget.groupID,
+                          ),
                         ],
                       ),
                     ),
@@ -184,6 +210,27 @@ class _DroneDetailsState extends State<DroneDetails> {
         ));
   }
 
+  Widget gridTile(String text) {
+    return GridTile(
+      child: Container(
+        decoration: const BoxDecoration(
+            color: Color.fromARGB(255, 45, 49, 56),
+            borderRadius: BorderRadius.all(Radius.circular(5))),
+        width: 50,
+        height: 10,
+        child: Center(
+          child: Text(
+            text,
+            style: GoogleFonts.poppins(
+              color: ThemeColors.whiteTextColor,
+              fontSize: FontSize.medium,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   Stream<List<Drone>> fetchDrone() {
     return FirebaseFirestore.instance

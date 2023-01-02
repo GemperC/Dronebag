@@ -296,6 +296,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                         final drones = snapshot.data!;
                         return Container(
                           child: ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
                             itemCount: drones.length,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {

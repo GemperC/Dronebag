@@ -283,7 +283,7 @@ class _FlightSummeryState extends State<FlightSummery> {
                 int totalFlightTime =
                     int.parse(flight_timeController.text) + drone.flight_time;
 
-                int hours_till_maintenaceNEW = drone.hours_till_maintenace- 
+                int minutes_till_maintenace = drone.minutes_till_maintenace- 
                     int.parse(flight_timeController.text);
                     
 
@@ -294,7 +294,7 @@ class _FlightSummeryState extends State<FlightSummery> {
                     .doc(drone.id)
                     .update({
                       "flight_time": totalFlightTime,
-                      "hours_till_maintenace": hours_till_maintenaceNEW});
+                      "minutes_till_maintenace": minutes_till_maintenace});
 
                 Navigator.pop(context);
               },

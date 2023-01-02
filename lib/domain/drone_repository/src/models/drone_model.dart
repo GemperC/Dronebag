@@ -7,7 +7,7 @@ class Drone {
   String name; // name of the drone
   String serial_number; // serial number of the drone in the army
   int flight_time; // hours of active flight
-  int hours_till_maintenace; // hours left until maintnence 
+  int minutes_till_maintenace; // hours left until maintnence 
   int maintenance; // every 'maintenance' hours the drone need maintenance
   DateTime date_added; // what date the drone was aded to the database
   DateTime date_bought; // when did the drone was bought
@@ -19,7 +19,7 @@ class Drone {
     required this.maintenance,
     required this.date_added,
     required this.date_bought,
-    this.hours_till_maintenace = 0,
+    this.minutes_till_maintenace = 0,
     required this.flight_time,
   });
 
@@ -30,7 +30,7 @@ class Drone {
         'maintenance': maintenance,
         'date_added': date_added,
         'date_bought': date_bought,
-        'hours_till_maintenace': hours_till_maintenace,
+        'minutes_till_maintenace': minutes_till_maintenace,
         'flight_time': flight_time,
       };
 
@@ -41,7 +41,7 @@ class Drone {
         maintenance: json['maintenance'] ,
         date_added: (json['date_added'] as Timestamp).toDate(),
         date_bought: (json['date_bought'] as Timestamp).toDate(),
-        hours_till_maintenace: json['hours_till_maintenace'] ,
+        minutes_till_maintenace: json['minutes_till_maintenace'] ,
         flight_time: json['flight_time'] ,
       );
 }

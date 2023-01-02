@@ -25,7 +25,11 @@ class _GroupDronesState extends State<GroupDrones> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController serial_numberController = TextEditingController();
-  final TextEditingController flight_timeController = TextEditingController();
+  final TextEditingController flight_timeHoursController =
+      TextEditingController();
+  final TextEditingController flight_timeMinutesController =
+      TextEditingController();
+
   final TextEditingController hours_till_maintenaceController =
       TextEditingController();
   final TextEditingController maintenanceController = TextEditingController();
@@ -86,8 +90,6 @@ class _GroupDronesState extends State<GroupDrones> {
     );
   }
 
-
-
 //fetch group's drones list
   Stream<List<Drone>> fetchGroupDrones() {
     return FirebaseFirestore.instance
@@ -100,7 +102,7 @@ class _GroupDronesState extends State<GroupDrones> {
 //build the tile of the drone
   Widget buildDroneTile(Drone drone) {
     Color maintenanceTextColor = ThemeColors.textFieldHintColor;
-    if (drone.hours_till_maintenace <= 0) {
+    if (drone.minutes_till_maintenace <= 60) {
       maintenanceTextColor = Colors.red;
     }
     return ListTile(
@@ -145,7 +147,7 @@ class _GroupDronesState extends State<GroupDrones> {
                       //alingemt of the titel
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Maintenance in ${drone.hours_till_maintenace} flight hours',
+                        'Maintenance in ${drone.minutes_till_maintenace} flight hours',
                         style: GoogleFonts.poppins(
                           color: maintenanceTextColor,
                           fontSize: FontSize.medium,
@@ -184,6 +186,7 @@ class _GroupDronesState extends State<GroupDrones> {
           ),
         ));
   }
+
 
 // dialog to add new drones to the group
   Future addDroneDialog() {
@@ -264,33 +267,91 @@ class _GroupDronesState extends State<GroupDrones> {
                     ),
                   ),
                   SizedBox(height: sizedBoxHight),
-                  TextFormField(
-                    controller: flight_timeController,
-                    validator: (value) {
-                      if (nameController.text.isEmpty) {
-                        return "This field can't be empty";
-                      }
-                      return null;
-                    },
+                  Text(
+                    "Flight Time:",
                     style: GoogleFonts.poppins(
                       color: ThemeColors.whiteTextColor,
+                      fontSize: FontSize.medium,
+                      fontWeight: FontWeight.w500,
                     ),
-                    keyboardType: TextInputType.number,
-                    cursorColor: ThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      fillColor: ThemeColors.textFieldBgColor,
-                      filled: true,
-                      hintText: "Flight Time",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
-                        fontSize: FontSize.small,
-                        fontWeight: FontWeight.w400,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 65,
+                        width: 80,
+                        child: TextFormField(
+                          controller: flight_timeHoursController,
+                          validator: (value) {
+                            if (flight_timeHoursController.text.isEmpty) {
+                              return "This field can't be empty";
+                            }
+                            return null;
+                          },
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.whiteTextColor,
+                          ),
+                          keyboardType: TextInputType.number,
+                          cursorColor: ThemeColors.primaryColor,
+                          decoration: InputDecoration(
+                            fillColor: ThemeColors.textFieldBgColor,
+                            filled: true,
+                            hintText: "Hours",
+                            hintStyle: GoogleFonts.poppins(
+                              color: ThemeColors.textFieldHintColor,
+                              fontSize: FontSize.small,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            border: const OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(18)),
+                            ),
+                          ),
+                        ),
                       ),
-                      border: const OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      const SizedBox(width: 10),
+                      SizedBox(
+                        height: 65,
+                        width: 80,
+                        child: TextFormField(
+                          controller: flight_timeMinutesController,
+                          validator: (value) {
+                            if (flight_timeMinutesController.text.isEmpty) {
+                              return "This field can't be empty";
+                            }
+                            if (int.parse(flight_timeMinutesController.text) >=
+                                    60 ||
+                                int.parse(flight_timeMinutesController.text) <=
+                                    0) {
+                              return "1-59";
+                            }
+                            return null;
+                          },
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.whiteTextColor,
+                          ),
+                          keyboardType: TextInputType.number,
+                          cursorColor: ThemeColors.primaryColor,
+                          decoration: InputDecoration(
+                            fillColor: ThemeColors.textFieldBgColor,
+                            filled: true,
+                            hintText: "Minutes",
+                            hintStyle: GoogleFonts.poppins(
+                              color: ThemeColors.textFieldHintColor,
+                              fontSize: FontSize.small,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            border: const OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(18)),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                   SizedBox(height: sizedBoxHight),
                   TextFormField(
@@ -391,10 +452,11 @@ class _GroupDronesState extends State<GroupDrones> {
       final drone = Drone(
         name: nameController.text.trim(),
         serial_number: serial_numberController.text,
-        flight_time: int.parse(flight_timeController.text),
+        flight_time: int.parse(flight_timeHoursController.text) * 60 +
+            int.parse(flight_timeMinutesController.text),
         id: docDrone.id,
-        hours_till_maintenace: hoursUntillMaintnance(),
-        maintenance: int.parse(maintenanceController.text),
+        minutes_till_maintenace: minutesLeftToMaintenance(),
+        maintenance: int.parse(maintenanceController.text) * 60,
         date_added: DateTime.now(),
         date_bought: DateTime.parse(date_boughtController.text),
       );
@@ -405,27 +467,21 @@ class _GroupDronesState extends State<GroupDrones> {
           'Drone has been added to the group', Colors.blue);
       Navigator.pop(context);
       Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => DroneDetails(
-                      groupID: widget.group.id,
-                      drone: drone,
-                    )),
-          );
+        context,
+        MaterialPageRoute(
+            builder: (context) => DroneDetails(
+                  groupID: widget.group.id,
+                  drone: drone,
+                )),
+      );
     }
   }
 
 //find how many hours left till drone maintnance
-  int hoursUntillMaintnance() {
-    int flightTime = int.parse(flight_timeController.text);
-    int maintnanceCycle = int.parse(maintenanceController.text);
-    int hoursLeftToMaintnance;
-
-    if (flightTime == 0) {
-      return maintnanceCycle;
-    }
-    hoursLeftToMaintnance =
-        (maintnanceCycle - flightTime % maintnanceCycle) % 200;
-    return hoursLeftToMaintnance;
+  int minutesLeftToMaintenance() {
+    int flightTime = int.parse(flight_timeHoursController.text) * 60 +
+        int.parse(flight_timeMinutesController.text);
+    int maintnanceCycle = int.parse(maintenanceController.text) * 60;
+    return maintnanceCycle - (flightTime % maintnanceCycle);
   }
 }
