@@ -5,6 +5,7 @@ import 'package:dronebag/domain/battery_repository/battery_repository.dart';
 import 'package:dronebag/domain/battery_station_issue_repository/battery_station_issue_repository.dart';
 import 'package:dronebag/domain/battery_station_repository/src/models/models.dart';
 import 'package:flutter/gestures.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/widgest.dart';
 
@@ -47,6 +48,10 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
 
   @override
   Widget build(BuildContext context) {
+    bool unknownDate = false;
+    if (widget.batteryStation.date_bought.year.toString() == "1") {
+      unknownDate = true;
+    }
     final fetch = FirestoreFetch(
         groupID: widget.groupID, batteryStation: widget.batteryStation);
     final create = FirestoreCreate(
@@ -87,10 +92,19 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(38, 20, 38, 38),
-            child: Column(
-              children: [
+            child: Column(children: [
               Text(
                 'Ownership: ${widget.batteryStation.ownership}',
+                style: GoogleFonts.poppins(
+                  color: ThemeColors.textFieldHintColor,
+                  fontSize: FontSize.medium,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                unknownDate
+                    ? 'Bought on: unknown'
+                    : "Bought on: '${widget.batteryStation.date_bought.day}-${widget.batteryStation.date_bought.month}-${widget.batteryStation.date_bought.year}'",
                 style: GoogleFonts.poppins(
                   color: ThemeColors.textFieldHintColor,
                   fontSize: FontSize.medium,

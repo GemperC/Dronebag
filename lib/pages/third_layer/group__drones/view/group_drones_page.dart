@@ -100,7 +100,7 @@ class _GroupDronesState extends State<GroupDrones> {
 
 //build the tile of the drone
   Widget buildDroneTile(Drone drone) {
-    Color maintenanceTextColor = ThemeColors.textFieldHintColor;
+    Color maintenanceTextColor = ThemeColors.textFieldlabelColor;
     if (drone.minutes_till_maintenace <= 60) {
       maintenanceTextColor = Colors.red;
     }
@@ -160,7 +160,7 @@ class _GroupDronesState extends State<GroupDrones> {
                       child: Text(
                         'Airtime: ~${drone.flight_time~/60} hours',
                         style: GoogleFonts.poppins(
-                          color: ThemeColors.textFieldHintColor,
+                          color: ThemeColors.textFieldlabelColor,
                           fontSize: FontSize.medium,
                           fontWeight: FontWeight.w400,
                         ),
@@ -213,9 +213,9 @@ class _GroupDronesState extends State<GroupDrones> {
                     decoration: InputDecoration(
                       fillColor: ThemeColors.textFieldBgColor,
                       filled: true,
-                      hintText: "Drone Name",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
+                      labelText: "Drone Name",
+                      labelStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldlabelColor,
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
@@ -242,9 +242,9 @@ class _GroupDronesState extends State<GroupDrones> {
                     decoration: InputDecoration(
                       fillColor: ThemeColors.textFieldBgColor,
                       filled: true,
-                      hintText: "Serial number",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
+                      labelText: "Serial number",
+                      labelStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldlabelColor,
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
@@ -285,9 +285,9 @@ class _GroupDronesState extends State<GroupDrones> {
                           decoration: InputDecoration(
                             fillColor: ThemeColors.textFieldBgColor,
                             filled: true,
-                            hintText: "Hours",
-                            hintStyle: GoogleFonts.poppins(
-                              color: ThemeColors.textFieldHintColor,
+                            labelText: "Hours",
+                            labelStyle: GoogleFonts.poppins(
+                              color: ThemeColors.textFieldlabelColor,
                               fontSize: FontSize.small,
                               fontWeight: FontWeight.w400,
                             ),
@@ -313,7 +313,7 @@ class _GroupDronesState extends State<GroupDrones> {
                                     60 ||
                                 int.parse(flight_timeMinutesController.text) <=
                                     0) {
-                              return "1-59";
+                              return "0-59";
                             }
                             return null;
                           },
@@ -325,9 +325,9 @@ class _GroupDronesState extends State<GroupDrones> {
                           decoration: InputDecoration(
                             fillColor: ThemeColors.textFieldBgColor,
                             filled: true,
-                            hintText: "Minutes",
-                            hintStyle: GoogleFonts.poppins(
-                              color: ThemeColors.textFieldHintColor,
+                            labelText: "Minutes",
+                            labelStyle: GoogleFonts.poppins(
+                              color: ThemeColors.textFieldlabelColor,
                               fontSize: FontSize.small,
                               fontWeight: FontWeight.w400,
                             ),
@@ -358,9 +358,9 @@ class _GroupDronesState extends State<GroupDrones> {
                     decoration: InputDecoration(
                       fillColor: ThemeColors.textFieldBgColor,
                       filled: true,
-                      hintText: "Maintnenace cycle in hours",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
+                      labelText: "Maintnenace cycle in hours",
+                      labelStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldlabelColor,
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
@@ -382,8 +382,8 @@ class _GroupDronesState extends State<GroupDrones> {
                           lastDate: DateTime(2100));
                     }),
                     validator: (value) {
-                      if (nameController.text.isEmpty) {
-                        return "This field can't be empty";
+                      if (date_boughtController.text.isEmpty) {
+                        date_boughtController.text = '0001-01-01';
                       }
                       return null;
                     },
@@ -395,9 +395,9 @@ class _GroupDronesState extends State<GroupDrones> {
                     decoration: InputDecoration(
                       fillColor: ThemeColors.textFieldBgColor,
                       filled: true,
-                      hintText: "Date bought",
-                      hintStyle: GoogleFonts.poppins(
-                        color: ThemeColors.textFieldHintColor,
+                      labelText: "Date bought",
+                      labelStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldlabelColor,
                         fontSize: FontSize.small,
                         fontWeight: FontWeight.w400,
                       ),
@@ -405,6 +405,14 @@ class _GroupDronesState extends State<GroupDrones> {
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
+                    ),
+                  ),
+                  Text(
+                    "Leave blank if date is unknown",
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.greyTextColor,
+                      fontSize: FontSize.medium,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],

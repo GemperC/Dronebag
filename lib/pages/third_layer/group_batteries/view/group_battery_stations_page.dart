@@ -27,7 +27,7 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
   final TextEditingController serial_numberController = TextEditingController();
   final TextEditingController battery_pairsController = TextEditingController();
   final TextEditingController date_boughtController = TextEditingController();
- final TextEditingController ownershipController = TextEditingController();
+  final TextEditingController ownershipController = TextEditingController();
   final double sizedBoxHight = 16;
 
   @override
@@ -234,7 +234,6 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
                       ),
                     ),
                   ),
-                  
                   SizedBox(height: sizedBoxHight),
                   TextFormField(
                     controller: ownershipController,
@@ -264,7 +263,6 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
                       ),
                     ),
                   ),
-                  
                   SizedBox(height: sizedBoxHight),
                   DateTimeField(
                     format: DateFormat('yyyy-MM-dd'),
@@ -278,7 +276,7 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
                     }),
                     validator: (value) {
                       if (date_boughtController.text.isEmpty) {
-                        return "This field can't be empty";
+                        date_boughtController.text = '0001-01-01';
                       }
                       return null;
                     },
@@ -300,6 +298,15 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
                       ),
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    "Leave blank if date is unknown",
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.greyTextColor,
+                      fontSize: FontSize.medium,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
