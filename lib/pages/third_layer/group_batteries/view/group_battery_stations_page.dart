@@ -276,7 +276,7 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
                     }),
                     validator: (value) {
                       if (date_boughtController.text.isEmpty) {
-                        date_boughtController.text = '0001-01-01';
+                        date_boughtController.text = 'unknown';
                       }
                       return null;
                     },
@@ -346,7 +346,7 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
         id: docBatteryStation.id,
         ownership: ownershipController.text,
         battery_pairs: int.parse(battery_pairsController.text),
-        date_bought: DateTime.parse(date_boughtController.text),
+        date_bought: date_boughtController.text=="unknown" ? DateTime.parse("1999-02-10") :  DateTime.parse(date_boughtController.text),
       );
 
       final json = batteryStation.toJson();

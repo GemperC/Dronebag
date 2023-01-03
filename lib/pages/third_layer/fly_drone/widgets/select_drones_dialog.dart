@@ -25,7 +25,6 @@ class _DroneSelectionDialogState extends State<DroneSelectionDialog> {
 
   @override
   Widget build(BuildContext context) {
-    print(selectedDrones);
     return AlertDialog(
       scrollable: true,
       backgroundColor: ThemeColors.scaffoldBgColor,

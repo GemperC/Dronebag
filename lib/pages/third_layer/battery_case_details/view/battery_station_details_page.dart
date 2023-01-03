@@ -48,7 +48,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
   @override
   Widget build(BuildContext context) {
     bool unknownDate = false;
-    if (widget.batteryStation.date_bought.year.toString() == "1") {
+    if (widget.batteryStation.date_bought.year.toString() == "1999") {
       unknownDate = true;
     }
     final fetch = FirestoreFetch(
