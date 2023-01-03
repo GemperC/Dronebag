@@ -7,14 +7,14 @@ import 'package:dronebag/domain/drone_repository/drone_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_repository/src/models/models.dart';
 import 'package:dronebag/pages/third_layer/fly_drone/fly_drone.dart';
+import 'package:dronebag/pages/third_layer/fly_drone/widgets/select_drones_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 import '../widgets/widgets.dart';
 
 const List<String> list = <String>['Practice', 'Mission'];
-  List<Drone> droneList = <Drone>[];
-
+List<Drone> droneList = <Drone>[];
 
 class StartFlightPage extends StatefulWidget {
   final Group group;
@@ -38,10 +38,8 @@ class _StartFlightPageState extends State<StartFlightPage> {
   final user = FirebaseAuth.instance.currentUser!;
   late UserData loggedUser;
   late DateTime airTimeStart;
-  String textForDroneList = "You haven't picked any drones yet";
   String dropdownValue = list.first;
   List<Drone> selectedDrones = <Drone>[];
-
 
   @override
   Widget build(BuildContext context) {
@@ -104,8 +102,21 @@ class _StartFlightPageState extends State<StartFlightPage> {
                         width: 30,
                         child: FittedBox(
                             child: FloatingActionButton.small(
-                          onPressed: () {
-                            pickDroneDialog();
+                          onPressed: () async {
+                            final drones = await showDialog<List<Drone>>(
+                              context: context,
+                              builder: (context) {
+                                return DroneSelectionDialog(
+                                  group: widget.group,
+                                );
+                              },
+                            );
+                            if (drones != null) {
+                              setState(() {
+                                selectedDrones = drones;
+                              });
+                            }
+                            // pickDroneDialog();
                           },
                           child: const ImageIcon(
                               AssetImage('assets/icons/plus.png')),
@@ -192,13 +203,24 @@ class _StartFlightPageState extends State<StartFlightPage> {
                   ),
                 ),
                 const SizedBox(height: 15),
-                Text(textForDroneList,
+                const SizedBox(height: 4),
+                selectedDrones.length > 0
+                    ? Text(
+                        "You picked the drones:",
                         style: GoogleFonts.poppins(
                           color: ThemeColors.whiteTextColor,
                           fontSize: FontSize.medium,
                           fontWeight: FontWeight.w600,
-                        ),),
-                const SizedBox(height: 4),
+                        ),
+                      )
+                    : Text(
+                        "You haven't picked any drones yet",
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -223,35 +245,42 @@ class _StartFlightPageState extends State<StartFlightPage> {
                     width: 160,
                     child: FittedBox(
                       child: FloatingActionButton(
+                        backgroundColor: selectedDrones.length > 0 ? Colors.blue : Color.fromARGB(255, 83, 83, 83),
                         onPressed: () {
-                          airTimeStart = DateTime.now();
-                          // sendNotificationToAdmins(widget.group.name,
-                          //     loggedUser.fullName, droneList);
-                          PostCall notification = PostCall(
-                            topic: widget.group.id,
-                            purpose: dropdownValue,
-                            pilot: loggedUser.fullName,
-                            drones: selectedDrones,
-                          );
-                          notification.makeCallStartFlight();
+                          if (selectedDrones.length > 0) {
+                            airTimeStart = DateTime.now();
+                            // sendNotificationToAdmins(widget.group.name,
+                            //     loggedUser.fullName, droneList);
+                            PostCall notification = PostCall(
+                              topic: widget.group.id,
+                              purpose: dropdownValue,
+                              pilot: loggedUser.fullName,
+                              drones: selectedDrones,
+                            );
+                            notification.makeCallStartFlight();
 
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => StopFlightPage(
-                                  airTimeStart: airTimeStart,
-                                  group: widget.group,
-                                  droneList: selectedDrones,
-                                  pilot: loggedUser,
-                                  flightPurpose: dropdownValue),
-                            ),
-                          );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => StopFlightPage(
+                                    airTimeStart: airTimeStart,
+                                    group: widget.group,
+                                    droneList: selectedDrones,
+                                    pilot: loggedUser,
+                                    flightPurpose: dropdownValue),
+                              ),
+                            );
+                          }
+                          Utils.showSnackBarWithColor(
+                              "You haven't picked drones to flight",
+                              Colors.red);
                         },
                         child: Text(
                           'Start Flight',
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
-                            color: ThemeColors.whiteTextColor,
+                            
+                            color:selectedDrones.length > 0 ? ThemeColors.whiteTextColor : Color.fromARGB(255, 170, 170, 170),
                             fontSize: 6,
                             fontWeight: FontWeight.w700,
                           ),
