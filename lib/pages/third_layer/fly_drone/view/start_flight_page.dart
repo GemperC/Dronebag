@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, depend_on_referenced_packages, sized_box_for_whitespace, avoid_unnecessary_containers
+// ignore_for_file: non_constant_identifier_names, depend_on_referenced_packages, sized_box_for_whitespace, avoid_unnecessary_containers, prefer_is_empty
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
@@ -245,7 +245,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                     width: 160,
                     child: FittedBox(
                       child: FloatingActionButton(
-                        backgroundColor: selectedDrones.length > 0 ? Colors.blue : Color.fromARGB(255, 83, 83, 83),
+                        backgroundColor: selectedDrones.length > 0 ? Colors.blue : const Color.fromARGB(255, 83, 83, 83),
                         onPressed: () {
                           if (selectedDrones.length > 0) {
                             airTimeStart = DateTime.now();
@@ -280,7 +280,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
                             
-                            color:selectedDrones.length > 0 ? ThemeColors.whiteTextColor : Color.fromARGB(255, 170, 170, 170),
+                            color:selectedDrones.length > 0 ? ThemeColors.whiteTextColor : const Color.fromARGB(255, 170, 170, 170),
                             fontSize: 6,
                             fontWeight: FontWeight.w700,
                           ),

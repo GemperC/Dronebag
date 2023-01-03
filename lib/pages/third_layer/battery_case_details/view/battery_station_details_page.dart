@@ -5,7 +5,6 @@ import 'package:dronebag/domain/battery_repository/battery_repository.dart';
 import 'package:dronebag/domain/battery_station_issue_repository/battery_station_issue_repository.dart';
 import 'package:dronebag/domain/battery_station_repository/src/models/models.dart';
 import 'package:flutter/gestures.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/widgest.dart';
 
