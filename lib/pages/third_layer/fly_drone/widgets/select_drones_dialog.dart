@@ -8,7 +8,6 @@ import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class DroneSelectionDialog extends StatefulWidget {
   final Group group;
 
@@ -23,11 +22,13 @@ class DroneSelectionDialog extends StatefulWidget {
 
 class _DroneSelectionDialogState extends State<DroneSelectionDialog> {
   List<Drone> selectedDrones = [];
+
   @override
   Widget build(BuildContext context) {
+    print(selectedDrones);
     return AlertDialog(
-      backgroundColor: ThemeColors.scaffoldBgColor,
       scrollable: true,
+      backgroundColor: ThemeColors.scaffoldBgColor,
       title: Text(
         "Select Drones to fly",
         style: GoogleFonts.poppins(
@@ -36,118 +37,92 @@ class _DroneSelectionDialogState extends State<DroneSelectionDialog> {
           fontWeight: FontWeight.w600,
         ),
       ),
-      content: StatefulBuilder(
-        builder: ((context, setState) {
-          return Container(
-            height: 500,
-            width: 300,
-            child: StreamBuilder<List<Drone>>(
-              stream: fetchGroupDrones(),
-              builder: ((context, snapshot) {
-                if (snapshot.hasData) {
-                  final drones = snapshot.data!;
-                  return ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: drones.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      // return GestureDetector(
-                      //   onTap: () {
-                      //     setState(() {
-                      //       // Toggle selected state of drone
-                      //       if (selectedDrones.contains(drones[index])) {
-                      //         selectedDrones.remove(drones[index]);
-                      //         print('removed drone');
-                      //       } else {
-                      //         selectedDrones.add(drones[index]);
-                      //         print('added drone');
-                      //       }
-                      //     });
-                      //   },
-                      //   child: Container(
-                      //     decoration: BoxDecoration(
-                      //         color: selectedDrones.contains(drones[index])
-                      //             ? Colors.blue
-                      //             : const Color.fromARGB(255, 65, 61, 82),
-                      //         borderRadius: const BorderRadius.all(
-                      //             Radius.circular(12))),
-                      return ListTile(
-                        // go to the drone page
-                        onTap: () {
-                          setState(() {
-                            // Toggle selected state of drone
-                            if (selectedDrones.contains(drones[index])) {
-                              selectedDrones.remove(drones[index]);
-                            } else {
-                              selectedDrones.add(drones[index]);
-                            }
-                          });
-                        },
-                        // build the tile info and design
-                        title: Center(
+      content: Container(
+        height: double.maxFinite,
+        width: 300,
+        child: StreamBuilder<List<Drone>>(
+          stream: fetchGroupDrones(),
+          builder: ((context, snapshot) {
+            if (snapshot.hasData) {
+              final drones = snapshot.data!;
+              return ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: drones.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    // go to the drone page
+                    onTap: () {
+                      setState(() {
+                        // Toggle selected state of drone
+                        if (selectedDrones.contains(drones[index])) {
+                          selectedDrones.remove(drones[index]);
+                        } else {
+                          selectedDrones.add(drones[index]);
+                        }
+
+                      });
+                    },
+                    // build the tile info and design
+                    title: Center(
+                      child: Padding(
+                        // padding betwwent he cards
+                        padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: selectedDrones.contains(drones[index])
+                                  ? Colors.blue
+                                  : const Color.fromARGB(255, 65, 61, 82),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(12))),
                           child: Padding(
-                            // padding betwwent he cards
-                            padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: selectedDrones
-                                          .contains(drones[index])
-                                      ? Colors.blue
-                                      : const Color.fromARGB(255, 65, 61, 82),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(12))),
-                              child: Padding(
-                                // padding of the text in the cards
-                                padding:
-                                    const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                                child: Column(
-                                  children: [
-                                    Align(
-                                      //alingemt of the titel
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        drones[index].name,
-                                        style: GoogleFonts.poppins(
-                                          color: ThemeColors.whiteTextColor,
-                                          fontSize: FontSize.small,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
+                            // padding of the text in the cards
+                            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            child: Column(
+                              children: [
+                                Align(
+                                  //alingemt of the titel
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    drones[index].name,
+                                    style: GoogleFonts.poppins(
+                                      color: ThemeColors.whiteTextColor,
+                                      fontSize: FontSize.small,
+                                      fontWeight: FontWeight.w400,
                                     ),
-                                    Align(
-                                      //alingemt of the titel
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        'Serial Number: ${drones[index].serial_number}',
-                                        style: GoogleFonts.poppins(
-                                          color:
-                                              ThemeColors.textFieldHintColor,
-                                          fontSize: FontSize.small,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
+                                Align(
+                                  //alingemt of the titel
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    'Serial Number: ${drones[index].serial_number}',
+                                    style: GoogleFonts.poppins(
+                                      color: ThemeColors.textFieldHintColor,
+                                      fontSize: FontSize.small,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   );
-                } else if (snapshot.hasError) {
-                  return SingleChildScrollView(
-                    child: Text('Something went wrong! \n\n$snapshot',
-                        style: const TextStyle(color: Colors.white)),
-                  );
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              }),
-            ),
-          );
-        }),
+                },
+              );
+            } else if (snapshot.hasError) {
+              return SingleChildScrollView(
+                child: Text('Something went wrong! \n\n$snapshot',
+                    style: const TextStyle(color: Colors.white)),
+              );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          }),
+        ),
       ),
       actions: [
         TextButton(

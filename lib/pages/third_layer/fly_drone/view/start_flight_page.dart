@@ -272,7 +272,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                             );
                           }
                           Utils.showSnackBarWithColor(
-                              "You haven't picked drones to flight",
+                              "You haven't picked drones to fly",
                               Colors.red);
                         },
                         child: Text(
