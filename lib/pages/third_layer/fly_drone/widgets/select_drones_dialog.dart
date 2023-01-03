@@ -55,11 +55,11 @@ class _DroneSelectionDialogState extends State<DroneSelectionDialog> {
                       setState(() {
                         // Toggle selected state of drone
                         if (selectedDrones.contains(drones[index])) {
+                          print('drone is in the list');
                           selectedDrones.remove(drones[index]);
                         } else {
                           selectedDrones.add(drones[index]);
                         }
-
                       });
                     },
                     // build the tile info and design

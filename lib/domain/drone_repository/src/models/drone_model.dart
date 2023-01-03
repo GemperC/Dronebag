@@ -44,4 +44,15 @@ class Drone {
         minutes_till_maintenace: json['minutes_till_maintenace'] ,
         flight_time: json['flight_time'] ,
       );
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other.runtimeType != runtimeType) return false;
+    final Drone otherDrone = other as Drone;
+    return otherDrone.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 }
