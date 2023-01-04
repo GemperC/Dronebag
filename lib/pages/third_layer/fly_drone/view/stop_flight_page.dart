@@ -42,8 +42,12 @@ class _StopFlightPageState extends State<StopFlightPage> {
   late Duration flightDuration;
   String notificationMsg = 'Waiting for notifications';
 
-  
   @override
+  void initState() {
+    print(widget.droneList);
+    super.initState();
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -110,15 +114,15 @@ class _StopFlightPageState extends State<StopFlightPage> {
                   const SizedBox(width: 12),
                   ListView.builder(
                     shrinkWrap: true,
-                    itemCount: droneList.length,
+                    itemCount: widget.droneList.length,
                     itemBuilder: ((context, index) {
                       return Center(
                         child: Text(
-                          '${droneList[index].name}  |  Serial: ${droneList[index].serial_number}',
+                          '${widget.droneList[index].name}  |  Serial: ${widget.droneList[index].serial_number}',
                           style: GoogleFonts.poppins(
                             color: ThemeColors.greyTextColor,
                             fontSize: FontSize.medium,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       );
@@ -243,5 +247,4 @@ class _StopFlightPageState extends State<StopFlightPage> {
     }
     return null;
   }
-
 }

@@ -245,7 +245,9 @@ class _StartFlightPageState extends State<StartFlightPage> {
                     width: 160,
                     child: FittedBox(
                       child: FloatingActionButton(
-                        backgroundColor: selectedDrones.length > 0 ? Colors.blue : const Color.fromARGB(255, 83, 83, 83),
+                        backgroundColor: selectedDrones.length > 0
+                            ? Colors.blue
+                            : const Color.fromARGB(255, 83, 83, 83),
                         onPressed: () {
                           if (selectedDrones.length > 0) {
                             airTimeStart = DateTime.now();
@@ -270,17 +272,20 @@ class _StartFlightPageState extends State<StartFlightPage> {
                                     flightPurpose: dropdownValue),
                               ),
                             );
+                            Utils.showSnackBarWithColor(
+                                "You have started a flight", Colors.blue);
+                          } else {
+                            Utils.showSnackBarWithColor(
+                                "You haven't picked drones to fly", Colors.red);
                           }
-                          Utils.showSnackBarWithColor(
-                              "You haven't picked drones to fly",
-                              Colors.red);
                         },
                         child: Text(
                           'Start Flight',
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
-                            
-                            color:selectedDrones.length > 0 ? ThemeColors.whiteTextColor : const Color.fromARGB(255, 170, 170, 170),
+                            color: selectedDrones.length > 0
+                                ? ThemeColors.whiteTextColor
+                                : const Color.fromARGB(255, 170, 170, 170),
                             fontSize: 6,
                             fontWeight: FontWeight.w700,
                           ),
