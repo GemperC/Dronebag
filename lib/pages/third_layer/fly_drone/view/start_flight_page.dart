@@ -248,8 +248,48 @@ class _StartFlightPageState extends State<StartFlightPage> {
                         backgroundColor: selectedDrones.length > 0
                             ? Colors.blue
                             : const Color.fromARGB(255, 83, 83, 83),
-                        onPressed: () {
-                          if (selectedDrones.length > 0) {
+                        onPressed: () async {
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                backgroundColor: ThemeColors.scaffoldBgColor,
+                                title: Center(
+                                  child: Text(
+                                    "!Beofre you Fly!",
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.red,
+                                      fontSize: FontSize.large,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                content: Center(
+                                  child: Text(
+                                    "Check whether frame arm sleeves are tightened securely",
+                                    style: GoogleFonts.poppins(
+                                      color: ThemeColors.whiteTextColor,
+                                      fontSize: FontSize.medium,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                actions: [
+                                  Center(
+                                      child: TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(true);
+                                          },
+                                          child: const Text(
+                                            "I'v Checked",
+                                            style:
+                                                TextStyle(color: Colors.blue),
+                                          )))
+                                ],
+                              );
+                            },
+                          );
+                          if (selectedDrones.length > 0 && confirm!) {
                             airTimeStart = DateTime.now();
                             // sendNotificationToAdmins(widget.group.name,
                             //     loggedUser.fullName, droneList);
