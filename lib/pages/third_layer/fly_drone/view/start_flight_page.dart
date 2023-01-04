@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, depend_on_referenced_packages, sized_box_for_whitespace, avoid_unnecessary_containers, prefer_is_empty
+// ignore_for_file: non_constant_identifier_names, depend_on_referenced_packages, sized_box_for_whitespace, avoid_unnecessary_containers, prefer_is_empty, use_build_context_synchronously
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';

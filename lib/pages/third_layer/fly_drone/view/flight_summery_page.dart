@@ -325,29 +325,6 @@ class _FlightSummeryState extends State<FlightSummery> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  // SizedBox(height: sizedBoxHight),
-                  // TextFormField(
-                  //   controller: maintenanceController,
-                  //   style: GoogleFonts.poppins(
-                  //     color: ThemeColors.whiteTextColor,
-                  //   ),
-                  //   keyboardType: TextInputType.number,
-                  //   cursorColor: ThemeColors.primaryColor,
-                  //   decoration: InputDecoration(
-                  //     fillColor: ThemeColors.textFieldBgColor,
-                  //     filled: true,
-                  //     hintText: "Maintnenace cycle in hours",
-                  //     hintStyle: GoogleFonts.poppins(
-                  //       color: ThemeColors.textFieldHintColor,
-                  //       fontSize: FontSize.small,
-                  //       fontWeight: FontWeight.w400,
-                  //     ),
-                  //     border: OutlineInputBorder(
-                  //       borderSide: BorderSide.none,
-                  //       borderRadius: BorderRadius.all(Radius.circular(18)),
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               )),
         ),
@@ -361,10 +338,11 @@ class _FlightSummeryState extends State<FlightSummery> {
               onPressed: () {
                 int totalFlightTime =
                     int.parse(flight_timeHoursController.text) * 60 +
-                    int.parse(flight_timeMinutesController.text) + drone.flight_time;
+                        int.parse(flight_timeMinutesController.text);
+                int newFlightTime = totalFlightTime + drone.flight_time;
 
-                int newMinutes_till_maintenace = drone.maintenance -
-                    totalFlightTime;
+                int newMinutes_till_maintenace =
+                    drone.minutes_till_maintenace - totalFlightTime;
 
                 FirebaseFirestore.instance
                     .collection('groups')
@@ -372,7 +350,7 @@ class _FlightSummeryState extends State<FlightSummery> {
                     .collection('drones')
                     .doc(drone.id)
                     .update({
-                  "flight_time": totalFlightTime,
+                  "flight_time": newFlightTime,
                   "minutes_till_maintenace": newMinutes_till_maintenace
                 });
 
