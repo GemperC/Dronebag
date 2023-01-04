@@ -119,42 +119,46 @@ class _EditBatteryStationDialogState extends State<EditBatteryStationDialog> {
       actions: [
         TextButton(
             onPressed: () async {
-              int count = 0;
-              Navigator.popUntil(context, (route) {
-                return count++ == 2;
-              });
-              Utils.showSnackBarWithColor(
-                  'Station is being deleted, please wait...', Colors.red);
-              var batteryStationDoc = FirebaseFirestore.instance
-                  .collection('groups')
-                  .doc(widget.groupID)
-                  .collection('battery_stations')
-                  .doc(widget.batteryStation.id);
+              showDialog(
+                  context: context,
+                  builder: (context) => confirmDeleteDialog());
+              // int count = 0;
+              // Navigator.popUntil(context, (route) {
+              //   return count++ == 2;
+              // });
+              // Utils.showSnackBarWithColor(
+              //     'Station is being deleted, please wait...', Colors.red);
+              // var batteryStationDoc = FirebaseFirestore.instance
+              //     .collection('groups')
+              //     .doc(widget.groupID)
+              //     .collection('battery_stations')
+              //     .doc(widget.batteryStation.id);
 
-              var batteriesCollectionSnap =
-                  await batteryStationDoc.collection('batteries').get();
-              for (var batteryDoc in batteriesCollectionSnap.docs) {
-                var batteriesIssueCollectionSnap = await batteryDoc.reference
-                    .collection('battery_issues')
-                    .get();
-                for (var batteryIssueDoc in batteriesIssueCollectionSnap.docs) {
-                  await batteryIssueDoc.reference.delete();
-                }
-                await batteryDoc.reference.delete();
-              }
+              // var batteriesCollectionSnap =
+              //     await batteryStationDoc.collection('batteries').get();
+              // for (var batteryDoc in batteriesCollectionSnap.docs) {
+              //   var batteriesIssueCollectionSnap = await batteryDoc.reference
+              //       .collection('battery_issues')
+              //       .get();
+              //   for (var batteryIssueDoc in batteriesIssueCollectionSnap.docs) {
+              //     await batteryIssueDoc.reference.delete();
+              //   }
+              //   await batteryDoc.reference.delete();
+              // }
 
-              var IssueCollectionSnap =
-                  await batteryStationDoc.collection('issues').get();
-              for (var issueDoc in IssueCollectionSnap.docs) {
-                await issueDoc.reference.delete();
-              }
-              batteryStationDoc.delete();
+              // var IssueCollectionSnap =
+              //     await batteryStationDoc.collection('issues').get();
+              // for (var issueDoc in IssueCollectionSnap.docs) {
+              //   await issueDoc.reference.delete();
+              // }
+              // batteryStationDoc.delete();
 
-              Utils.showSnackBarWithColor(
-                  'Station has been deleted', Colors.blue);
+              // Utils.showSnackBarWithColor(
+              //     'Station has been deleted', Colors.blue);
             },
-            child: const Text(
-              'Delete Station',
+            child: 
+            const Text(
+              'Delete',
               style: TextStyle(color: Colors.red),
             )),
         TextButton(
@@ -199,5 +203,73 @@ class _EditBatteryStationDialogState extends State<EditBatteryStationDialog> {
         ),
       ],
     );
+  }
+
+  Widget confirmDeleteDialog() {
+    return AlertDialog(
+        backgroundColor: ThemeColors.scaffoldBgColor,
+        title: Center(
+          child: Text(
+            "Delete this station?",
+            style: GoogleFonts.poppins(
+              color: ThemeColors.whiteTextColor,
+              fontSize: FontSize.large,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'Cancle',
+                style: TextStyle(color: Colors.blue),
+              )),
+                  TextButton(
+            onPressed: () async {
+              showDialog(
+                  context: context,
+                  builder: (context) => confirmDeleteDialog());
+              int count = 0;
+              Navigator.popUntil(context, (route) {
+                return count++ == 4;
+              });
+              Utils.showSnackBarWithColor(
+                  'Station is being deleted, please wait...', Colors.red);
+              var batteryStationDoc = FirebaseFirestore.instance
+                  .collection('groups')
+                  .doc(widget.groupID)
+                  .collection('battery_stations')
+                  .doc(widget.batteryStation.id);
+
+              var batteriesCollectionSnap =
+                  await batteryStationDoc.collection('batteries').get();
+              for (var batteryDoc in batteriesCollectionSnap.docs) {
+                var batteriesIssueCollectionSnap = await batteryDoc.reference
+                    .collection('battery_issues')
+                    .get();
+                for (var batteryIssueDoc in batteriesIssueCollectionSnap.docs) {
+                  await batteryIssueDoc.reference.delete();
+                }
+                await batteryDoc.reference.delete();
+              }
+
+              var IssueCollectionSnap =
+                  await batteryStationDoc.collection('issues').get();
+              for (var issueDoc in IssueCollectionSnap.docs) {
+                await issueDoc.reference.delete();
+              }
+              batteryStationDoc.delete();
+
+              Utils.showSnackBarWithColor(
+                  'Station has been deleted', Colors.blue);
+            },
+            child: const Text(
+              'Delete Station',
+              style: TextStyle(color: Colors.red),
+            )),
+        ]);
   }
 }
