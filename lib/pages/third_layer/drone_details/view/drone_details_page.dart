@@ -447,7 +447,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                             }
                             if (int.parse(flight_timeMinutesController.text) >=
                                     60 ||
-                                int.parse(flight_timeMinutesController.text) <=
+                                int.parse(flight_timeMinutesController.text) <
                                     0) {
                               return "1-59";
                             }
