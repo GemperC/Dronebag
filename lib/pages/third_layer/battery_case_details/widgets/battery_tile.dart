@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, prefer_const_constructors
 
 import 'package:dronebag/domain/battery_issue_repository/battery_issue_repository.dart';
 import 'package:dronebag/domain/battery_repository/battery_repository.dart';
@@ -39,7 +39,9 @@ class _BatteryTileState extends State<BatteryTile> {
     final fetch = FirestoreFetch(
         groupID: widget.groupID, batteryStation: widget.batteryStation);
     Color batteryColor = Colors.green;
-    if (widget.battery.cycle >= 100 && widget.battery.cycle < 150) {
+    if (widget.battery.cycle >= 50 && widget.battery.cycle < 100) {
+      batteryColor =  Color.fromARGB(255, 0, 84, 3);
+    } else if (widget.battery.cycle >= 100 && widget.battery.cycle < 150) {
       batteryColor = Colors.orange;
     } else if (widget.battery.cycle >= 150) {
       batteryColor = Colors.red;
@@ -84,7 +86,9 @@ class _BatteryTileState extends State<BatteryTile> {
                           ),
                         ),
                         Text(
-                          batteryIssues.isEmpty ? "" : "Issues: ${batteryIssues.length.toString()}",
+                          batteryIssues.isEmpty
+                              ? ""
+                              : "Issues: ${batteryIssues.length.toString()}",
                           style: GoogleFonts.poppins(
                             color: Colors.black,
                             fontSize: FontSize.medium,

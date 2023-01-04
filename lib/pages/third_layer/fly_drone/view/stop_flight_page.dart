@@ -44,7 +44,6 @@ class _StopFlightPageState extends State<StopFlightPage> {
 
   @override
   void initState() {
-    print(widget.droneList);
     super.initState();
   }
 
@@ -93,9 +92,10 @@ class _StopFlightPageState extends State<StopFlightPage> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 7),
                       child: Text(
-                        notificationMsg, //"below are the flight details",
+                        textAlign: TextAlign.center,
+                        "Do not close the app! \nYou can keep the app open in the background", //"below are the flight details",
                         style: GoogleFonts.poppins(
-                          color: ThemeColors.greyTextColor,
+                          color: Colors.red,
                           fontSize: FontSize.medium,
                           fontWeight: FontWeight.w600,
                         ),
@@ -176,7 +176,7 @@ class _StopFlightPageState extends State<StopFlightPage> {
                       ]),
                     ),
                   ),
-                  const SizedBox(height: 150),
+                  const SizedBox(height: 120),
                   Center(
                     child: SizedBox(
                       height: 160,
@@ -187,13 +187,13 @@ class _StopFlightPageState extends State<StopFlightPage> {
                           onPressed: () {
                             flightDuration =
                                 DateTime.now().difference(widget.airTimeStart);
-                            List<Drone> tempDroneList = List.from(droneList);
-                            droneList.clear();
+                            // List<Drone> tempDroneList = List.from(droneList);
+                            // droneList.clear();
                             PostCall notification = PostCall(
                                 topic: widget.group.id,
                                 purpose: widget.flightPurpose,
                                 pilot: widget.pilot.fullName,
-                                drones: tempDroneList);
+                                drones: widget.droneList);
                             notification.makeCallEndFlight();
 
                             Navigator.pushReplacement(
@@ -201,10 +201,10 @@ class _StopFlightPageState extends State<StopFlightPage> {
                               MaterialPageRoute(
                                 builder: (context) => FlightSummery(
                                   group: widget.group,
-                                  droneList: tempDroneList,
+                                  droneList: widget.droneList,
                                   pilot: widget.pilot,
                                   flightPurpose: widget.flightPurpose,
-                                  flightDuration: flightDuration,
+                                  flightDuration: flightDuration.inMinutes,
                                 ),
                               ),
                             );
