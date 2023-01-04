@@ -77,13 +77,13 @@ class _GroupSettingsState extends State<GroupSettings> {
                                     .doc(userSettings.id)
                                     .update({'notifications': value});
                                 if (value!) {
-                                  // print('sucsribed to ${widget.group.name}');
+                                  // print('${loggedUser.email} sucsribed to ${widget.group.name}');
 
                                   _firebaseMessaging
                                       .subscribeToTopic(widget.group.id);
                                 } else if (!value) {
-                                  // print(
-                                  //     'unsucsribed from ${widget.group.name}');
+                                  // print( 
+                                  //     '${loggedUser.email} unsucsribed from ${widget.group.name}');
 
                                   _firebaseMessaging
                                       .unsubscribeFromTopic(widget.group.id);
@@ -145,27 +145,23 @@ class _GroupSettingsState extends State<GroupSettings> {
                   );
                 } else if (snapshot.hasError) {
                   return Scaffold(
-                    body: Container(
-                      child: Text(
-                        snapshot.error.toString(),
-                        style: GoogleFonts.poppins(
-                          color: ThemeColors.whiteTextColor,
-                          fontSize: FontSize.medium,
-                          fontWeight: FontWeight.w500,
-                        ),
+                    body: Text(
+                      snapshot.error.toString(),
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.whiteTextColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   );
                 }else {
                   return Scaffold(
-                    body: Container(
-                      child: Text(
-                        snapshot.error.toString(),
-                        style: GoogleFonts.poppins(
-                          color: ThemeColors.whiteTextColor,
-                          fontSize: FontSize.xxLarge,
-                          fontWeight: FontWeight.w600,
-                        ),
+                    body: Text(
+                      snapshot.error.toString(),
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.whiteTextColor,
+                        fontSize: FontSize.xxLarge,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   );

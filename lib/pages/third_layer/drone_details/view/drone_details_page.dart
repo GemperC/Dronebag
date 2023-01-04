@@ -278,7 +278,6 @@ class _DroneDetailsState extends State<DroneDetails> {
 
   Widget richText_listingDroneDetailsDates(
       String field, DateTime droneDetailDate) {
-    print(droneDetailDate.year);
     return RichText(
       text: TextSpan(
         children: <TextSpan>[

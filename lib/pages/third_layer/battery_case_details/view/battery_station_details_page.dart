@@ -47,10 +47,10 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
 
   @override
   Widget build(BuildContext context) {
-    bool unknownDate = false;
-    if (widget.batteryStation.date_bought.year.toString() == "1999") {
-      unknownDate = true;
-    }
+    // bool unknownDate = false;
+    // if (widget.batteryStation.date_bought.year.toString() == "1999") {
+    //   unknownDate = true;
+    // }
     final fetch = FirestoreFetch(
         groupID: widget.groupID, batteryStation: widget.batteryStation);
     final create = FirestoreCreate(
@@ -101,7 +101,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                 ),
               ),
               Text(
-                unknownDate
+                widget.batteryStation.date_bought.year.toString() == "1999"
                     ? 'Bought on: unknown'
                     : "Bought on: '${widget.batteryStation.date_bought.day}-${widget.batteryStation.date_bought.month}-${widget.batteryStation.date_bought.year}'",
                 style: GoogleFonts.poppins(
