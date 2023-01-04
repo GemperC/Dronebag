@@ -383,7 +383,7 @@ class _GroupDronesState extends State<GroupDrones> {
                     }),
                     validator: (value) {
                       if (date_boughtController.text.isEmpty) {
-                        date_boughtController.text = '0001-01-01';
+                        date_boughtController.text = 'unknown';
                       }
                       return null;
                     },
@@ -454,7 +454,7 @@ class _GroupDronesState extends State<GroupDrones> {
         minutes_till_maintenace: minutesLeftToMaintenance(),
         maintenance: int.parse(maintenanceController.text) * 60,
         date_added: DateTime.now(),
-        date_bought: DateTime.parse(date_boughtController.text),
+        date_bought: date_boughtController.text=="unknown" ? DateTime.parse("1999-02-10") :  DateTime.parse(date_boughtController.text),
       );
 
       final json = drone.toJson();

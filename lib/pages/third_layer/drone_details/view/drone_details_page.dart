@@ -45,10 +45,6 @@ class _DroneDetailsState extends State<DroneDetails> {
 
   @override
   Widget build(BuildContext context) {
-    bool unknownDate = false;
-    if (widget.drone.date_bought.year.toString() == "1") {
-      unknownDate = true;
-    }
     return Scaffold(
         appBar: AppBar(
           backgroundColor: ThemeColors.scaffoldBgColor,
@@ -96,30 +92,11 @@ class _DroneDetailsState extends State<DroneDetails> {
                           const SizedBox(height: 12),
                           richText_listingDroneDetailsDates(
                               'Date Added', drone.date_added),
+                              
                           const SizedBox(height: 12),
-                          RichText(
-                            text: TextSpan(
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: "Date Bought:    ",
-                                  style: GoogleFonts.poppins(
-                                    color: ThemeColors.whiteTextColor,
-                                    fontSize: FontSize.xMedium,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text:
-                                  unknownDate? "unknown" : '${widget.drone.date_bought.day}-${widget.drone.date_bought.month}-${widget.drone.date_bought.year}',
-                                  style: GoogleFonts.poppins(
-                                    color: ThemeColors.whiteTextColor,
-                                    fontSize: FontSize.xMedium,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          richText_listingDroneDetailsDates(
+                              'Date Bought', drone.date_bought),
+                          
                           const SizedBox(height: 12),
                           richText_listingDroneDetails('Flight Time',
                               '${drone.flight_time ~/ 60} hours and ${drone.flight_time % 60} minutes'),
@@ -301,6 +278,7 @@ class _DroneDetailsState extends State<DroneDetails> {
 
   Widget richText_listingDroneDetailsDates(
       String field, DateTime droneDetailDate) {
+    print(droneDetailDate.year);
     return RichText(
       text: TextSpan(
         children: <TextSpan>[
@@ -313,8 +291,9 @@ class _DroneDetailsState extends State<DroneDetails> {
             ),
           ),
           TextSpan(
-            text:
-                '${droneDetailDate.day}-${droneDetailDate.month}-${droneDetailDate.year}',
+            text: droneDetailDate.year == 1999
+                ? "unknown"
+                : '${droneDetailDate.day}-${droneDetailDate.month}-${droneDetailDate.year}',
             style: GoogleFonts.poppins(
               color: ThemeColors.whiteTextColor,
               fontSize: FontSize.xMedium,
@@ -536,42 +515,80 @@ class _DroneDetailsState extends State<DroneDetails> {
         actions: [
           TextButton(
               onPressed: () async {
-                int count = 0;
-                Navigator.popUntil(context, (route) {
-                  return count++ == 2;
-                });
-                Utils.showSnackBarWithColor(
-                    'Drone is being deleted, please wait...', Colors.red);
-                var droneDoc = FirebaseFirestore.instance
-                    .collection('groups')
-                    .doc(widget.groupID)
-                    .collection('drones')
-                    .doc(widget.drone.id);
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    backgroundColor: ThemeColors.scaffoldBgColor,
+                    title: Center(
+                      child: Text(
+                        "Delete this drone?",
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                          fontSize: FontSize.large,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            'Cancle',
+                            style: TextStyle(color: Colors.blue),
+                          )),
+                      TextButton(
+                          onPressed: () async {
+                            int count = 0;
+                            Navigator.popUntil(context, (route) {
+                              return count++ == 3;
+                            });
+                            Utils.showSnackBarWithColor(
+                                'Drone is being deleted, please wait...',
+                                Colors.red);
+                            var droneDoc = FirebaseFirestore.instance
+                                .collection('groups')
+                                .doc(widget.groupID)
+                                .collection('drones')
+                                .doc(widget.drone.id);
 
-                var droneIssueCollectionSnap =
-                    await droneDoc.collection('issues').get();
-                for (var issueDoc in droneIssueCollectionSnap.docs) {
-                  await issueDoc.reference.delete();
-                }
-                var droneMaintenanceRecordsCollectionSnap =
-                    await droneDoc.collection('maintenance_history').get();
-                for (var recordDoc
-                    in droneMaintenanceRecordsCollectionSnap.docs) {
-                  await recordDoc.reference.delete();
-                }
-                var droneFlightRecordsCollectionSnap =
-                    await droneDoc.collection('flight_data').get();
-                for (var recordDoc in droneFlightRecordsCollectionSnap.docs) {
-                  await recordDoc.reference.delete();
-                }
-                droneDoc.delete();
+                            var droneIssueCollectionSnap =
+                                await droneDoc.collection('issues').get();
+                            for (var issueDoc
+                                in droneIssueCollectionSnap.docs) {
+                              await issueDoc.reference.delete();
+                            }
+                            var droneMaintenanceRecordsCollectionSnap =
+                                await droneDoc
+                                    .collection('maintenance_history')
+                                    .get();
+                            for (var recordDoc
+                                in droneMaintenanceRecordsCollectionSnap.docs) {
+                              await recordDoc.reference.delete();
+                            }
+                            var droneFlightRecordsCollectionSnap =
+                                await droneDoc.collection('flight_data').get();
+                            for (var recordDoc
+                                in droneFlightRecordsCollectionSnap.docs) {
+                              await recordDoc.reference.delete();
+                            }
+                            droneDoc.delete();
 
-                Utils.showSnackBarWithColor(
-                    'Drone ${widget.drone.name} has been deleted from the group',
-                    Colors.blue);
+                            Utils.showSnackBarWithColor(
+                                'Drone ${widget.drone.name} has been deleted from the group',
+                                Colors.blue);
+                          },
+                          child: const Text(
+                            'Delete Station',
+                            style: TextStyle(color: Colors.red),
+                          ))
+                    ],
+                  ),
+                );
               },
               child: const Text(
-                'Delete Drone',
+                'Delete',
                 style: TextStyle(color: Colors.red),
               )),
           TextButton(
