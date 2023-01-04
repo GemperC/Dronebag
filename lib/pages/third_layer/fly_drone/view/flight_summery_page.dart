@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
+import 'package:dronebag/domain/flight_data_repository/fight_data_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_repository/src/models/models.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
@@ -152,6 +153,30 @@ class _FlightSummeryState extends State<FlightSummery> {
                   Center(
                     child: MainButton2(
                       onPressed: () {
+                        widget.droneList.forEach((drone) async {
+                          final docFlightRecord = FirebaseFirestore.instance
+                              .collection('groups')
+                              .doc(widget.group.id)
+                              .collection('drones')
+                              .doc(drone.id)
+                              .collection('flight_data')
+                              .doc();
+                          final flightRecord = FlightData(
+                              id: docFlightRecord.id,
+                              droneName: drone.name,
+                              droneSerial: drone.serial_number,
+                              flight_purpose: widget.flightPurpose,
+                              flight_time: widget.flightDuration,
+                              date: DateTime.now(),
+                              pilot: widget.pilot.fullName);
+
+                          final json = flightRecord.toJson();
+                          await docFlightRecord.set(json);
+                          Utils.showSnackBarWithColor(
+                              'New flight record has been added to the drones',
+                              Colors.blue);
+                        });
+
                         Navigator.pop(context);
                       },
                       text: 'Done',

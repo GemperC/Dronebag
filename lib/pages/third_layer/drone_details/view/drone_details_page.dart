@@ -92,11 +92,9 @@ class _DroneDetailsState extends State<DroneDetails> {
                           const SizedBox(height: 12),
                           richText_listingDroneDetailsDates(
                               'Date Added', drone.date_added),
-                              
                           const SizedBox(height: 12),
                           richText_listingDroneDetailsDates(
                               'Date Bought', drone.date_bought),
-                          
                           const SizedBox(height: 12),
                           richText_listingDroneDetails('Flight Time',
                               '${drone.flight_time ~/ 60} hours and ${drone.flight_time % 60} minutes'),

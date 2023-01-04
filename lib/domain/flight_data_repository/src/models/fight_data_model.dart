@@ -4,15 +4,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FlightData {
   String id; //id of the flight data in the firestore database
-  String comment;
+  String droneName;
+  String droneSerial;
   String flight_purpose;
   int flight_time; // hours of active flight in the flight
   DateTime date;
   String pilot;
 
   FlightData({
-    this.id = '',
-    this.comment= '',
+    required this.id,
+    required this.droneName,
+    required this.droneSerial,
     required this.flight_purpose,
     required this.flight_time,
     required this.date,
@@ -21,7 +23,8 @@ class FlightData {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'comment': comment,
+        'droneName': droneName,
+        'droneSerial': droneSerial,
         'flight_purpose': flight_purpose,
         'flight_time': flight_time,
         'date': date,
@@ -30,7 +33,8 @@ class FlightData {
 
   static FlightData fromJson(Map<String, dynamic> json) => FlightData(
         id: json['id'],
-        comment: json['comment'],
+        droneName: json['droneName'],
+        droneSerial: json['droneSerial'],
         flight_purpose: json['flight_purpose'],
         flight_time: json['flight_time'],
         date: (json['date'] as Timestamp).toDate(),

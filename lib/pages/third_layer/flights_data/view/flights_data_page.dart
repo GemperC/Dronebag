@@ -116,7 +116,7 @@ class _FlightDataPageState extends State<FlightDataPage> {
             child: Column(
               children: [
                 Text(
-                  record.comment,
+                  record.droneName,
                   style: GoogleFonts.poppins(
                     color: ThemeColors.whiteTextColor,
                     fontSize: FontSize.large,
@@ -323,7 +323,7 @@ class _FlightDataPageState extends State<FlightDataPage> {
               child: const Text('Cancel')),
           TextButton(
               onPressed: () {
-                createFlightRecord();
+                // createFlightRecord();
               },
               child: const Text('Add Record')),
         ],
@@ -332,32 +332,32 @@ class _FlightDataPageState extends State<FlightDataPage> {
   }
 
 //create a new drone and add it to the group
-  Future createFlightRecord() async {
-    final isValid = formKey.currentState!.validate();
-    if (!isValid) {
-      return;
-    } else {
-      final docRecord = FirebaseFirestore.instance
-          .collection('groups')
-          .doc(widget.groupID)
-          .collection('drones')
-          .doc(widget.droneID)
-          .collection('flight_data')
-          .doc();
-      final issue = FlightData(
-        comment: commentController.text,
-        id: docRecord.id,
-        date: DateTime.parse(flightDateController.text),
-        flight_time: int.parse(flightTimeController.text),
-        flight_purpose: flightPurposeontroller.text,
-        pilot: pilotController.text
-      );
+  // Future createFlightRecord() async {
+  //   final isValid = formKey.currentState!.validate();
+  //   if (!isValid) {
+  //     return;
+  //   } else {
+  //     final docRecord = FirebaseFirestore.instance
+  //         .collection('groups')
+  //         .doc(widget.groupID)
+  //         .collection('drones')
+  //         .doc(widget.droneID)
+  //         .collection('flight_data')
+  //         .doc();
+  //     final issue = FlightData(
+  //       comment: commentController.text,
+  //       id: docRecord.id,
+  //       date: DateTime.parse(flightDateController.text),
+  //       flight_time: int.parse(flightTimeController.text),
+  //       flight_purpose: flightPurposeontroller.text,
+  //       pilot: pilotController.text
+  //     );
 
-      final json = issue.toJson();
-      await docRecord.set(json);
-      Utils.showSnackBarWithColor(
-          'New issue has been added to the drone', Colors.blue);
-      Navigator.pop(context);
-    }
-  }
+  //     final json = issue.toJson();
+  //     await docRecord.set(json);
+  //     Utils.showSnackBarWithColor(
+  //         'New issue has been added to the drone', Colors.blue);
+  //     Navigator.pop(context);
+  //   }
+  // }
 }
