@@ -74,8 +74,8 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
                               final groups = snapshot.data!;
                               List<String> groupKeysList = [];
                               for (var group in groups) {
-                                  groupKeysList.add(group.key);
-                                }
+                                groupKeysList.add(group.key);
+                              }
                               return TextFormField(
                                 controller: groupKeyController,
                                 validator: (value) {
@@ -170,10 +170,13 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
               .collection('settings')
               .doc(doc.get('id'));
           final usersettings =
-              UserSettings(id: docuserSettings.id, role: 'member');
+              UserSettings(
+                group: doc.get('name'),
+                notifications: false,
+                id: docuserSettings.id, 
+                role: 'member');
           final json = usersettings.toJson();
           await docuserSettings.set(json);
-
 
           final docGroupMember = FirebaseFirestore.instance
               .collection('groups')

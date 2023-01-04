@@ -143,8 +143,32 @@ class _GroupSettingsState extends State<GroupSettings> {
                       )
                     ],
                   );
-                } else {
-                  return const Scaffold();
+                } else if (snapshot.hasError) {
+                  return Scaffold(
+                    body: Container(
+                      child: Text(
+                        snapshot.error.toString(),
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  );
+                }else {
+                  return Scaffold(
+                    body: Container(
+                      child: Text(
+                        snapshot.error.toString(),
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                          fontSize: FontSize.xxLarge,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  );
                 }
               }),
         ));
@@ -153,9 +177,9 @@ class _GroupSettingsState extends State<GroupSettings> {
   Stream<List<UserSettings>> fetchUserSettings() {
     return FirebaseFirestore.instance
         .collection('users')
-        .doc(loggedUser.email)
+        .doc(loggedUser.email!)
         .collection("settings")
-        .where("group", isEqualTo: widget.group.name)
+        .where("id", isEqualTo: widget.group.id)
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => UserSettings.fromJson(doc.data()))
