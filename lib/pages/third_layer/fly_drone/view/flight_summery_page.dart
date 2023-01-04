@@ -172,10 +172,29 @@ class _FlightSummeryState extends State<FlightSummery> {
 
                           final json = flightRecord.toJson();
                           await docFlightRecord.set(json);
-                          Utils.showSnackBarWithColor(
-                              'New flight record has been added to the drones',
-                              Colors.blue);
+
+                          int droneFlightTime = widget.flightDuration ~/
+                              (widget.droneList.length);
+                          int newFlightTime =
+                              droneFlightTime + drone.flight_time;
+
+                          int newMinutes_till_maintenace =
+                              drone.minutes_till_maintenace - droneFlightTime;
+
+                          FirebaseFirestore.instance
+                              .collection('groups')
+                              .doc(widget.group.id)
+                              .collection('drones')
+                              .doc(drone.id)
+                              .update({
+                            "flight_time": newFlightTime,
+                            "minutes_till_maintenace":
+                                newMinutes_till_maintenace
+                          });
                         });
+                        Utils.showSnackBarWithColor(
+                            'New flight record have been added to the drones',
+                            Colors.blue);
 
                         Navigator.pop(context);
                       },
@@ -193,41 +212,41 @@ class _FlightSummeryState extends State<FlightSummery> {
   Widget buildDroneTile(Drone drone) {
     return ListTile(
         // go to the drone page
-        onTap: () {
-          editDroneDialog(drone);
-        },
+        // onTap: () {
+        //   editDroneDialog(drone);
+        // },
         // build the tile info and design
         title: Center(
+      child: Padding(
+        // padding betwwent he cards
+        padding: const EdgeInsets.fromLTRB(0, 3, 0, 3),
+        child: Container(
+          decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 65, 61, 82),
+              borderRadius: BorderRadius.all(Radius.circular(12))),
           child: Padding(
-            // padding betwwent he cards
-            padding: const EdgeInsets.fromLTRB(0, 3, 0, 3),
-            child: Container(
-              decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 65, 61, 82),
-                  borderRadius: BorderRadius.all(Radius.circular(12))),
-              child: Padding(
-                // padding of the text in the cards
-                padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                child: Column(
-                  children: [
-                    Align(
-                      //alingemt of the titel
-                      alignment: Alignment.center,
-                      child: Text(
-                        '${drone.name}  |  Serial: ${drone.serial_number}',
-                        style: GoogleFonts.poppins(
-                          color: ThemeColors.whiteTextColor,
-                          fontSize: FontSize.xMedium,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+            // padding of the text in the cards
+            padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+            child: Column(
+              children: [
+                Align(
+                  //alingemt of the titel
+                  alignment: Alignment.center,
+                  child: Text(
+                    '${drone.name}  |  Serial: ${drone.serial_number}',
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                      fontSize: FontSize.xMedium,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
-        ));
+        ),
+      ),
+    ));
   }
 
   Future editDroneDialog(Drone drone) {

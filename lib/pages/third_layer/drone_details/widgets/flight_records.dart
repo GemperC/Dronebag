@@ -39,7 +39,7 @@ class _DroneFlightRecordsState extends State<DroneFlightRecords> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0,12,0,0),
+      padding: const EdgeInsets.fromLTRB(0,15,0,0),
       child: StreamBuilder<List<FlightData>>(
           stream: fetchRecords(),
           builder: (context, snapshot) {
@@ -200,7 +200,18 @@ class _DroneFlightRecordsState extends State<DroneFlightRecords> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      record.droneName,
+                      "Flight duration:   ${record.flight_time ~/60} hours and ${record.flight_time %60} minutes",
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.whiteTextColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Pilot:   ${record.pilot}",
                       style: GoogleFonts.poppins(
                         color: ThemeColors.whiteTextColor,
                         fontSize: FontSize.medium,
@@ -209,7 +220,7 @@ class _DroneFlightRecordsState extends State<DroneFlightRecords> {
                     ),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Align(
                         alignment: Alignment.centerRight,
