@@ -1,5 +1,4 @@
 // ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace, unnecessary_new
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/domain/battery_repository/battery_repository.dart';

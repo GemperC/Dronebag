@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace
+// ignore_for_file: sized_box_for_whitespace, avoid_function_literals_in_foreach_calls
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
@@ -34,7 +34,6 @@ class _MyGroupPageState extends State<MyGroupPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(userRole);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ThemeColors.scaffoldBgColor,

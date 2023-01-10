@@ -2,7 +2,6 @@ import 'package:dronebag/domain/battery_issue_repository/battery_issue_repositor
 import 'package:dronebag/domain/battery_repository/battery_repository.dart';
 import 'package:dronebag/domain/battery_station_repository/battery_station_repository.dart';
 import 'package:dronebag/pages/third_layer/battery_case_details/widgets/widgest.dart';
-import 'package:dronebag/widgets/utils.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
