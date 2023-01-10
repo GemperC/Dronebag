@@ -7,6 +7,7 @@ import 'package:dronebag/domain/drone_repository/drone_repository.dart';
 import 'package:dronebag/domain/flight_data_repository/fight_data_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_repository/src/models/models.dart';
+import 'package:dronebag/pages/third_layer/fly_drone/fly_drone.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -48,11 +49,21 @@ class _FlightSummeryState extends State<FlightSummery> {
   final TextEditingController hours_till_maintenaceController =
       TextEditingController();
   final TextEditingController maintenanceController = TextEditingController();
+  List<double> _currentSliderValues = [];
+
   @override
   void initState() {
     // print(widget.droneList);
     flight_timeController =
         TextEditingController(text: widget.flightDuration.toString());
+    widget.droneList.forEach((drone) {
+      if (widget.flightDuration > 0) {
+        _currentSliderValues
+            .add(widget.flightDuration / widget.droneList.length);
+      } else {
+        _currentSliderValues.add(0);
+      }
+    });
     super.initState();
   }
 
@@ -63,6 +74,7 @@ class _FlightSummeryState extends State<FlightSummery> {
 
   @override
   Widget build(BuildContext context) {
+    print(_currentSliderValues);
     return WillPopScope(
       onWillPop: () async => true,
       child: Scaffold(
@@ -136,7 +148,7 @@ class _FlightSummeryState extends State<FlightSummery> {
                     shrinkWrap: true,
                     itemCount: widget.droneList.length,
                     itemBuilder: ((context, index) {
-                      return buildDroneTile(widget.droneList[index]);
+                      return buildDroneTile(widget.droneList[index], index);
                       // return Center(
                       //   child: Text(
                       //     '${widget.droneList[index].name}  |  Serial: ${widget.droneList[index].serial_number}',
@@ -209,7 +221,7 @@ class _FlightSummeryState extends State<FlightSummery> {
     );
   }
 
-  Widget buildDroneTile(Drone drone) {
+  Widget buildDroneTile(Drone drone, int index) {
     return ListTile(
         // go to the drone page
         // onTap: () {
@@ -239,6 +251,18 @@ class _FlightSummeryState extends State<FlightSummery> {
                       fontSize: FontSize.xMedium,
                       fontWeight: FontWeight.w500,
                     ),
+                  ),
+                ),
+                Center(
+                  child: Slider(
+                    max: 100,
+                    value: _currentSliderValues[index],
+                    onChanged: (double value) {
+                      _currentSliderValues[index] = value;
+                      setState(() {
+                        _currentSliderValues[index] = value;
+                      });
+                    },
                   ),
                 ),
               ],

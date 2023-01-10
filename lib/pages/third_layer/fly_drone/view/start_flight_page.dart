@@ -256,7 +256,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                                 backgroundColor: ThemeColors.scaffoldBgColor,
                                 title: Center(
                                   child: Text(
-                                    "!Beofre you Fly!",
+                                    "!Before you Fly!",
                                     style: GoogleFonts.poppins(
                                       color: Colors.red,
                                       fontSize: FontSize.large,
