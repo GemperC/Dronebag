@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace, avoid_function_literals_in_foreach_calls
+// ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace, avoid_function_literals_in_foreach_calls, prefer_final_fields
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
@@ -7,7 +7,6 @@ import 'package:dronebag/domain/drone_repository/drone_repository.dart';
 import 'package:dronebag/domain/flight_data_repository/fight_data_repository.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
 import 'package:dronebag/domain/user_repository/src/models/models.dart';
-import 'package:dronebag/pages/third_layer/fly_drone/fly_drone.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -50,6 +49,7 @@ class _FlightSummeryState extends State<FlightSummery> {
       TextEditingController();
   final TextEditingController maintenanceController = TextEditingController();
   List<double> _currentSliderValues = [];
+  double totalSlidervalue = 0;
 
   @override
   void initState() {
@@ -57,7 +57,7 @@ class _FlightSummeryState extends State<FlightSummery> {
     flight_timeController =
         TextEditingController(text: widget.flightDuration.toString());
     widget.droneList.forEach((drone) {
-      if (widget.flightDuration > 0) {
+      if ((widget.flightDuration / widget.droneList.length) > 1) {
         _currentSliderValues
             .add(widget.flightDuration / widget.droneList.length);
       } else {
@@ -74,7 +74,6 @@ class _FlightSummeryState extends State<FlightSummery> {
 
   @override
   Widget build(BuildContext context) {
-    print(_currentSliderValues);
     return WillPopScope(
       onWillPop: () async => true,
       child: Scaffold(
@@ -94,7 +93,7 @@ class _FlightSummeryState extends State<FlightSummery> {
           ),
           body: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(38),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
                   Align(
@@ -118,16 +117,15 @@ class _FlightSummeryState extends State<FlightSummery> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(height: 50),
                   Align(
                     alignment: Alignment.center,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 7),
+                      padding: const EdgeInsets.only(top: 17),
                       child: Text(
                         textAlign: TextAlign.center,
-                        "Click a drone to set the details \n make sure to press 'Update drone' to update the drone's information", //"below are the flight details",
+                        "On defualt each drone gets 1/3 of the total flight time \n but you can change it with the sliders \n click the Done button below to confirm", //"below are the flight details",
                         style: GoogleFonts.poppins(
-                          color: ThemeColors.greyTextColor,
+                          color: const Color.fromARGB(255, 129, 123, 123),
                           fontSize: FontSize.small,
                           fontWeight: FontWeight.w500,
                         ),
@@ -146,6 +144,7 @@ class _FlightSummeryState extends State<FlightSummery> {
                   const SizedBox(width: 12),
                   ListView.builder(
                     shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: widget.droneList.length,
                     itemBuilder: ((context, index) {
                       return buildDroneTile(widget.droneList[index], index);
@@ -165,6 +164,7 @@ class _FlightSummeryState extends State<FlightSummery> {
                   Center(
                     child: MainButton2(
                       onPressed: () {
+                        int index = 0;
                         widget.droneList.forEach((drone) async {
                           final docFlightRecord = FirebaseFirestore.instance
                               .collection('groups')
@@ -178,15 +178,14 @@ class _FlightSummeryState extends State<FlightSummery> {
                               droneName: drone.name,
                               droneSerial: drone.serial_number,
                               flight_purpose: widget.flightPurpose,
-                              flight_time: widget.flightDuration,
+                              flight_time: _currentSliderValues[index].toInt(),
                               date: DateTime.now(),
                               pilot: widget.pilot.fullName);
 
                           final json = flightRecord.toJson();
                           await docFlightRecord.set(json);
 
-                          int droneFlightTime = widget.flightDuration ~/
-                              (widget.droneList.length);
+                          int droneFlightTime = _currentSliderValues[index].toInt();
                           int newFlightTime =
                               droneFlightTime + drone.flight_time;
 
@@ -203,6 +202,7 @@ class _FlightSummeryState extends State<FlightSummery> {
                             "minutes_till_maintenace":
                                 newMinutes_till_maintenace
                           });
+                          index++;
                         });
                         Utils.showSnackBarWithColor(
                             'New flight record have been added to the drones',
@@ -253,180 +253,37 @@ class _FlightSummeryState extends State<FlightSummery> {
                     ),
                   ),
                 ),
-                Center(
-                  child: Slider(
-                    max: 100,
-                    value: _currentSliderValues[index],
-                    onChanged: (double value) {
-                      _currentSliderValues[index] = value;
-                      setState(() {
-                        _currentSliderValues[index] = value;
-                      });
-                    },
+                Align(
+                  //alingemt of the titel
+                  alignment: Alignment.center,
+                  child: Text(
+                    '${_currentSliderValues[index].toInt() ~/ 60} hours and ${_currentSliderValues[index].toInt() % 60} minutes',
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                      fontSize: FontSize.xMedium,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
+                widget.flightDuration != 0
+                    ? Center(
+                        child: Slider(
+                          max: widget.flightDuration.toDouble(),
+                          value: _currentSliderValues[index],
+                          onChanged: (double value) {
+                            setState(() {
+                              _currentSliderValues[index] =
+                                  value.round().toDouble();
+                            });
+                          },
+                        ),
+                      )
+                    : Container(),
               ],
             ),
           ),
         ),
       ),
     ));
-  }
-
-  Future editDroneDialog(Drone drone) {
-    return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: ThemeColors.scaffoldBgColor,
-        scrollable: true,
-        title: Text(
-          '${drone.name}  |  Serial: ${drone.serial_number}',
-          style: GoogleFonts.poppins(
-            color: ThemeColors.whiteTextColor,
-            fontSize: FontSize.large,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        content: Container(
-          width: 300,
-          child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  Center(
-                    child: Text(
-                      "${widget.flightPurpose} flight time:",
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.whiteTextColor,
-                        fontSize: FontSize.medium,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 65,
-                        width: 80,
-                        child: TextFormField(
-                          controller: flight_timeHoursController
-                            ..text = (widget.flightDuration ~/ 60).toString(),
-                          validator: (value) {
-                            if (flight_timeHoursController.text.isEmpty) {
-                              return "This field can't be empty";
-                            }
-                            return null;
-                          },
-                          style: GoogleFonts.poppins(
-                            color: ThemeColors.whiteTextColor,
-                          ),
-                          keyboardType: TextInputType.number,
-                          cursorColor: ThemeColors.primaryColor,
-                          decoration: InputDecoration(
-                            fillColor: ThemeColors.textFieldBgColor,
-                            filled: true,
-                            labelText: "Hours",
-                            labelStyle: GoogleFonts.poppins(
-                              color: ThemeColors.textFieldHintColor,
-                              fontSize: FontSize.small,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            border: const OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(18)),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      SizedBox(
-                        height: 65,
-                        width: 80,
-                        child: TextFormField(
-                          controller: flight_timeMinutesController
-                            ..text = (widget.flightDuration % 60).toString(),
-                          validator: (value) {
-                            if (flight_timeMinutesController.text.isEmpty) {
-                              return "This field can't be empty";
-                            }
-                            if (int.parse(flight_timeMinutesController.text) >=
-                                    60 ||
-                                int.parse(flight_timeMinutesController.text) <=
-                                    0) {
-                              return "1-59";
-                            }
-                            return null;
-                          },
-                          style: GoogleFonts.poppins(
-                            color: ThemeColors.whiteTextColor,
-                          ),
-                          keyboardType: TextInputType.number,
-                          cursorColor: ThemeColors.primaryColor,
-                          decoration: InputDecoration(
-                            fillColor: ThemeColors.textFieldBgColor,
-                            filled: true,
-                            labelText: "Minutes",
-                            labelStyle: GoogleFonts.poppins(
-                              color: ThemeColors.textFieldHintColor,
-                              fontSize: FontSize.small,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            border: const OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(18)),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    "This will be added to the drone's flight time", //"below are the flight details",
-                    style: GoogleFonts.poppins(
-                      color: ThemeColors.greyTextColor,
-                      fontSize: FontSize.medium,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              )),
-        ),
-        actions: [
-          TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel')),
-          TextButton(
-              onPressed: () {
-                int totalFlightTime =
-                    int.parse(flight_timeHoursController.text) * 60 +
-                        int.parse(flight_timeMinutesController.text);
-                int newFlightTime = totalFlightTime + drone.flight_time;
-
-                int newMinutes_till_maintenace =
-                    drone.minutes_till_maintenace - totalFlightTime;
-
-                FirebaseFirestore.instance
-                    .collection('groups')
-                    .doc(widget.group.id)
-                    .collection('drones')
-                    .doc(drone.id)
-                    .update({
-                  "flight_time": newFlightTime,
-                  "minutes_till_maintenace": newMinutes_till_maintenace
-                });
-
-                Navigator.pop(context);
-              },
-              child: const Text('Update Drone')),
-        ],
-      ),
-    );
   }
 }
