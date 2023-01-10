@@ -8,7 +8,7 @@ import 'package:dronebag/widgets/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const List<String> list = <String>['open', 'closed'];
+const List<String> dropdownList = <String>['open', 'closed'];
 
 // ignore: must_be_immutable
 class BatteryIssueTile extends StatefulWidget {
@@ -44,6 +44,9 @@ class _BatteryIssueTileState extends State<BatteryIssueTile> {
 
     return ListTile(
       onTap: (() {
+                setState(() {
+          dropdownValue = widget.batteryIssue.status;
+        });
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -108,7 +111,7 @@ class _BatteryIssueTileState extends State<BatteryIssueTile> {
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w600,
                           ),
-                          items: list
+                          items: dropdownList
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,

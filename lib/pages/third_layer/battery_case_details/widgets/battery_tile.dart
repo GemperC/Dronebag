@@ -40,7 +40,7 @@ class _BatteryTileState extends State<BatteryTile> {
         groupID: widget.groupID, batteryStation: widget.batteryStation);
     Color batteryColor = Colors.green;
     if (widget.battery.cycle >= 50 && widget.battery.cycle < 100) {
-      batteryColor =  Color.fromARGB(255, 0, 84, 3);
+      batteryColor = Color.fromARGB(255, 0, 84, 3);
     } else if (widget.battery.cycle >= 100 && widget.battery.cycle < 150) {
       batteryColor = Colors.orange;
     } else if (widget.battery.cycle >= 150) {
@@ -51,7 +51,15 @@ class _BatteryTileState extends State<BatteryTile> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final batteryIssues = snapshot.data!;
+            int openIssueNum = 0;
 
+            if (batteryIssues.isNotEmpty) {
+              batteryIssues.forEach((doc) {
+                if (doc.status == "open") {
+                  openIssueNum++;
+                }
+              });
+            }
             return ListTile(
               // go to the battery case page
 
@@ -86,11 +94,11 @@ class _BatteryTileState extends State<BatteryTile> {
                           ),
                         ),
                         Text(
-                          batteryIssues.isEmpty
+                          openIssueNum == 0
                               ? ""
-                              : "Issues: ${batteryIssues.length.toString()}",
+                              : "Issues: $openIssueNum",
                           style: GoogleFonts.poppins(
-                            color: Colors.black,
+                            color: Colors.red[400],
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w400,
                           ),
