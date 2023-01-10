@@ -181,7 +181,7 @@ class _GroupDronesState extends State<GroupDrones> {
                       child: Text(
                         'Current location: ~${drone.current_location}',
                         style: GoogleFonts.poppins(
-                          color: Color.fromARGB(255, 50, 189, 0),
+                          color: const Color.fromARGB(255, 50, 189, 0),
                           fontSize: FontSize.medium,
                           fontWeight: FontWeight.w400,
                         ),
