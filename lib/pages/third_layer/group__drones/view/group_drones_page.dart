@@ -12,9 +12,11 @@ import 'package:intl/intl.dart';
 
 class GroupDrones extends StatefulWidget {
   final Group group;
+  final String privileges;
   const GroupDrones({
     Key? key,
     required this.group,
+    required this.privileges,
   }) : super(key: key);
 
   @override
@@ -24,13 +26,12 @@ class GroupDrones extends StatefulWidget {
 class _GroupDronesState extends State<GroupDrones> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
-    final TextEditingController flightsController = TextEditingController();
+  final TextEditingController flightsController = TextEditingController();
   final TextEditingController serial_numberController = TextEditingController();
   final TextEditingController flight_timeHoursController =
       TextEditingController();
   final TextEditingController flight_timeMinutesController =
       TextEditingController();
-
 
   final TextEditingController maintenanceController = TextEditingController();
   final TextEditingController date_boughtController = TextEditingController();
@@ -61,7 +62,12 @@ class _GroupDronesState extends State<GroupDrones> {
               ),
             ),
             onPressed: () {
+              if (widget.privileges == 'admin') {
               addDroneDialog();
+               } else {
+                Utils.showSnackBarWithColor(
+                    'You dont have to required priviledges', Colors.red);
+              }
             },
           ),
         ],
@@ -105,6 +111,7 @@ class _GroupDronesState extends State<GroupDrones> {
     if (drone.minutes_till_maintenace <= 60) {
       maintenanceTextColor = Colors.red;
     }
+
     return ListTile(
         // go to the drone page
         onTap: () {
@@ -147,7 +154,7 @@ class _GroupDronesState extends State<GroupDrones> {
                       //alingemt of the titel
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Maintenance in ~${drone.minutes_till_maintenace~/60} hours',
+                        'Maintenance in ~${drone.minutes_till_maintenace ~/ 60} hours',
                         style: GoogleFonts.poppins(
                           color: maintenanceTextColor,
                           fontSize: FontSize.medium,
@@ -159,7 +166,7 @@ class _GroupDronesState extends State<GroupDrones> {
                       //alingemt of the titel
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Airtime: ~${drone.flight_time~/60} hours',
+                        'Airtime: ~${drone.flight_time ~/ 60} hours',
                         style: GoogleFonts.poppins(
                           color: ThemeColors.textFieldlabelColor,
                           fontSize: FontSize.medium,
@@ -167,7 +174,34 @@ class _GroupDronesState extends State<GroupDrones> {
                         ),
                       ),
                     ),
-                
+                    FutureBuilder<int>(
+                      future: FirebaseFirestore.instance
+                          .collection(
+                              'groups/${widget.group.id}/drones/${drone.id}/issues')
+                          .where("status", isEqualTo: "open")
+                          .get()
+                          .then((value) => value.docs.length),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData && snapshot.data! != 0) {
+                          int openIssueNum = snapshot.data!;
+                          return Align(
+                            //alingemt of the titel
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Open Issues: $openIssueNum',
+                              style: GoogleFonts.poppins(
+                                color: Colors.red[400],
+                                fontSize: FontSize.medium,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          );
+                        } else if (snapshot.hasError) {
+                          Container();
+                        }
+                        return Container();
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -175,7 +209,6 @@ class _GroupDronesState extends State<GroupDrones> {
           ),
         ));
   }
-
 
 // dialog to add new drones to the group
   Future addDroneDialog() {
@@ -476,17 +509,18 @@ class _GroupDronesState extends State<GroupDrones> {
           .collection('drones')
           .doc();
       final drone = Drone(
-        name: nameController.text.trim(),
-        serial_number: serial_numberController.text,
-        flight_time: int.parse(flight_timeHoursController.text) * 60 +
-            int.parse(flight_timeMinutesController.text),
-        id: docDrone.id,
-        minutes_till_maintenace: minutesLeftToMaintenance(),
-        maintenance: int.parse(maintenanceController.text) * 60,
-        date_added: DateTime.now(),
-        date_bought: date_boughtController.text=="unknown" ? DateTime.parse("1999-02-10") :  DateTime.parse(date_boughtController.text),
-      flights: int.parse(flightsController.text)
-      );
+          name: nameController.text.trim(),
+          serial_number: serial_numberController.text,
+          flight_time: int.parse(flight_timeHoursController.text) * 60 +
+              int.parse(flight_timeMinutesController.text),
+          id: docDrone.id,
+          minutes_till_maintenace: minutesLeftToMaintenance(),
+          maintenance: int.parse(maintenanceController.text) * 60,
+          date_added: DateTime.now(),
+          date_bought: date_boughtController.text == "unknown"
+              ? DateTime.parse("1999-02-10")
+              : DateTime.parse(date_boughtController.text),
+          flights: int.parse(flightsController.text));
 
       final json = drone.toJson();
       await docDrone.set(json);

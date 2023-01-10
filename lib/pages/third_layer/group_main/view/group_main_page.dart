@@ -25,9 +25,16 @@ class MyGroupPage extends StatefulWidget {
 
 class _MyGroupPageState extends State<MyGroupPage> {
   final loggedUser = FirebaseAuth.instance.currentUser!;
+  String userRole = '';
+  @override
+  void initState() {
+    checkUserAdminPriviledges();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    print(userRole);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ThemeColors.scaffoldBgColor,
@@ -110,12 +117,12 @@ class _MyGroupPageState extends State<MyGroupPage> {
                     groupMenuButton(
                       const AssetImage('assets/icons/car-battery.png'),
                       'Batteries',
-                      GroupBatteryStations(group: widget.group),
+                      GroupBatteryStations(group: widget.group, privileges: userRole),
                     ),
                     groupMenuButton(
                       const AssetImage('assets/icons/drone.png'),
                       'Drones',
-                      GroupDrones(group: widget.group),
+                      GroupDrones(group: widget.group, privileges: userRole),
                     ),
                     groupMenuButton(
                       const AssetImage('assets/icons/remote.png'),
@@ -249,5 +256,25 @@ class _MyGroupPageState extends State<MyGroupPage> {
         ],
       ),
     );
+  }
+
+  Future<String> checkUserAdminPriviledges() async {
+    var userSettingsSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(loggedUser.email)
+        .collection('settings')
+        .doc(widget.group.id)
+        .get();
+
+    if (userSettingsSnapshot.exists) {
+      Map<String, dynamic> data = userSettingsSnapshot.data()!;
+      String role = data['role'];
+      setState(() {
+        userRole = data['role'];
+      });
+      return role;
+    } else {
+      return "member";
+    }
   }
 }

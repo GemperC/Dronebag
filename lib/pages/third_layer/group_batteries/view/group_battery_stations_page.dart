@@ -13,9 +13,11 @@ import 'package:intl/intl.dart';
 
 class GroupBatteryStations extends StatefulWidget {
   final Group group;
+  final String privileges;
   const GroupBatteryStations({
     Key? key,
     required this.group,
+    required this.privileges,
   }) : super(key: key);
 
   @override
@@ -55,7 +57,12 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
               ),
             ),
             onPressed: () {
-              addBatteryStationDialog();
+              if (widget.privileges == 'admin') {
+                addBatteryStationDialog();
+              } else {
+                Utils.showSnackBarWithColor(
+                    'You dont have to required priviledges', Colors.red);
+              }
             },
           ),
         ],
@@ -346,7 +353,9 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
         id: docBatteryStation.id,
         ownership: ownershipController.text,
         battery_pairs: int.parse(battery_pairsController.text),
-        date_bought: date_boughtController.text=="unknown" ? DateTime.parse("1999-02-10") :  DateTime.parse(date_boughtController.text),
+        date_bought: date_boughtController.text == "unknown"
+            ? DateTime.parse("1999-02-10")
+            : DateTime.parse(date_boughtController.text),
       );
 
       final json = batteryStation.toJson();
