@@ -9,6 +9,8 @@ import 'package:dronebag/widgets/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+const List<String> list = <String>['open', 'closed'];
+
 class DroneIssues extends StatefulWidget {
   final String groupID;
   final Drone drone;
@@ -23,7 +25,9 @@ class DroneIssues extends StatefulWidget {
 }
 
 class _DroneIssuesState extends State<DroneIssues> {
+  String dropdownValue = "issue.status";
   TextEditingController issueDetailController = new TextEditingController();
+  TextEditingController issueStatusController = new TextEditingController();
 
   @override
   void initState() {
@@ -34,42 +38,42 @@ class _DroneIssuesState extends State<DroneIssues> {
   Widget build(BuildContext context) {
     return Column(children: [
       TextButton(
-    child: Text(
-      'New Record',
-      textAlign: TextAlign.center,
-      style: GoogleFonts.poppins(
-        color: Colors.blue,
-        fontSize: FontSize.medium,
-        fontWeight: FontWeight.w600,
-      ),
-    ),
-    onPressed: () {
-      createIssue();
-    },
+        child: Text(
+          'New Record',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins(
+            color: Colors.blue,
+            fontSize: FontSize.medium,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        onPressed: () {
+          createIssue();
+        },
       ),
       StreamBuilder<List<Issue>>(
-      stream: fetchGroupDroneIssues(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final droneIssues = snapshot.data!;
-          return ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: droneIssues.length,
-              itemBuilder: (context, index) {
-                issueDetailController =
-                    TextEditingController(text: droneIssues[index].detail);
-                return issueTile(droneIssues[index], issueDetailController);
-              });
-        } else if (snapshot.hasError) {
-          return SingleChildScrollView(
-            child: Text('Something went wrong! \n\n$snapshot',
-                style: const TextStyle(color: Colors.white)),
-          );
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      }),
+          stream: fetchGroupDroneIssues(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final droneIssues = snapshot.data!;
+              return ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: droneIssues.length,
+                  itemBuilder: (context, index) {
+                    issueDetailController =
+                        TextEditingController(text: droneIssues[index].detail);
+                    return issueTile(droneIssues[index], issueDetailController);
+                  });
+            } else if (snapshot.hasError) {
+              return SingleChildScrollView(
+                child: Text('Something went wrong! \n\n$snapshot',
+                    style: const TextStyle(color: Colors.white)),
+              );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          }),
     ]);
   }
 
@@ -117,6 +121,10 @@ class _DroneIssuesState extends State<DroneIssues> {
 
     return ListTile(
       onTap: (() {
+        setState(() {
+          dropdownValue = issue.status;
+        });
+
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -132,29 +140,78 @@ class _DroneIssuesState extends State<DroneIssues> {
                 ),
               ),
             ),
-            content: TextFormField(
-              controller: issueDetailController,
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              style: GoogleFonts.poppins(
-                color: ThemeColors.whiteTextColor,
-                fontSize: FontSize.medium,
-                fontWeight: FontWeight.w400,
-              ),
-              decoration: InputDecoration(
-                fillColor: ThemeColors.textFieldBgColor,
-                filled: true,
-                hintText: "Issue description",
-                hintStyle: GoogleFonts.poppins(
-                  color: ThemeColors.textFieldHintColor,
-                  fontSize: FontSize.small,
-                  fontWeight: FontWeight.w400,
+            content: Column(
+              children: [
+                TextFormField(
+                  controller: issueDetailController,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.whiteTextColor,
+                    fontSize: FontSize.medium,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  decoration: InputDecoration(
+                    fillColor: ThemeColors.textFieldBgColor,
+                    filled: true,
+                    hintText: "Issue description",
+                    hintStyle: GoogleFonts.poppins(
+                      color: ThemeColors.textFieldHintColor,
+                      fontSize: FontSize.small,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.all(Radius.circular(18)),
+                    ),
+                  ),
                 ),
-                border: const OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.all(Radius.circular(18)),
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Row(
+                    children: [
+                      Text(
+                        'Status:   ',
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 50,
+                                                width: 80,
+
+                        child: DropdownButtonFormField<String>(
+                          elevation: 16,
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.greyTextColor,
+                            fontSize: FontSize.medium,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          items:
+                              list.map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          value: dropdownValue,
+                          onChanged: (String? value) {
+                            dropdownValue = value!;
+                          },
+                          // onSaved: (value) {
+                          //   setState(() {
+                          //     dropdownValue = value!;
+                          //   });
+                          // },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
             actions: [
               TextButton(
@@ -171,8 +228,10 @@ class _DroneIssuesState extends State<DroneIssues> {
                         .doc(widget.drone.id)
                         .collection('issues')
                         .doc(issue.id);
-                    docBatteryStationIssue
-                        .update({'detail': issueDetailController.text});
+                    docBatteryStationIssue.update({
+                      'detail': issueDetailController.text,
+                      'status': dropdownValue
+                    });
                     Navigator.pop(context);
                     Utils.showSnackBarWithColor(
                         'Issue has been updated', Colors.blue);

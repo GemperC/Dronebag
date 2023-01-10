@@ -28,6 +28,7 @@ class StartFlightPage extends StatefulWidget {
 }
 
 class _StartFlightPageState extends State<StartFlightPage> {
+
   final formKey = GlobalKey<FormState>();
   final TextEditingController serial_numberController = TextEditingController();
   final TextEditingController batteryIssueDetailController =
