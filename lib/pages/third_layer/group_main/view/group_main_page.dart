@@ -1,5 +1,6 @@
 // ignore_for_file: sized_box_for_whitespace
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/domain/group_repository/group_repository.dart';
@@ -23,11 +24,36 @@ class MyGroupPage extends StatefulWidget {
 }
 
 class _MyGroupPageState extends State<MyGroupPage> {
+  final loggedUser = FirebaseAuth.instance.currentUser!;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ThemeColors.scaffoldBgColor,
+        actions: [
+          loggedUser.email! == "testadmin@gmail.com"
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 20.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      QuerySnapshot droneCollection = await FirebaseFirestore
+                          .instance
+                          .collection("groups")
+                          .doc(widget.group.id)
+                          .collection("drones")
+                          .get();
+                      droneCollection.docs.forEach((droneDoc) {
+                        droneDoc.reference.update({"flights": 0});
+                      });
+                    },
+                    child: const Icon(
+                      Icons.bug_report,
+                      size: 26.0,
+                    ),
+                  ))
+              : Container()
+        ],
       ),
       body: SingleChildScrollView(
         child: SafeArea(

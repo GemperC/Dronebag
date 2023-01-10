@@ -25,6 +25,8 @@ class DroneDetails extends StatefulWidget {
 class _DroneDetailsState extends State<DroneDetails> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController flightsController = TextEditingController();
+
   final TextEditingController serial_numberController = TextEditingController();
   final TextEditingController flight_timeController = TextEditingController();
 
@@ -98,6 +100,9 @@ class _DroneDetailsState extends State<DroneDetails> {
                           const SizedBox(height: 12),
                           richText_listingDroneDetails('Flight Time',
                               '${drone.flight_time ~/ 60} hours and ${drone.flight_time % 60} minutes'),
+                          const SizedBox(height: 12),
+                          richText_listingDroneDetails(
+                              'Flights', drone.flights),
                           const SizedBox(height: 12),
                           richText_listingDroneDetails('Mainetenance Cycle',
                               'every ${drone.maintenance ~/ 60} hours'),
@@ -476,6 +481,35 @@ class _DroneDetailsState extends State<DroneDetails> {
                     ],
                   ),
                   SizedBox(height: sizedBoxHight),
+                  TextFormField(
+                    controller: flightsController..text = widget.drone.flights.toString(),
+                    validator: (value) {
+                      if (flightsController.text.isEmpty) {
+                        return "This field can't be empty";
+                      }
+                      return null;
+                    },
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                    keyboardType: TextInputType.number,
+                    cursorColor: ThemeColors.primaryColor,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      labelText: "Flights",
+                      labelStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldlabelColor,
+                        fontSize: FontSize.small,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: sizedBoxHight),
                   const SizedBox(width: 10),
                   TextFormField(
                     controller: maintenanceController
@@ -606,6 +640,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                 'maintenance': int.parse(maintenanceController.text) * 60,
                 'flight_time': int.parse(flight_timeHoursController.text) * 60 +
                     int.parse(flight_timeMinutesController.text),
+                "flights": int.parse(flightsController.text)
               });
               Navigator.pop(context);
             },

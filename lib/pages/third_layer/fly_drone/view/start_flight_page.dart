@@ -202,8 +202,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 15),
-                const SizedBox(height: 4),
+                const SizedBox(height: 19),
                 selectedDrones.length > 0
                     ? Text(
                         "You picked the drones:",

@@ -24,6 +24,7 @@ class GroupDrones extends StatefulWidget {
 class _GroupDronesState extends State<GroupDrones> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
+    final TextEditingController flightsController = TextEditingController();
   final TextEditingController serial_numberController = TextEditingController();
   final TextEditingController flight_timeHoursController =
       TextEditingController();
@@ -343,6 +344,35 @@ class _GroupDronesState extends State<GroupDrones> {
                   ),
                   SizedBox(height: sizedBoxHight),
                   TextFormField(
+                    controller: flightsController,
+                    validator: (value) {
+                      if (flightsController.text.isEmpty) {
+                        return "This field can't be empty";
+                      }
+                      return null;
+                    },
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                    keyboardType: TextInputType.number,
+                    cursorColor: ThemeColors.primaryColor,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      labelText: "Flights",
+                      labelStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldlabelColor,
+                        fontSize: FontSize.small,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: sizedBoxHight),
+                  TextFormField(
                     controller: maintenanceController,
                     validator: (value) {
                       if (nameController.text.isEmpty) {
@@ -455,6 +485,7 @@ class _GroupDronesState extends State<GroupDrones> {
         maintenance: int.parse(maintenanceController.text) * 60,
         date_added: DateTime.now(),
         date_bought: date_boughtController.text=="unknown" ? DateTime.parse("1999-02-10") :  DateTime.parse(date_boughtController.text),
+      flights: int.parse(flightsController.text)
       );
 
       final json = drone.toJson();

@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, depend_on_referenced_packages, unused_local_variable
+// ignore_for_file: file_names, depend_on_referenced_packages, unused_local_variable, unused_shown_name
 
 import 'dart:async';
 import 'dart:convert' show Encoding, json;
