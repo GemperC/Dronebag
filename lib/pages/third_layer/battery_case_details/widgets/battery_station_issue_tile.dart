@@ -9,7 +9,10 @@ import 'package:dronebag/widgets/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+const List<String> list = <String>['open', 'closed'];
+
 class BatteryStationIssueTile extends StatefulWidget {
+
   final String groupID;
   final BatteryStation batteryStation;
   final BatteryStationIssue batteryStationIssue;
@@ -28,6 +31,8 @@ class BatteryStationIssueTile extends StatefulWidget {
 }
 
 class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
+    String dropdownValue = "";
+
   // TextEditingController batteryStationIssueDetailController =
   //     TextEditingController();
 
@@ -47,6 +52,9 @@ class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
 
     return ListTile(
       onTap: (() {
+        setState(() {
+          dropdownValue = widget.batteryStationIssue.status;
+        });
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -62,29 +70,73 @@ class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
                 ),
               ),
             ),
-            content: TextFormField(
-              controller: widget.batteryStationIssueDetailController,
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              style: GoogleFonts.poppins(
-                color: ThemeColors.whiteTextColor,
-                fontSize: FontSize.medium,
-                fontWeight: FontWeight.w400,
-              ),
-              decoration: InputDecoration(
-                fillColor: ThemeColors.textFieldBgColor,
-                filled: true,
-                hintText: "Issue description",
-                hintStyle: GoogleFonts.poppins(
-                  color: ThemeColors.textFieldHintColor,
-                  fontSize: FontSize.small,
-                  fontWeight: FontWeight.w400,
+            content: Column(
+              children: [
+                TextFormField(
+                  controller: widget.batteryStationIssueDetailController,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  style: GoogleFonts.poppins(
+                    color: ThemeColors.whiteTextColor,
+                    fontSize: FontSize.medium,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  decoration: InputDecoration(
+                    fillColor: ThemeColors.textFieldBgColor,
+                    filled: true,
+                    hintText: "Issue description",
+                    hintStyle: GoogleFonts.poppins(
+                      color: ThemeColors.textFieldHintColor,
+                      fontSize: FontSize.small,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.all(Radius.circular(18)),
+                    ),
+                  ),
                 ),
-                border: const OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.all(Radius.circular(18)),
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Row(
+                    children: [
+                      Text(
+                        'Status:   ',
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 50,
+                        width: 80,
+                        child: DropdownButtonFormField<String>(
+                          elevation: 16,
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.greyTextColor,
+                            fontSize: FontSize.medium,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          items: list
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          value: dropdownValue,
+                          onChanged: (String? value) {
+                            dropdownValue = value!;
+                          },
+
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
             actions: [
               TextButton(
@@ -102,7 +154,8 @@ class _BatteryStationIssueTileState extends State<BatteryStationIssueTile> {
                         .collection('issues')
                         .doc(widget.batteryStationIssue.id);
                     docBatteryStationIssue.update({
-                      'detail': widget.batteryStationIssueDetailController.text
+                      'detail': widget.batteryStationIssueDetailController.text,
+                      'status': dropdownValue
                     });
                     Navigator.pop(context);
                     Utils.showSnackBarWithColor(

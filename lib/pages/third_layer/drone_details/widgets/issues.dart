@@ -25,7 +25,7 @@ class DroneIssues extends StatefulWidget {
 }
 
 class _DroneIssuesState extends State<DroneIssues> {
-  String dropdownValue = "issue.status";
+  String dropdownValue = "";
   TextEditingController issueDetailController = new TextEditingController();
   TextEditingController issueStatusController = new TextEditingController();
 
@@ -181,8 +181,7 @@ class _DroneIssuesState extends State<DroneIssues> {
                       ),
                       SizedBox(
                         height: 50,
-                                                width: 80,
-
+                        width: 80,
                         child: DropdownButtonFormField<String>(
                           elevation: 16,
                           style: GoogleFonts.poppins(
@@ -190,8 +189,8 @@ class _DroneIssuesState extends State<DroneIssues> {
                             fontSize: FontSize.medium,
                             fontWeight: FontWeight.w600,
                           ),
-                          items:
-                              list.map<DropdownMenuItem<String>>((String value) {
+                          items: list
+                              .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(value),
@@ -201,11 +200,7 @@ class _DroneIssuesState extends State<DroneIssues> {
                           onChanged: (String? value) {
                             dropdownValue = value!;
                           },
-                          // onSaved: (value) {
-                          //   setState(() {
-                          //     dropdownValue = value!;
-                          //   });
-                          // },
+
                         ),
                       ),
                     ],
