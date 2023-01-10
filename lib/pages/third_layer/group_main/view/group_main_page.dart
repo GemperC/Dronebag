@@ -50,7 +50,7 @@ class _MyGroupPageState extends State<MyGroupPage> {
                           .collection("drones")
                           .get();
                       droneCollection.docs.forEach((droneDoc) {
-                        droneDoc.reference.update({"flights": 0});
+                        droneDoc.reference.update({"current_location": ""});
                       });
                     },
                     child: const Icon(

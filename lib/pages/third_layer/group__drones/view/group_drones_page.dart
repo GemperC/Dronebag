@@ -518,6 +518,7 @@ class _GroupDronesState extends State<GroupDrones> {
           minutes_till_maintenace: minutesLeftToMaintenance(),
           maintenance: int.parse(maintenanceController.text) * 60,
           date_added: DateTime.now(),
+          current_location: "",
           date_bought: date_boughtController.text == "unknown"
               ? DateTime.parse("1999-02-10")
               : DateTime.parse(date_boughtController.text),

@@ -28,7 +28,7 @@ class _DroneDetailsState extends State<DroneDetails> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController flightsController = TextEditingController();
-
+  final TextEditingController currentLocationController  = TextEditingController();
   final TextEditingController serial_numberController = TextEditingController();
   final TextEditingController flight_timeController = TextEditingController();
 
@@ -97,6 +97,9 @@ class _DroneDetailsState extends State<DroneDetails> {
                           richText_listingDroneDetails('Name', drone.name),
                           const SizedBox(height: 12),
                           richText_listingDroneDetails(
+                              'Current Location', drone.current_location),
+                          const SizedBox(height: 12),
+                          richText_listingDroneDetails(
                               'Serial Number', drone.serial_number),
                           const SizedBox(height: 12),
                           richText_listingDroneDetailsDates(
@@ -147,20 +150,20 @@ class _DroneDetailsState extends State<DroneDetails> {
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       if (widget.privileges == 'admin') {
-                                      FirebaseFirestore.instance
-                                          .collection('groups')
-                                          .doc(widget.groupID)
-                                          .collection('drones')
-                                          .doc(drone.id)
-                                          .update({
-                                        'minutes_till_maintenace':
-                                            drone.maintenance
-                                      });
+                                        FirebaseFirestore.instance
+                                            .collection('groups')
+                                            .doc(widget.groupID)
+                                            .collection('drones')
+                                            .doc(drone.id)
+                                            .update({
+                                          'minutes_till_maintenace':
+                                              drone.maintenance
+                                        });
                                       } else {
-                                            Utils.showSnackBarWithColor(
-                                                'You dont have to required priviledges',
-                                                Colors.red);
-                                          }
+                                        Utils.showSnackBarWithColor(
+                                            'You dont have to required priviledges',
+                                            Colors.red);
+                                      }
                                     },
                                   text: 'Reset',
                                   style: GoogleFonts.poppins(
@@ -214,11 +217,10 @@ class _DroneDetailsState extends State<DroneDetails> {
                             ),
                           ),
                           SwitchCaseStateManager(
-                            index: initialIndex,
-                            drone: drone,
-                            groupID: widget.groupID,
-                            privileges:widget.privileges
-                          ),
+                              index: initialIndex,
+                              drone: drone,
+                              groupID: widget.groupID,
+                              privileges: widget.privileges),
                         ],
                       ),
                     ),
@@ -292,6 +294,59 @@ class _DroneDetailsState extends State<DroneDetails> {
       ),
     );
   }
+
+  // Widget richText_listingDroneDetailsCurrentLocation(
+  //     String field, dynamic droneDetail) {
+  //   return Row(
+  //     children: [
+  //       Text("$field:",
+  //           style: GoogleFonts.poppins(
+  //             color: ThemeColors.whiteTextColor,
+  //             fontSize: FontSize.medium,
+  //             fontWeight: FontWeight.w500,
+  //           )),
+  //       const SizedBox(width: 10),
+  //       Container(
+  //         height: 54,
+  //         width: 170,
+  //         child: TextFormField(
+  //           controller: currentLocationController
+  //             ..text = widget.drone.current_location,
+  //           onChanged: (value) {
+  //                           FirebaseFirestore.instance
+  //                 .collection('groups')
+  //                 .doc(widget.groupID)
+  //                 .collection('drones')
+  //                 .doc(widget.drone.id)
+  //                 .update({
+  //               'current_location': currentLocationController.text,
+
+  //             });
+  //           },
+  //           style: GoogleFonts.poppins(
+  //             color: ThemeColors.whiteTextColor,
+  //           ),
+  //           keyboardType: TextInputType.name,
+  //           cursorColor: ThemeColors.primaryColor,
+  //           decoration: InputDecoration(
+  //             fillColor: ThemeColors.textFieldBgColor,
+  //             filled: true,
+  //             hintText: "Click to fill",
+  //             hintStyle: GoogleFonts.poppins(
+  //               color: ThemeColors.textFieldHintColor,
+  //               fontSize: FontSize.medium,
+  //               fontWeight: FontWeight.w500,
+  //             ),
+  //             border: const OutlineInputBorder(
+  //               borderSide: BorderSide.none,
+  //               borderRadius: BorderRadius.all(Radius.circular(18)),
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget richText_listingDroneDetailsDates(
       String field, DateTime droneDetailDate) {
@@ -391,6 +446,36 @@ class _DroneDetailsState extends State<DroneDetails> {
                       fillColor: ThemeColors.textFieldBgColor,
                       filled: true,
                       labelText: "Serial number",
+                      labelStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: sizedBoxHight),
+                  TextFormField(
+                    controller: currentLocationController
+                      ..text = widget.drone.current_location,
+                    validator: (value) {
+                      if (currentLocationController.text.isEmpty) {
+                        return "This field can't be empty";
+                      }
+                      return null;
+                    },
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                    keyboardType: TextInputType.name,
+                    cursorColor: ThemeColors.primaryColor,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      labelText: "Current Location",
                       labelStyle: GoogleFonts.poppins(
                         color: ThemeColors.textFieldHintColor,
                         fontSize: FontSize.medium,
@@ -655,7 +740,8 @@ class _DroneDetailsState extends State<DroneDetails> {
                 'maintenance': int.parse(maintenanceController.text) * 60,
                 'flight_time': int.parse(flight_timeHoursController.text) * 60 +
                     int.parse(flight_timeMinutesController.text),
-                "flights": int.parse(flightsController.text)
+                "flights": int.parse(flightsController.text),
+                "current_location": currentLocationController.text,
               });
               Navigator.pop(context);
             },

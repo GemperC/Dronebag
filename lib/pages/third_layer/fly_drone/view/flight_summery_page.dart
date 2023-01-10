@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace, avoid_function_literals_in_foreach_calls, prefer_final_fields
+// ignore_for_file: non_constant_identifier_names, sized_box_for_whitespace, avoid_function_literals_in_foreach_calls, prefer_final_fields, use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dronebag/app.dart';
@@ -167,8 +167,6 @@ class _FlightSummeryState extends State<FlightSummery> {
 
                         for (int index = 0; index < widget.droneList.length; index++) {
 
-                            print(index);
-                            print(_currentSliderValues[index].toInt());
 
                             final docFlightRecord = FirebaseFirestore.instance
                                 .collection('groups')

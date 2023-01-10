@@ -7,13 +7,14 @@ class Drone {
   String name; // name of the drone
   String serial_number; // serial number of the drone in the army
   int flight_time; // hours of active flight
-  int minutes_till_maintenace; // hours left until maintnence 
+  int minutes_till_maintenace; // hours left until maintnence
   int maintenance; // every 'maintenance' hours the drone need maintenance
   DateTime date_added; // what date the drone was aded to the database
   DateTime date_bought; // when did the drone was bought
   int flights; // number of flights (lifts)
+  String current_location = "";
 
-  Drone ({
+  Drone({
     this.id = '',
     required this.name,
     required this.serial_number,
@@ -23,6 +24,7 @@ class Drone {
     required this.flights,
     this.minutes_till_maintenace = 0,
     required this.flight_time,
+    required this.current_location,
   });
 
   Map<String, dynamic> toJson() => {
@@ -35,18 +37,20 @@ class Drone {
         'minutes_till_maintenace': minutes_till_maintenace,
         'flight_time': flight_time,
         'flights': flights,
+        "current_location": current_location,
       };
 
   static Drone fromJson(Map<String, dynamic> json) => Drone(
         id: json['id'],
         name: json['name'],
         serial_number: json['serial_number'],
-        maintenance: json['maintenance'] ,
+        maintenance: json['maintenance'],
         date_added: (json['date_added'] as Timestamp).toDate(),
         date_bought: (json['date_bought'] as Timestamp).toDate(),
-        minutes_till_maintenace: json['minutes_till_maintenace'] ,
-        flight_time: json['flight_time'] ,
-        flights: json['flights'] ,
+        minutes_till_maintenace: json['minutes_till_maintenace'],
+        flight_time: json['flight_time'],
+        flights: json['flights'],
+        current_location: json['current_location'],
       );
 
   @override
