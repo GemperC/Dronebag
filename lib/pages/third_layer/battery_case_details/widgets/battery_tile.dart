@@ -13,11 +13,13 @@ class BatteryTile extends StatefulWidget {
   final String groupID;
   final BatteryStation batteryStation;
   final Battery battery;
+  final String privileges;
   const BatteryTile({
     Key? key,
     required this.groupID,
     required this.batteryStation,
     required this.battery,
+    required this.privileges,
   }) : super(key: key);
 
   @override
@@ -94,9 +96,7 @@ class _BatteryTileState extends State<BatteryTile> {
                           ),
                         ),
                         Text(
-                          openIssueNum == 0
-                              ? ""
-                              : "Issues: $openIssueNum",
+                          openIssueNum == 0 ? "" : "Issues: $openIssueNum",
                           style: GoogleFonts.poppins(
                             color: Colors.red[400],
                             fontSize: FontSize.medium,
@@ -114,7 +114,7 @@ class _BatteryTileState extends State<BatteryTile> {
                     builder: (context) => BatteryDetailDialog(
                         battery: widget.battery,
                         batteryStation: widget.batteryStation,
-                        groupID: widget.groupID));
+                        groupID: widget.groupID,privileges: widget.privileges,));
               },
             );
           } else if (snapshot.hasError) {

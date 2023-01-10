@@ -2,6 +2,7 @@ import 'package:dronebag/domain/battery_issue_repository/battery_issue_repositor
 import 'package:dronebag/domain/battery_repository/battery_repository.dart';
 import 'package:dronebag/domain/battery_station_repository/battery_station_repository.dart';
 import 'package:dronebag/pages/third_layer/battery_case_details/widgets/widgest.dart';
+import 'package:dronebag/widgets/utils.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,12 +14,14 @@ class BatteryDetailDialog extends StatefulWidget {
   final String groupID;
   final BatteryStation batteryStation;
   final Battery battery;
+  final String privileges;
 
   const BatteryDetailDialog({
     Key? key,
     required this.groupID,
     required this.batteryStation,
     required this.battery,
+    required this.privileges,
   }) : super(key: key);
 
   @override
@@ -98,37 +101,46 @@ class _BatteryDetailDialogState extends State<BatteryDetailDialog> {
           ),
           const SizedBox(width: 8),
           SizedBox(
-            width: 70,
-            height: 50,
-            child: TextField(
-              onChanged: (value) {
-                final docBattery = FirebaseFirestore.instance
-                    .collection('groups')
-                    .doc(widget.groupID)
-                    .collection('battery_stations')
-                    .doc(widget.batteryStation.id)
-                    .collection('batteries')
-                    .doc(widget.battery.id);
-                docBattery.update({'cycle': int.parse(value)});
-              },
-              style: GoogleFonts.poppins(color: ThemeColors.whiteTextColor),
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                fillColor: ThemeColors.textFieldBgColor,
-                filled: true,
-                hintText: "0-200",
-                hintStyle: GoogleFonts.poppins(
-                  color: ThemeColors.textFieldHintColor,
-                  fontSize: FontSize.small,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: const OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                ),
-              ),
-            ),
-          ),
+              width: 70,
+              height: 50,
+              child: widget.privileges == "admin"
+                  ? TextField(
+                      onChanged: (value) {
+                        final docBattery = FirebaseFirestore.instance
+                            .collection('groups')
+                            .doc(widget.groupID)
+                            .collection('battery_stations')
+                            .doc(widget.batteryStation.id)
+                            .collection('batteries')
+                            .doc(widget.battery.id);
+                        docBattery.update({'cycle': int.parse(value)});
+                      },
+                      style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        fillColor: ThemeColors.textFieldBgColor,
+                        filled: true,
+                        hintText: "0-200",
+                        hintStyle: GoogleFonts.poppins(
+                          color: ThemeColors.textFieldHintColor,
+                          fontSize: FontSize.small,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                      ),
+                    )
+                  : Center(
+                    child: Text(widget.battery.cycle.toString(),
+                        style: GoogleFonts.poppins(
+                          color: ThemeColors.whiteTextColor,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w400,
+                        )),
+                  )),
           const SizedBox(height: 30),
           Align(
             alignment: Alignment.topLeft,
@@ -150,7 +162,9 @@ class _BatteryDetailDialogState extends State<BatteryDetailDialog> {
                   TextSpan(
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
+
                         create.createBatteryIssue(widget.battery);
+
                       },
                     text: 'Add Issue',
                     style: GoogleFonts.poppins(

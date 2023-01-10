@@ -12,10 +12,12 @@ import '../widgets/widgest.dart';
 class DroneDetails extends StatefulWidget {
   final String groupID;
   final Drone drone;
+  final String privileges;
   const DroneDetails({
     Key? key,
     required this.groupID,
     required this.drone,
+    required this.privileges,
   }) : super(key: key);
 
   @override
@@ -70,7 +72,12 @@ class _DroneDetailsState extends State<DroneDetails> {
                 ),
               ),
               onPressed: () {
-                editDroneDialog();
+                if (widget.privileges == 'admin') {
+                  editDroneDialog();
+                } else {
+                  Utils.showSnackBarWithColor(
+                      'You dont have to required priviledges', Colors.red);
+                }
               },
             ),
           ],
@@ -139,6 +146,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                                 text: TextSpan(
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
+                                      if (widget.privileges == 'admin') {
                                       FirebaseFirestore.instance
                                           .collection('groups')
                                           .doc(widget.groupID)
@@ -148,6 +156,11 @@ class _DroneDetailsState extends State<DroneDetails> {
                                         'minutes_till_maintenace':
                                             drone.maintenance
                                       });
+                                      } else {
+                                            Utils.showSnackBarWithColor(
+                                                'You dont have to required priviledges',
+                                                Colors.red);
+                                          }
                                     },
                                   text: 'Reset',
                                   style: GoogleFonts.poppins(
@@ -204,6 +217,7 @@ class _DroneDetailsState extends State<DroneDetails> {
                             index: initialIndex,
                             drone: drone,
                             groupID: widget.groupID,
+                            privileges:widget.privileges
                           ),
                         ],
                       ),
@@ -482,7 +496,8 @@ class _DroneDetailsState extends State<DroneDetails> {
                   ),
                   SizedBox(height: sizedBoxHight),
                   TextFormField(
-                    controller: flightsController..text = widget.drone.flights.toString(),
+                    controller: flightsController
+                      ..text = widget.drone.flights.toString(),
                     validator: (value) {
                       if (flightsController.text.isEmpty) {
                         return "This field can't be empty";

@@ -5,16 +5,20 @@ import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/domain/drone_repository/drone_repository.dart';
 import 'package:dronebag/domain/flight_data_repository/fight_data_repository.dart';
+import 'package:dronebag/widgets/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DroneFlightRecords extends StatefulWidget {
   final String groupID;
   final Drone drone;
+  final String privileges;
+
   const DroneFlightRecords({
     Key? key,
     required this.groupID,
     required this.drone,
+    required this.privileges,
   }) : super(key: key);
 
   @override
@@ -38,7 +42,7 @@ class _DroneFlightRecordsState extends State<DroneFlightRecords> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0,15,0,0),
+      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
       child: StreamBuilder<List<FlightData>>(
           stream: fetchRecords(),
           builder: (context, snapshot) {
@@ -103,7 +107,6 @@ class _DroneFlightRecordsState extends State<DroneFlightRecords> {
   }
 
   Widget RecordTile(FlightData record) {
-
     return ListTile(
       // onTap: (() {
       //   showDialog(
@@ -199,7 +202,7 @@ class _DroneFlightRecordsState extends State<DroneFlightRecords> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Flight duration:   ${record.flight_time ~/60} hours and ${record.flight_time %60} minutes",
+                      "Flight duration:   ${record.flight_time ~/ 60} hours and ${record.flight_time % 60} minutes",
                       style: GoogleFonts.poppins(
                         color: ThemeColors.whiteTextColor,
                         fontSize: FontSize.medium,
@@ -254,15 +257,21 @@ class _DroneFlightRecordsState extends State<DroneFlightRecords> {
                                         )),
                                     TextButton(
                                         onPressed: () {
-                                          FirebaseFirestore.instance
-                                              .collection('groups')
-                                              .doc(widget.groupID)
-                                              .collection('drones')
-                                              .doc(widget.drone.id)
-                                              .collection("flight_data")
-                                              .doc(record.id)
-                                              .delete();
-                                          Navigator.pop(context);
+                                          if (widget.privileges == 'admin') {
+                                            FirebaseFirestore.instance
+                                                .collection('groups')
+                                                .doc(widget.groupID)
+                                                .collection('drones')
+                                                .doc(widget.drone.id)
+                                                .collection("flight_data")
+                                                .doc(record.id)
+                                                .delete();
+                                            Navigator.pop(context);
+                                          } else {
+                                            Utils.showSnackBarWithColor(
+                                                'You dont have to required priviledges',
+                                                Colors.red);
+                                          }
                                         },
                                         child: const Text(
                                           'Yes Delete',

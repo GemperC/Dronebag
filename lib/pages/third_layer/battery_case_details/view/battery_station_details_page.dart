@@ -12,10 +12,13 @@ import '../widgets/widgest.dart';
 class BatteryStationDetails extends StatefulWidget {
   final String groupID;
   final BatteryStation batteryStation;
+  final String privileges;
   const BatteryStationDetails({
     Key? key,
     required this.groupID,
     required this.batteryStation,
+        required this.privileges,
+
   }) : super(key: key);
 
   @override
@@ -79,12 +82,17 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                 ),
               ),
               onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) => EditBatteryStationDialog(
-                          batteryStation: widget.batteryStation,
-                          groupID: widget.groupID,
-                        ));
+                if (widget.privileges == 'admin') {
+                  showDialog(
+                      context: context,
+                      builder: (context) => EditBatteryStationDialog(
+                            batteryStation: widget.batteryStation,
+                            groupID: widget.groupID,
+                          ));
+                } else {
+                  Utils.showSnackBarWithColor(
+                      'You dont have to required priviledges', Colors.red);
+                }
               },
             ),
           ],
@@ -143,7 +151,7 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                           return BatteryTile(
                               battery: batteries[index],
                               batteryStation: widget.batteryStation,
-                              groupID: widget.groupID);
+                              groupID: widget.groupID,privileges: widget.privileges,);
                         },
                       );
                     } else if (snapshot.hasError) {
@@ -223,5 +231,4 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
           ),
         ));
   }
-
 }

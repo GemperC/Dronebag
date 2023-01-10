@@ -12,10 +12,12 @@ import 'package:google_fonts/google_fonts.dart';
 class DroneMaintenance extends StatefulWidget {
   final String groupID;
   final Drone drone;
+  final String privileges;
   const DroneMaintenance({
     Key? key,
     required this.groupID,
     required this.drone,
+    required this.privileges,
   }) : super(key: key);
 
   @override
@@ -33,43 +35,45 @@ class _DroneMaintenanceState extends State<DroneMaintenance> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      TextButton(
-    child: Text(
-      'New Record',
-      textAlign: TextAlign.center,
-      style: GoogleFonts.poppins(
-        color: Colors.blue,
-        fontSize: FontSize.medium,
-        fontWeight: FontWeight.w600,
-      ),
-    ),
-    onPressed: () {
-      createRecord();
-    },
-      ),
+      widget.privileges == "admin"
+          ? TextButton(
+              child: Text(
+                'New Record',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  color: Colors.blue,
+                  fontSize: FontSize.medium,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              onPressed: () {
+                createRecord();
+              },
+            )
+          : const SizedBox(height: 15),
       StreamBuilder<List<Maintenance>>(
-      stream: fetchRecords(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final records = snapshot.data!;
-          return ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: records.length,
-              itemBuilder: (context, index) {
-                detailController =
-                    TextEditingController(text: records[index].detail);
-                return RecordTile(records[index], detailController);
-              });
-        } else if (snapshot.hasError) {
-          return SingleChildScrollView(
-            child: Text('Something went wrong! \n\n$snapshot',
-                style: const TextStyle(color: Colors.white)),
-          );
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      }),
+          stream: fetchRecords(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final records = snapshot.data!;
+              return ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: records.length,
+                  itemBuilder: (context, index) {
+                    detailController =
+                        TextEditingController(text: records[index].detail);
+                    return RecordTile(records[index], detailController);
+                  });
+            } else if (snapshot.hasError) {
+              return SingleChildScrollView(
+                child: Text('Something went wrong! \n\n$snapshot',
+                    style: const TextStyle(color: Colors.white)),
+              );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          }),
     ]);
   }
 
@@ -102,11 +106,13 @@ class _DroneMaintenanceState extends State<DroneMaintenance> {
         .collection('maintenance_history')
         .orderBy("date", descending: true)
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Maintenance.fromJson(doc.data())).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Maintenance.fromJson(doc.data()))
+            .toList());
   }
 
-  Widget RecordTile(Maintenance record, TextEditingController detailController) {
+  Widget RecordTile(
+      Maintenance record, TextEditingController detailController) {
     String description = record.detail;
     Color textDescriptionColor = ThemeColors.whiteTextColor;
     if (record.detail == "") {
@@ -250,6 +256,7 @@ class _DroneMaintenanceState extends State<DroneMaintenance> {
                                     )),
                                 TextButton(
                                     onPressed: () {
+                                      if (widget.privileges == 'admin') {
                                       FirebaseFirestore.instance
                                           .collection('groups')
                                           .doc(widget.groupID)
@@ -259,6 +266,11 @@ class _DroneMaintenanceState extends State<DroneMaintenance> {
                                           .doc(record.id)
                                           .delete();
                                       Navigator.pop(context);
+                                      } else {
+                                            Utils.showSnackBarWithColor(
+                                                'You dont have to required priviledges',
+                                                Colors.red);
+                                          }
                                     },
                                     child: const Text(
                                       'Yes Delete',

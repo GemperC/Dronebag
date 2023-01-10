@@ -114,6 +114,7 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
                 builder: (context) => BatteryStationDetails(
                       groupID: widget.group.id,
                       batteryStation: batteryStation,
+                      privileges: widget.privileges
                     )),
           );
         },

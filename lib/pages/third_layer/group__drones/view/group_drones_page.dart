@@ -121,6 +121,7 @@ class _GroupDronesState extends State<GroupDrones> {
                 builder: (context) => DroneDetails(
                       groupID: widget.group.id,
                       drone: drone,
+                      privileges: widget.privileges
                     )),
           );
         },
@@ -533,6 +534,7 @@ class _GroupDronesState extends State<GroupDrones> {
             builder: (context) => DroneDetails(
                   groupID: widget.group.id,
                   drone: drone,
+                  privileges: widget.privileges,
                 )),
       );
     }
