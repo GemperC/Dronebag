@@ -175,6 +175,18 @@ class _GroupDronesState extends State<GroupDrones> {
                         ),
                       ),
                     ),
+                    Align(
+                      //alingemt of the titel
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Current location: ~${drone.current_location}',
+                        style: GoogleFonts.poppins(
+                          color: Color.fromARGB(255, 50, 189, 0),
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
                     FutureBuilder<int>(
                       future: FirebaseFirestore.instance
                           .collection(
