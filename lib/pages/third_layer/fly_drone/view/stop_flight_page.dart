@@ -204,7 +204,7 @@ class _StopFlightPageState extends State<StopFlightPage> {
                                   droneList: widget.droneList,
                                   pilot: widget.pilot,
                                   flightPurpose: widget.flightPurpose,
-                                  flightDuration: flightDuration.inMinutes,
+                                  flightDuration: 60,
                                 ),
                               ),
                             );

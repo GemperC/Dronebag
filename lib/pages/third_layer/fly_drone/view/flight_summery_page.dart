@@ -163,47 +163,54 @@ class _FlightSummeryState extends State<FlightSummery> {
                   const SizedBox(height: 100),
                   Center(
                     child: MainButton2(
-                      onPressed: () {
-                        int index = 0;
-                        widget.droneList.forEach((drone) async {
-                          final docFlightRecord = FirebaseFirestore.instance
-                              .collection('groups')
-                              .doc(widget.group.id)
-                              .collection('drones')
-                              .doc(drone.id)
-                              .collection('flight_data')
-                              .doc();
-                          final flightRecord = FlightData(
-                              id: docFlightRecord.id,
-                              droneName: drone.name,
-                              droneSerial: drone.serial_number,
-                              flight_purpose: widget.flightPurpose,
-                              flight_time: _currentSliderValues[index].toInt(),
-                              date: DateTime.now(),
-                              pilot: widget.pilot.fullName);
+                      onPressed: () async{
 
-                          final json = flightRecord.toJson();
-                          await docFlightRecord.set(json);
+                        for (int index = 0; index < widget.droneList.length; index++) {
 
-                          int droneFlightTime = _currentSliderValues[index].toInt();
-                          int newFlightTime =
-                              droneFlightTime + drone.flight_time;
+                            print(index);
+                            print(_currentSliderValues[index].toInt());
 
-                          int newMinutes_till_maintenace =
-                              drone.minutes_till_maintenace - droneFlightTime;
+                            final docFlightRecord = FirebaseFirestore.instance
+                                .collection('groups')
+                                .doc(widget.group.id)
+                                .collection('drones')
+                                .doc(widget.droneList[index].id)
+                                .collection('flight_data')
+                                .doc();
+                            final flightRecord = FlightData(
+                                id: docFlightRecord.id,
+                                droneName: widget.droneList[index].name,
+                                droneSerial: widget.droneList[index].serial_number,
+                                flight_purpose: widget.flightPurpose,
+                                flight_time:
+                                    _currentSliderValues[index].toInt(),
+                                date: DateTime.now(),
+                                pilot: widget.pilot.fullName);
 
-                          FirebaseFirestore.instance
-                              .collection('groups')
-                              .doc(widget.group.id)
-                              .collection('drones')
-                              .doc(drone.id)
-                              .update({
-                            "flight_time": newFlightTime,
-                            "minutes_till_maintenace":
-                                newMinutes_till_maintenace
-                          });
-                          index++;
-                        });
+                            final json = flightRecord.toJson();
+                            await docFlightRecord.set(json);
+
+                            int droneFlightTime =
+                                _currentSliderValues[index].toInt();
+                            int newFlightTime =
+                                droneFlightTime + widget.droneList[index].flight_time;
+
+                            int newMinutes_till_maintenace =
+                                widget.droneList[index].minutes_till_maintenace - droneFlightTime;
+
+                            FirebaseFirestore.instance
+                                .collection('groups')
+                                .doc(widget.group.id)
+                                .collection('drones')
+                                .doc(widget.droneList[index].id)
+                                .update({
+                              "flight_time": newFlightTime,
+                              "minutes_till_maintenace":
+                                  newMinutes_till_maintenace
+                            });
+                        }
+                          // widget.droneList.forEach((drone) async {
+                          // });
                         Utils.showSnackBarWithColor(
                             'New flight record have been added to the drones',
                             Colors.blue);
