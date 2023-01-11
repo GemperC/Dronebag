@@ -16,10 +16,9 @@ Future main() async {
     badge: true,
     carPlay: false,
     criticalAlert: false,
-    provisional: false,
+    provisional: true,
     sound: true,
   );
-  print('User granted permission: ${settings.authorizationStatus}');
 
   runApp(const Dronebag());
 }
