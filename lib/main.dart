@@ -9,6 +9,18 @@ Future main() async {
   await Firebase.initializeApp();
   await GetStorage.init();
   FirebaseMessaging.onBackgroundMessage(backgroudHandler);
+  FirebaseMessaging messeging = FirebaseMessaging.instance;
+  NotificationSettings settings = await messeging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  print('User granted permission: ${settings.authorizationStatus}');
+
   runApp(const Dronebag());
 }
 
@@ -41,7 +53,9 @@ class _DronebagState extends State<Dronebag> {
         debugShowCheckedModeBanner: false,
         navigatorKey: navigatorKey,
         scaffoldMessengerKey: Utils.messengerKey,
-        home: introdata.read('displayed') ? const IsLoggedIn() : const IntroPage());
+        home: introdata.read('displayed')
+            ? const IsLoggedIn()
+            : const IntroPage());
   }
 }
 

@@ -28,7 +28,6 @@ class StartFlightPage extends StatefulWidget {
 }
 
 class _StartFlightPageState extends State<StartFlightPage> {
-
   final formKey = GlobalKey<FormState>();
   final TextEditingController serial_numberController = TextEditingController();
   final TextEditingController batteryIssueDetailController =
@@ -299,7 +298,7 @@ class _StartFlightPageState extends State<StartFlightPage> {
                               pilot: loggedUser.fullName,
                               drones: selectedDrones,
                             );
-                            notification.makeCallStartFlight();
+                            await notification.makeCallStartFlight();
 
                             Navigator.pushReplacement(
                               context,
