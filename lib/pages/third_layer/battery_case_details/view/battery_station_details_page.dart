@@ -16,8 +16,7 @@ class BatteryStationDetails extends StatefulWidget {
     Key? key,
     required this.groupID,
     required this.batteryStation,
-        required this.privileges,
-
+    required this.privileges,
   }) : super(key: key);
 
   @override
@@ -118,6 +117,28 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
+              RichText(
+                text: TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: "Current Location: ",
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    TextSpan(
+                      text: widget.batteryStation.current_location,
+                      style: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: 10),
               Text(
                 'Batteries',
@@ -148,9 +169,11 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           return BatteryTile(
-                              battery: batteries[index],
-                              batteryStation: widget.batteryStation,
-                              groupID: widget.groupID,privileges: widget.privileges,);
+                            battery: batteries[index],
+                            batteryStation: widget.batteryStation,
+                            groupID: widget.groupID,
+                            privileges: widget.privileges,
+                          );
                         },
                       );
                     } else if (snapshot.hasError) {

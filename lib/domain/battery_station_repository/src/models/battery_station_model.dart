@@ -6,6 +6,7 @@ class BatteryStation {
   String id; //id of the battery case in the firestore database
   String serial_number; // serial number of the battery case in the army
   String ownership; // serial number of the battery case in the army
+  String current_location = "";
 
   int battery_pairs; // how much battery pairs the case has
   DateTime date_bought; // when did the battery case was purchased
@@ -16,6 +17,7 @@ class BatteryStation {
     required this.ownership,
     required this.date_bought,
     this.battery_pairs = 0,
+    required this.current_location,
   });
 
   Map<String, dynamic> toJson() => {
@@ -24,6 +26,7 @@ class BatteryStation {
         'battery_pairs': battery_pairs,
         'date_bought': date_bought,
         'ownership': ownership,
+        'current_location': current_location,
       };
 
   static BatteryStation fromJson(Map<String, dynamic> json) => BatteryStation(
@@ -32,5 +35,6 @@ class BatteryStation {
         date_bought: (json['date_bought'] as Timestamp).toDate(),
         battery_pairs: json['battery_pairs'],
         ownership: json['ownership'],
+        current_location: json['current_location'],
       );
 }

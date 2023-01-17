@@ -32,6 +32,8 @@ class _EditBatteryStationDialogState extends State<EditBatteryStationDialog> {
   final double sizedBoxHight = 16;
   final TextEditingController battery_pairsController = TextEditingController();
   final TextEditingController ownershipController = TextEditingController();
+    final TextEditingController currentLocationController  = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +115,37 @@ class _EditBatteryStationDialogState extends State<EditBatteryStationDialog> {
                     ),
                   ),
                 ),
+                                const SizedBox(height: 16),
+
+                TextFormField(
+                    controller: currentLocationController
+                      ..text = widget.batteryStation.current_location,
+                    validator: (value) {
+                      if (currentLocationController.text.isEmpty) {
+                        return "This field can't be empty";
+                      }
+                      return null;
+                    },
+                    style: GoogleFonts.poppins(
+                      color: ThemeColors.whiteTextColor,
+                    ),
+                    keyboardType: TextInputType.name,
+                    cursorColor: ThemeColors.primaryColor,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.textFieldBgColor,
+                      filled: true,
+                      labelText: "Current Location",
+                      labelStyle: GoogleFonts.poppins(
+                        color: ThemeColors.textFieldHintColor,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    ),
+                  ),
               ],
             )),
       ),
@@ -176,6 +209,7 @@ class _EditBatteryStationDialogState extends State<EditBatteryStationDialog> {
                 .update({
               'serial_number': serial_numberController.text,
               'ownership': ownershipController.text,
+              "current_location": currentLocationController.text
             });
 
             final CollectionReference batteryCollection = FirebaseFirestore

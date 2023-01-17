@@ -38,19 +38,20 @@ class _MyGroupPageState extends State<MyGroupPage> {
       appBar: AppBar(
         backgroundColor: ThemeColors.scaffoldBgColor,
         actions: [
+          //===============DEBUG BUTTON===================
           loggedUser.email! == "testadmin@gmail.com"
               ? Padding(
                   padding: const EdgeInsets.only(right: 20.0),
                   child: GestureDetector(
                     onTap: () async {
-                      QuerySnapshot droneCollection = await FirebaseFirestore
+                      QuerySnapshot collection = await FirebaseFirestore
                           .instance
                           .collection("groups")
                           .doc(widget.group.id)
-                          .collection("drones")
+                          .collection("battery_stations")
                           .get();
-                      droneCollection.docs.forEach((droneDoc) {
-                        droneDoc.reference.update({"current_location": ""});
+                      collection.docs.forEach((doc) {
+                        doc.reference.update({"current_location": ""});
                       });
                     },
                     child: const Icon(

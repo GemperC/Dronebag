@@ -156,6 +156,18 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
                         ),
                       ),
                     ),
+                    Align(
+                      //alingemt of the titel
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Current location: ${batteryStation.current_location}',
+                        style: GoogleFonts.poppins(
+                          color: const Color.fromARGB(255, 50, 189, 0),
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -353,6 +365,7 @@ class _GroupBatteryStationsState extends State<GroupBatteryStations> {
         serial_number: serial_numberController.text,
         id: docBatteryStation.id,
         ownership: ownershipController.text,
+        current_location: "",
         battery_pairs: int.parse(battery_pairsController.text),
         date_bought: date_boughtController.text == "unknown"
             ? DateTime.parse("1999-02-10")

@@ -6,7 +6,7 @@ class BatteryIssue {
   String status; // was the BatteryIssue revolved
   DateTime date; // hours of active flight
 
-  BatteryIssue ({
+  BatteryIssue({
     this.id = '',
     required this.detail,
     this.status = 'open',
@@ -25,6 +25,5 @@ class BatteryIssue {
         detail: json['detail'],
         status: json['status'],
         date: (json['date'] as Timestamp).toDate(),
-
       );
 }
