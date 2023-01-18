@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
+            VALUE "CompanyName", "com.tomcohen" "\0"
             VALUE "FileDescription", "dronebag" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "dronebag" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2022 com.example. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2022 com.tomcohen. All rights reserved." "\0"
             VALUE "OriginalFilename", "dronebag.exe" "\0"
             VALUE "ProductName", "dronebag" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

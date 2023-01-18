@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:630321126392:android:6628423fccaa7705d0140d",
+        "mobilesdk_app_id": "1:630321126392:android:e8ff9fd9c32d3426d0140d",
         "android_client_info": {
-          "package_name": "com.example.dronebag"
+          "package_name": "com.tomcohen.dronebag"
         }
       },
       "oauth_client": [
@@ -29,6 +29,13 @@
             {
               "client_id": "630321126392-2099j3mp6kqe1tmjgvhrubkg3k1o73lk.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "630321126392-ibp5g61b3liv420urd0jh3o3i5poem87.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tomcohen.dronebag"
+              }
             }
           ]
         }
@@ -58,6 +65,13 @@
             {
               "client_id": "630321126392-2099j3mp6kqe1tmjgvhrubkg3k1o73lk.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "630321126392-ibp5g61b3liv420urd0jh3o3i5poem87.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tomcohen.dronebag"
+              }
             }
           ]
         }

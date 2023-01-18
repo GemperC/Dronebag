@@ -1,4 +1,4 @@
-package com.example.dronebag
+package com.tomcohen.dronebag
 
 import io.flutter.embedding.android.FlutterActivity
 
