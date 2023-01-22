@@ -290,27 +290,27 @@ class _StartFlightPageState extends State<StartFlightPage> {
                           );
                           if (selectedDrones.length > 0 && confirm!) {
                             airTimeStart = DateTime.now();
-                            // sendNotificationToAdmins(widget.group.name,
-                            //     loggedUser.fullName, droneList);
                             PostCall notification = PostCall(
                               topic: widget.group.id,
                               purpose: dropdownValue,
                               pilot: loggedUser.fullName,
                               drones: selectedDrones,
                             );
+                            setState(() {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => StopFlightPage(
+                                      airTimeStart: airTimeStart,
+                                      group: widget.group,
+                                      droneList: selectedDrones,
+                                      pilot: loggedUser,
+                                      flightPurpose: dropdownValue),
+                                ),
+                              );
+                            });
                             await notification.makeCallStartFlight();
 
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => StopFlightPage(
-                                    airTimeStart: airTimeStart,
-                                    group: widget.group,
-                                    droneList: selectedDrones,
-                                    pilot: loggedUser,
-                                    flightPurpose: dropdownValue),
-                              ),
-                            );
                             Utils.showSnackBarWithColor(
                                 "You have started a flight", Colors.blue);
                           } else {
@@ -337,29 +337,6 @@ class _StartFlightPageState extends State<StartFlightPage> {
             ),
           ),
         ));
-  }
-
-  Future sendNotificationToAdmins(
-      String topic, String pilot, List<Drone> drones) async {
-    http.post(
-      Uri.parse('https://fcm.googleapis.com/fcm/send'),
-      headers: {
-        'content-type': 'application/json',
-        'Authorization':
-            'key=AAAAksIRG_g:APA91bHSF8IAwnFTcUpYlqvZpGT1vzhfsDR7XeCfQfrSUydQWZqDI7SVzRBuCl90CMp6xp_wOLqZ3x2MblT-SH1RKbACcX3RQFHHYqp0efb2Y8M1zhY0-e6E3e32c2_PVs_QbKIrjqpr'
-      },
-      body: jsonEncode(
-        {
-          "to": "/topics/$topic",
-          "notification": {
-            "title": "$pilot started a flight!",
-            "body":
-                "In the group $topic \n$pilot is flying the drones:\n${drones.map((e) => e.name)}",
-          },
-          "priority": "high",
-        },
-      ),
-    );
   }
 
   void dropdownCallback(String? selectedvalue) {
