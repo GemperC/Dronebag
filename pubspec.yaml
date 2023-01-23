@@ -35,6 +35,7 @@ dependencies:
   firebase_performance: ^0.9.0+6
   firebase_messaging: ^14.1.1
   flutter_local_notifications: ^12.0.2
+  flutter_launcher_icons: ^0.11.0
 
 dev_dependencies:
   flutter_test:
@@ -42,7 +43,12 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   
 
-
+flutter_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "assets/app/dronebag_icon.png" 
+  adaptive_icon_background: "assets/app/ic_launcher_adaptive_back.png"
+  adaptive_icon_foreground: "assets/app/ic_launcher_adaptive_fore.png"
 
 flutter:
 
