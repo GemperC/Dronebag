@@ -112,7 +112,10 @@ class _BatteryDetailDialogState extends State<BatteryDetailDialog> {
                             .doc(widget.batteryStation.id)
                             .collection('batteries')
                             .doc(widget.battery.id);
-                        docBattery.update({'cycle': int.parse(value)});
+                        docBattery.update({
+                          'cycle': int.parse(value),
+                          'last_update': DateTime.now(),
+                        });
                       },
                       style: GoogleFonts.poppins(
                           color: ThemeColors.whiteTextColor),
@@ -133,13 +136,24 @@ class _BatteryDetailDialogState extends State<BatteryDetailDialog> {
                       ),
                     )
                   : Center(
-                    child: Text(widget.battery.cycle.toString(),
-                        style: GoogleFonts.poppins(
-                          color: ThemeColors.whiteTextColor,
-                          fontSize: FontSize.medium,
-                          fontWeight: FontWeight.w400,
-                        )),
-                  )),
+                      child: Text(widget.battery.cycle.toString(),
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.whiteTextColor,
+                            fontSize: FontSize.medium,
+                            fontWeight: FontWeight.w400,
+                          )),
+                    )),
+          const SizedBox(height: 20),
+          widget.battery.last_update == null
+              ? Container()
+              : Text(
+                  "Last Update: ${widget.battery.last_update!.day}.${widget.battery.last_update!.month}.${widget.battery.last_update!.year}",
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: FontSize.xMedium,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
           const SizedBox(height: 30),
           Align(
             alignment: Alignment.topLeft,
@@ -161,9 +175,7 @@ class _BatteryDetailDialogState extends State<BatteryDetailDialog> {
                   TextSpan(
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-
                         create.createBatteryIssue(widget.battery);
-
                       },
                     text: 'Add Issue',
                     style: GoogleFonts.poppins(

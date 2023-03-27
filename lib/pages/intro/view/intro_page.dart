@@ -1,4 +1,3 @@
-
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
 import 'package:dronebag/main.dart';
@@ -15,7 +14,6 @@ class IntroPage extends StatefulWidget {
 }
 
 class _IntroPageState extends State<IntroPage> {
-
   final introdate = GetStorage();
 
   void endIntroductionScreen(context) {
@@ -29,15 +27,10 @@ class _IntroPageState extends State<IntroPage> {
   List<PageViewModel> getPages() {
     return [
       PageViewModel(
-        image: Container(
-          margin: const EdgeInsets.only(top: 35, bottom: 10),
-          width: 200.0,
-          height: 200.0,
-          decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
-          child: const Icon(
-            Icons.backpack,
-            color: Color.fromARGB(255, 255, 255, 255),
-            size: 160.0,
+        image: Padding(
+          padding: const EdgeInsets.only(top: 60),
+          child: Image.asset(
+            "assets/intro/icon_no_bg.png",
           ),
         ),
         titleWidget: Text(
@@ -49,7 +42,7 @@ class _IntroPageState extends State<IntroPage> {
           ),
         ),
         bodyWidget: Text(
-          'Manage your drone fleet with a \ncustom made app',
+          'Dronebag is a custom-made app designed for drone enthusiasts. With Dronebag, you can easily create drone groups and add drones to them, making it easy to keep track of your drone fleet.',
           textAlign: TextAlign.center,
           style: GoogleFonts.poppins(
             color: ThemeColors.whiteTextColor,
@@ -61,44 +54,102 @@ class _IntroPageState extends State<IntroPage> {
         ),
       ),
       PageViewModel(
-          image: Container(
-            margin: const EdgeInsets.only(top: 35, bottom: 10),
-            width: 200.0,
-            height: 200.0,
-            child: Image.asset('assets/images/drone.png'),
-          ),
-          titleWidget: Column(
-            children: [
-              const SizedBox(height: 40),
-              Text(
-                'Dronebag',
-                style: GoogleFonts.poppins(
-                  color: const Color.fromARGB(255, 255, 255, 255),
-                  fontSize: FontSize.xxLarge,
-                  fontWeight: FontWeight.w600,
-                ),
+        image: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Image.asset('assets/intro/drone_fleet.png'),
+        ),
+        titleWidget: Column(
+          children: [
+            const SizedBox(height: 40),
+            Text(
+              'Manage Your Drone Fleet with Ease',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                color: const Color.fromARGB(255, 255, 255, 255),
+                fontSize: FontSize.xxLarge,
+                fontWeight: FontWeight.w600,
               ),
-            ],
-          ),
-          bodyWidget: Text(
-            'Manage your drone fleet with a \ncustom made app',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(
-              color: ThemeColors.whiteTextColor,
-              fontSize: FontSize.xMedium,
             ),
+          ],
+        ),
+        bodyWidget: Text(
+          ' With Dronebag, you can easily create and manage drone groups, monitor battery cycles, and receive notifications when your drones are in the air.',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins(
+            color: ThemeColors.whiteTextColor,
+            fontSize: FontSize.xMedium,
           ),
-          // footer: Text(
-          //   "Footer Text  here",
-          //   style: TextStyle(
-          //     color: ThemeColors.whiteTextColor,
-          //     fontSize: FontSize.small,
-          //     fontWeight: FontWeight.w400,
-          //   ),
-          // ),
-          decoration: const PageDecoration(
-            pageColor: ThemeColors.scaffoldBgColor,
-          )),
+        ),
+        decoration: const PageDecoration(
+          pageColor: ThemeColors.scaffoldBgColor,
+        ),
+      ),
+      PageViewModel(
+        image: Padding(
+          padding: const EdgeInsets.only(top: 80.0),
+          child: Image.asset(
+            'assets/intro/man.png',
+            color: Colors.white,
+          ),
+        ),
+        titleWidget: Column(
+          children: [
+            const SizedBox(height: 40),
+            Text(
+              'Simplify Your Drone Operations',
+              style: GoogleFonts.poppins(
+                color: const Color.fromARGB(255, 255, 255, 255),
+                fontSize: FontSize.xxLarge,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        bodyWidget: Text(
+          'Dronebag makes it easy to keep track of your drones, batteries, and flights. With its user-friendly interface and advanced features, Dronebag simplifies your drone operations and makes flying safer and more efficient.',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins(
+            color: ThemeColors.whiteTextColor,
+            fontSize: FontSize.xMedium,
+          ),
+        ),
+        decoration: const PageDecoration(
+          pageColor: ThemeColors.scaffoldBgColor,
+        ),
+      ),
+      PageViewModel(
+        image: Padding(
+          padding: const EdgeInsets.only(top: 80.0),
+          child: Image.asset(
+            'assets/intro/cut.png',
+            color: Colors.white,
+          ),
+        ),
+        titleWidget: Column(
+          children: [
+            const SizedBox(height: 40),
+            Text(
+              'No more paper work!',
+              style: GoogleFonts.poppins(
+                color: const Color.fromARGB(255, 255, 255, 255),
+                fontSize: FontSize.xxLarge,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        bodyWidget: Text(
+          'Drones are a lot of fun, but managing them can be a hassle. With Dronebag, you can focus on flying and let our app take care of the rest. Dronebag simplifies drone management, so you can spend more time enjoying the experience.',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins(
+            color: ThemeColors.whiteTextColor,
+            fontSize: FontSize.xMedium,
+          ),
+        ),
+        decoration: const PageDecoration(
+          pageColor: ThemeColors.scaffoldBgColor,
+        ),
+      ),
     ];
   }
 

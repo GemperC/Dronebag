@@ -5,7 +5,7 @@ description: A new Flutter project.
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 1.2.0+2
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
@@ -16,7 +16,7 @@ dependencies:
     sdk: flutter
 
   provider: ^6.0.3
-  introduction_screen: ^3.0.2
+  introduction_screen: ^3.1.7
   get: ^4.6.5
   get_storage: ^2.0.3
   email_validator: ^2.1.17
@@ -64,6 +64,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    - assets/intro/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

@@ -177,6 +177,8 @@ class _BatteryStationDetailsState extends State<BatteryStationDetails> {
                         },
                       );
                     } else if (snapshot.hasError) {
+                      print(snapshot);
+
                       return SingleChildScrollView(
                         child: Text('Something went wrong! \n\n$snapshot',
                             style: const TextStyle(color: Colors.white)),
