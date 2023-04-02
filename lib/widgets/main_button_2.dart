@@ -24,7 +24,7 @@ class MainButton2 extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: ThemeColors.primaryColor,
+        backgroundColor: backgroundColor ?? ThemeColors.primaryColor,
         foregroundColor: ThemeColors.whiteTextColor,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),

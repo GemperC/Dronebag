@@ -51,43 +51,6 @@ class _BatteryDetailDialogState extends State<BatteryDetailDialog> {
           fontWeight: FontWeight.w600,
         ),
       ),
-      // content: SingleChildScrollView(
-      //   child: StreamBuilder<List<BatteryIssue>>(
-      //       stream: fetch.fetchBatteryIssue(widget.battery),
-      //       builder: ((context, snapshot) {
-      //         if (snapshot.hasData) {
-      //           final batteryIssues = snapshot.data!;
-      //           //print(issues.length);
-      //           return Container(
-      //             width: double.maxFinite,
-      //             child: ListView.builder(
-      //               shrinkWrap: true,
-      //               physics: const NeverScrollableScrollPhysics(),
-      //               itemCount: batteryIssues.length,
-      //               itemBuilder: (context, index) {
-      //                 batteryIssueDetailController = TextEditingController(
-      //                     text: batteryIssues[index].detail);
-      //                 return BatteryIssueTile(
-      //                     batteryIssueDetailController:
-      //                         batteryIssueDetailController,
-      //                     battery: widget.battery,
-      //                     batteryIssue: batteryIssues[index],
-      //                     batteryStation: widget.batteryStation,
-      //                     groupID: widget.groupID);
-      //               },
-      //             ),
-      //           );
-      //         } else if (snapshot.hasError) {
-      //           return SingleChildScrollView(
-      //             child: Text('Something went wrong! \n\n$snapshot',
-      //                 style: const TextStyle(color: Colors.white)),
-      //           );
-      //         } else {
-      //           return const Center(child: CircularProgressIndicator());
-      //         }
-      //       }),
-      //     ),
-      // ),
       content: Column(
         children: [
           Text(

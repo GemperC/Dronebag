@@ -3,12 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserData {
   final String fullName;
   final String email;
-  final String phone;
+  final String? phone;
 
   UserData({
     required this.fullName,
     required this.email,
-    required this.phone,
+    this.phone,
   });
 
   Map<String, dynamic> toJson() => {
@@ -17,14 +17,13 @@ class UserData {
         'Phone_Number': phone,
       };
 
- UserData.fromMap(Map<String, dynamic> Function() map)
+  UserData.fromMap(Map<String, dynamic> Function() map)
       : assert(map()['Full_Name'] != null),
         assert(map()['Email'] != null),
         assert(map()['Phone_Number'] != null),
         fullName = map()['Full_Name'],
         email = map()['Email'],
         phone = map()['Phone_Number'];
-
 
   static UserData fromJson(Map<String, dynamic> json) => UserData(
         fullName: json['Full_Name'],
@@ -37,6 +36,4 @@ class UserData {
     final json = user.toJson();
     await docUser.set(json);
   }
-
- 
 }

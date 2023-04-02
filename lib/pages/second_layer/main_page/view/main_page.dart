@@ -1,9 +1,11 @@
 import 'package:dronebag/config/font_size.dart';
 import 'package:dronebag/config/theme_colors.dart';
+import 'package:dronebag/domain/user_settings_repository/src/models/models.dart';
 import 'package:dronebag/pages/second_layer/create_group/create_group.dart';
 import 'package:dronebag/pages/second_layer/join_group/join_group.dart';
 import 'package:dronebag/pages/second_layer/main_page/widgets/getUserName.dart';
 import 'package:dronebag/pages/second_layer/my_groups/my_groups.dart';
+import 'package:dronebag/pages/second_layer/user_settings/user_settings_widget.dart';
 import 'package:dronebag/widgets/main_button_2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +52,8 @@ class MainPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const MyGroupsPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const MyGroupsPage()),
                   );
                 },
               ),
@@ -60,7 +63,8 @@ class MainPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const CreateGroupPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const CreateGroupPage()),
                   );
                 },
               ),
@@ -70,15 +74,19 @@ class MainPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const JoinGroupPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const JoinGroupPage()),
                   );
                 },
               ),
               const Spacer(),
               MainButton2(
-                text: 'Sign Out',
-                onPressed: () => FirebaseAuth.instance.signOut(),
-              ),
+                  text: 'User Settings',
+                  onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const UserSettingsWidget()),
+                      )),
             ],
           ),
         ),

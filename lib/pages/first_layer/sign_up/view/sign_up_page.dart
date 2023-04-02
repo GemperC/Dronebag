@@ -29,7 +29,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController confirmemailController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
+  // final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmpasswordController =
       TextEditingController();
@@ -41,7 +41,7 @@ class _SignUpPageState extends State<SignUpPage> {
     nameController.dispose();
     emailController.dispose();
     confirmemailController.dispose();
-    phoneController.dispose();
+    // phoneController.dispose();
     passwordController.dispose();
     confirmpasswordController.dispose();
     super.dispose();
@@ -173,35 +173,35 @@ class _SignUpPageState extends State<SignUpPage> {
                       SizedBox(height: sizedBoxHight),
 
                       //Phone Input Field
-                      TextFormField(
-                        controller: phoneController,
-                        validator: (value) {
-                          if (phoneController.text.length != 10) {
-                            return "please enter your phone number";
-                          }
-                          return null;
-                        },
-                        style: GoogleFonts.poppins(
-                          color: ThemeColors.whiteTextColor,
-                        ),
-                        cursorColor: ThemeColors.primaryColor,
-                        keyboardType: TextInputType.phone,
-                        decoration: InputDecoration(
-                          fillColor: ThemeColors.textFieldBgColor,
-                          filled: true,
-                          labelText: "Phone number",
-                          labelStyle: GoogleFonts.poppins(
-                            color: ThemeColors.textFieldHintColor,
-                            fontSize: FontSize.medium,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          border: const OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.all(Radius.circular(18)),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: sizedBoxHight),
+                      // TextFormField(
+                      //   controller: phoneController,
+                      //   validator: (value) {
+                      //     if (phoneController.text.length != 10) {
+                      //       return "please enter your phone number";
+                      //     }
+                      //     return null;
+                      //   },
+                      //   style: GoogleFonts.poppins(
+                      //     color: ThemeColors.whiteTextColor,
+                      //   ),
+                      //   cursorColor: ThemeColors.primaryColor,
+                      //   keyboardType: TextInputType.phone,
+                      //   decoration: InputDecoration(
+                      //     fillColor: ThemeColors.textFieldBgColor,
+                      //     filled: true,
+                      //     labelText: "Phone number",
+                      //     labelStyle: GoogleFonts.poppins(
+                      //       color: ThemeColors.textFieldHintColor,
+                      //       fontSize: FontSize.medium,
+                      //       fontWeight: FontWeight.w400,
+                      //     ),
+                      //     border: const OutlineInputBorder(
+                      //       borderSide: BorderSide.none,
+                      //       borderRadius: BorderRadius.all(Radius.circular(18)),
+                      //     ),
+                      //   ),
+                      // ),
+                      // SizedBox(height: sizedBoxHight),
 
                       //Password Input Field
                       TextFormField(
@@ -323,7 +323,7 @@ class _SignUpPageState extends State<SignUpPage> {
       final user = UserData(
         fullName: nameController.text.trim(),
         email: emailController.text.trim(),
-        phone: phoneController.text.trim(),
+        // phone: phoneController.text.trim(),
       );
       user.createUser(user);
     } on FirebaseAuthException catch (e) {
