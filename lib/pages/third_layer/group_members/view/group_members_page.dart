@@ -37,18 +37,18 @@ class _GroupMembersState extends State<GroupMembers> {
           ),
           backgroundColor: ThemeColors.scaffoldBgColor),
       body: SafeArea(
-        
-        child: Padding(
-          padding: const EdgeInsets.all(30),
-          child: StreamBuilder<List<GroupMember>>(
-            stream: fetchGroupMembers(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                bool loggedUserIsAdmin = false;
-                final groupUsers = snapshot.data!;
-                List<GroupMember> groupAdminsList = [];
-                List<GroupMember> groupMembersList = [];
-                for (var user in groupUsers) {
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(30),
+            child: StreamBuilder<List<GroupMember>>(
+              stream: fetchGroupMembers(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  bool loggedUserIsAdmin = false;
+                  final groupUsers = snapshot.data!;
+                  List<GroupMember> groupAdminsList = [];
+                  List<GroupMember> groupMembersList = [];
+                  for (var user in groupUsers) {
                     if (user.role == 'admin') {
                       if (loggedUser.email == user.email) {
                         loggedUserIsAdmin = true;
@@ -58,65 +58,68 @@ class _GroupMembersState extends State<GroupMembers> {
                       groupMembersList.add(user);
                     }
                   }
-                return Column(
-                  children: [
-                    Text(
-                      "Tip: Click a member to change his privileges",
-                      style: GoogleFonts.poppins(
-                        color: ThemeColors.greyTextColor,
-                        fontSize: FontSize.medium,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Admins:',
+                  return Column(
+                    children: [
+                      Text(
+                        "Tip: Click a member to change his privileges",
                         style: GoogleFonts.poppins(
-                          color: ThemeColors.whiteTextColor,
-                          fontSize: FontSize.xLarge,
+                          color: ThemeColors.greyTextColor,
+                          fontSize: FontSize.medium,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: groupAdminsList.length,
-                        itemBuilder: ((context, index) {
-                          return buildGroupMemberTile(
-                              groupAdminsList[index], loggedUserIsAdmin);
-                        })),
-                    const SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Users:',
-                        style: GoogleFonts.poppins(
-                          color: ThemeColors.whiteTextColor,
-                          fontSize: FontSize.xLarge,
-                          fontWeight: FontWeight.w600,
+                      const SizedBox(height: 15),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Admins:',
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.whiteTextColor,
+                            fontSize: FontSize.xLarge,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
-                    ),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: groupMembersList.length,
-                        itemBuilder: ((context, index) {
-                          return buildGroupMemberTile(
-                              groupMembersList[index], loggedUserIsAdmin);
-                        })),
-                  ],
-                );
-              } else if (snapshot.hasError) {
-                return SingleChildScrollView(
-                  child: Text('Something went wrong! \n\n$snapshot',
-                      style: const TextStyle(color: Colors.white)),
-                );
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            },
+                      ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: groupAdminsList.length,
+                          itemBuilder: ((context, index) {
+                            return buildGroupMemberTile(
+                                groupAdminsList[index], loggedUserIsAdmin);
+                          })),
+                      const SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Users:',
+                          style: GoogleFonts.poppins(
+                            color: ThemeColors.whiteTextColor,
+                            fontSize: FontSize.xLarge,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: groupMembersList.length,
+                          itemBuilder: ((context, index) {
+                            return buildGroupMemberTile(
+                                groupMembersList[index], loggedUserIsAdmin);
+                          })),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return SingleChildScrollView(
+                    child: Text('Something went wrong! \n\n$snapshot',
+                        style: const TextStyle(color: Colors.white)),
+                  );
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
           ),
         ),
       ),
@@ -149,10 +152,7 @@ class _GroupMembersState extends State<GroupMembers> {
                   .doc(member.email)
                   .collection("settings")
                   .doc(widget.group.id)
-                  .update({
-                    "role": "member",
-                    "notifications": "false"
-                    });
+                  .update({"role": "member", "notifications": "false"});
             } else if (member.role == 'member') {
               memberDoc.update({'role': 'admin'});
               FirebaseFirestore.instance
